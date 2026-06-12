@@ -6,11 +6,21 @@ The Project Aegis frontend uses Next.js with the App Router, TypeScript, Tailwin
 
 The App Router lives in `src/app`.
 
-- `layout.tsx` defines the root HTML shell and metadata.
-- `page.tsx` defines the current homepage placeholder.
+- `layout.tsx` defines the root HTML shell, metadata, and global `AppShell`.
+- `page.tsx` redirects `/` to `/control-room`.
 - `globals.css` defines Tailwind layers, base styles, and theme variables.
 
-Future product routes should be added under `src/app` as the MVP screens are introduced.
+Current product routes under `src/app` are skeleton pages only:
+
+- `/control-room`
+- `/scenario-simulator`
+- `/trade-sentinel`
+- `/ai-parliament`
+- `/crisis-commander`
+- `/impact-dashboard`
+- `/resources`
+- `/reports`
+- `/settings`
 
 ## Folder Structure
 
@@ -36,6 +46,19 @@ Future product routes should be added under `src/app` as the MVP screens are int
 - `components/commander`: Crisis Commander components.
 - `components/shared`: Small reusable components used across product areas.
 
+## Layout Components Added
+
+- `components/layout/AppShell.tsx`: Composes the persistent sidebar, topbar, and main content area.
+- `components/layout/Sidebar.tsx`: Provides product branding, primary navigation, active route state, and system status.
+- `components/layout/Topbar.tsx`: Provides platform heading, corridor selector placeholder, notification indicator, time widget, and theme control.
+- `components/layout/ThemeToggle.tsx`: Provides a small class-based light/dark theme toggle using the existing CSS variable strategy.
+
+## Shared Components Added
+
+- `components/shared/PageHeader.tsx`: Standard title and description block for placeholder pages.
+- `components/shared/SectionCard.tsx`: Basic card wrapper for page sections.
+- `components/shared/StatusBadge.tsx`: Small semantic status badge for simple status labels.
+
 ## Data Folder Purpose
 
 The `data` folder will hold MVP JSON datasets and fixtures, including future Odisha Cyclone Corridor nodes, routes, stress indicators, and impact assumptions.
@@ -44,7 +67,9 @@ The `data` folder will hold MVP JSON datasets and fixtures, including future Odi
 
 The `services` folder will hold frontend clients for future backend APIs and external integrations. It should not contain business logic that belongs on the backend.
 
-## Future Pages Planned
+## Product Pages
+
+The following pages exist as placeholders and do not contain real product logic yet:
 
 - Control Room
 - Scenario Simulator

@@ -35,6 +35,15 @@ frontend/
 │   ├── app/
 │   │   ├── layout.tsx
 │   │   ├── page.tsx
+│   │   ├── control-room/
+│   │   ├── scenario-simulator/
+│   │   ├── trade-sentinel/
+│   │   ├── ai-parliament/
+│   │   ├── crisis-commander/
+│   │   ├── impact-dashboard/
+│   │   ├── resources/
+│   │   ├── reports/
+│   │   ├── settings/
 │   │   └── globals.css
 │   ├── components/
 │   │   ├── layout/
@@ -76,7 +85,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Frontend foundation initialized only.
+Issue #3 completed: global application layout and navigation added.
 
 Implemented:
 
@@ -85,14 +94,18 @@ Implemented:
 - Tailwind CSS configuration
 - ESLint configuration
 - Light and dark CSS variable theme tokens
-- Placeholder homepage
+- Global `AppShell`
+- Desktop sidebar navigation
+- Topbar
+- Simple theme toggle
+- Placeholder pages for all primary app sections
+- Shared `PageHeader`, `SectionCard`, and `StatusBadge` components
 - Placeholder index files
 - Frontend documentation
 
 Not implemented:
 
-- Dashboard pages
-- Navigation/sidebar
+- Real dashboard logic
 - Maps
 - Charts
 - AI logic
@@ -101,4 +114,4 @@ Not implemented:
 
 ## Next Issue
 
-Issue #3 - Build Global Application Layout and Navigation
+Issue #4 - Create Frontend Mock Data Layer
