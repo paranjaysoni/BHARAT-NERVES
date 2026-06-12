@@ -19,6 +19,19 @@ export {
   resourceDeployments,
   situationOverview
 } from "./crisis-commander";
+export {
+  districtImpacts,
+  forecastNotes,
+  geographicImpact,
+  impactInsights,
+  impactKpis,
+  impactOverTime,
+  impactRiskDistribution,
+  impactSummary,
+  recoveryBenefits,
+  recoveryComparison,
+  sectorImpactBreakdown
+} from "./impact";
 export { metrics } from "./metrics";
 export {
   aiParliamentPage,

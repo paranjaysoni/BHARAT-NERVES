@@ -13,8 +13,9 @@ Project Aegis is a self-healing digital nervous system for trade, logistics, and
 - ESLint
 - lucide-react
 - clsx
+- Recharts
 
-Future issues will add map, chart, animation, and product-specific libraries only when those features are implemented.
+Future issues will add map, animation, and product-specific libraries only when those features are implemented.
 
 ## Setup Commands
 
@@ -64,6 +65,7 @@ frontend/
 │   │   ├── shipments.ts
 │   │   ├── parliament.ts
 │   │   ├── crisis-commander.ts
+│   │   ├── impact.ts
 │   │   ├── nodes.ts
 │   │   ├── routes.ts
 │   │   ├── scenarios.ts
@@ -105,7 +107,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #10 complete: Crisis Commander page added.
+Issue #11 complete: Impact Dashboard page added.
 
 Implemented:
 
@@ -143,13 +145,17 @@ Implemented:
 - Crisis Commander page at `/crisis-commander`
 - Commander-specific composition components in `src/components/commander`
 - Crisis Commander mock data in `src/data/crisis-commander.ts`
+- Impact Dashboard page at `/impact-dashboard`
+- Impact dashboard components in `src/components/dashboard`
+- Impact mock data in `src/data/impact.ts`
+- Static Recharts visualizations for impact analytics
 - Frontend documentation
 
 Not implemented:
 
 - Backend/API integrations
 - Real map integration
-- Charts
+- Real forecasting
 - AI logic
 - Scenario simulation
 - NetworkX routing
@@ -157,4 +163,4 @@ Not implemented:
 
 ## Next Issue
 
-Issue #11 - Create Impact Dashboard
+Issue #12 - Create Resources Page

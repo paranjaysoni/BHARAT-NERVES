@@ -16,6 +16,19 @@ export type {
   ResourceDeployment,
   SituationOverview
 } from "./crisis-commander";
+export type {
+  DistrictImpact,
+  GeographicImpact,
+  ImpactInsight,
+  ImpactKpi,
+  ImpactRiskItem,
+  ImpactRiskLevel,
+  ImpactSummary,
+  ImpactTrendPoint,
+  RecoveryBenefit,
+  RecoveryComparisonPoint,
+  SectorImpactPoint
+} from "./impact";
 export type { Metric, MetricTrend } from "./metric";
 export type { AegisNode, AegisNodeStatus, AegisNodeType } from "./node";
 export type {
