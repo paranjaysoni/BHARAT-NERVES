@@ -108,7 +108,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #12 complete: Resources page added.
+Issue #13 complete: Reports page added.
 
 Implemented:
 
@@ -153,6 +153,10 @@ Implemented:
 - Resources page at `/resources`
 - Resources-specific composition components in `src/components/resources`
 - Expanded resource mock data in `src/data/resources.ts`
+- Reports page at `/reports`
+- Reports-specific composition components in `src/components/reports`
+- Expanded report mock data in `src/data/reports.ts` (22 reports with full executive preview content)
+- Interactive report selection with local state preview panel
 - Frontend documentation
 
 Not implemented:
@@ -169,4 +173,4 @@ Not implemented:
 
 ## Next Issue
 
-Issue #13 - Create Reports Page
+Issue #14 - Create Settings Page

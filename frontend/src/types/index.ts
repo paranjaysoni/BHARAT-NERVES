@@ -42,7 +42,16 @@ export type {
   ParliamentTimelineItem,
   StakeholderPriority
 } from "./parliament";
-export type { Report, ReportStatus } from "./report";
+export type {
+  FeaturedBrief,
+  FutureReportingItem,
+  Report,
+  ReportActivity,
+  ReportCategory,
+  ReportCategoryCard,
+  ReportPriority,
+  ReportStatus
+} from "./report";
 export type { Resource, ResourceStatus, ResourceType } from "./resource";
 export type { AegisRoute, AegisRouteStatus } from "./route";
 export type { Scenario, ScenarioSeverity } from "./scenario";

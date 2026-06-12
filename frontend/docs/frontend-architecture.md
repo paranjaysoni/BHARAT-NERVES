@@ -225,6 +225,31 @@ Resources-specific composition components live in `src/components/resources/`. M
 
 This page is a mock resources and data library only. It does not include backend APIs, real uploads, real downloads, authentication, cloud storage, live data fetching, document processing, or AI summarization. Future versions should route resource reads through `src/services/` and connect to real APIs, government datasets, storage systems, and operational feeds.
 
+## Reports Page
+
+Issue #13 added the `/reports` page.
+
+The Reports page uses:
+
+- `PageHeader` for page identity and reporting center status.
+- `MetricCard` for six KPI cards across the top.
+- `SectionCard` for all panel wrappers.
+- `StatusBadge` and `RiskPill` for report status and priority indicators.
+- `TimelineItem` for recent activity and the chronological activity timeline.
+- `DataTable`-style interactive table for report selection (implemented directly for click interactivity).
+
+Reports-specific composition components live in `src/components/reports/`. Mock report data lives in `src/data/reports.ts`, with supporting types in `src/types/report.ts`.
+
+### Report Data Flow
+
+Reports data is fully centralized in `src/data/reports.ts`. The page component imports all required exports from `@/data`. No component defines its own data.
+
+### Preview Architecture
+
+The `ReportPreview` component receives a `report: Report | null` prop. When null, it displays an empty state prompt. When a report is selected from `ReportsTable`, the page-level `useState` hook updates the `selectedReport` state, and the preview renders the full executive content (summary, findings, recommendations). Selection state is local to the page component — it is not persisted, URL-synced, or shared across pages.
+
+The `ReportsTable` component accepts `onSelectReport` and `selectedReportId` props to wire the interactive row highlighting back to the parent page.
+
 ## Data Folder Purpose
 
 The `data` folder holds typed MVP mock datasets and fixtures, including Odisha Cyclone Corridor nodes, routes, scenarios, agents, metrics, alerts, reports, resources, settings, navigation, user, corridor, and system status data.
@@ -270,5 +295,5 @@ The following pages exist in the app:
 - Crisis Commander: mock executive command and response plan page.
 - Impact Dashboard: mock impact analytics page with static Recharts visuals.
 - Resources: mock resources and data library page.
-- Reports
+- Reports: centralized intelligence reporting hub with interactive table, preview panel, and executive briefs.
 - Settings

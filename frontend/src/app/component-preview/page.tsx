@@ -58,9 +58,9 @@ const reportColumns: DataTableColumn<Report>[] = [
     )
   },
   {
-    key: "fileSize",
-    header: "Size",
-    cell: (report) => report.fileSize
+    key: "version",
+    header: "Version",
+    cell: (report) => report.version
   }
 ];
 
