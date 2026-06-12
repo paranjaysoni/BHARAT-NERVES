@@ -59,6 +59,7 @@ frontend/
 │   ├── services/
 │   ├── data/
 │   │   ├── control-room.ts
+│   │   ├── scenario-simulator.ts
 │   │   ├── nodes.ts
 │   │   ├── routes.ts
 │   │   ├── scenarios.ts
@@ -100,7 +101,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #6 complete: National Control Room Dashboard skeleton added.
+Issue #7 complete: Scenario Simulator skeleton added.
 
 Implemented:
 
@@ -125,6 +126,9 @@ Implemented:
 - National Control Room dashboard at `/control-room`
 - Dashboard-specific composition components in `src/components/dashboard`
 - Control Room mock data slice in `src/data/control-room.ts`
+- Scenario Simulator page at `/scenario-simulator`
+- Scenario-specific composition components in `src/components/scenario`
+- Scenario Simulator mock data slice in `src/data/scenario-simulator.ts`
 - Frontend documentation
 
 Not implemented:
@@ -139,4 +143,4 @@ Not implemented:
 
 ## Next Issue
 
-Issue #7 - Create Scenario Simulator Page
+Issue #8 - Create Trade Sentinel Dashboard

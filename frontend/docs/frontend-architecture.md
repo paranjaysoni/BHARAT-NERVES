@@ -13,7 +13,7 @@ The App Router lives in `src/app`.
 Current product routes under `src/app`:
 
 - `/control-room`: National Control Room dashboard built with mock data and reusable dashboard components.
-- `/scenario-simulator`
+- `/scenario-simulator`: Scenario Simulator skeleton with local scenario selection and mock impact preview.
 - `/trade-sentinel`
 - `/ai-parliament`
 - `/crisis-commander`
@@ -115,6 +115,24 @@ The Control Room page uses:
 
 Dashboard-specific composition components live in `src/components/dashboard/` and consume centralized mock data from `src/data/`. The page does not include real map integration, backend calls, AI logic, scenario simulation, NetworkX routing, or business calculations.
 
+## Scenario Simulator Page
+
+Issue #7 added the `/scenario-simulator` page.
+
+The Scenario Simulator page uses:
+
+- `PageHeader` for page identity and readiness context.
+- `ScenarioCard` for predefined scenario selection.
+- `SectionCard` for simulator panels.
+- `MetricCard` for expected impact summary values.
+- `MapPlaceholder` for a visual impact preview without real map integration.
+- `TimelineItem` for the static simulation timeline preview.
+- `DataTable` for scenario comparison.
+
+Scenario-specific composition components live in `src/components/scenario/`. The page consumes `scenarios`, `scenarioSimulationImpacts`, and `scenarioTimelineSteps` from `src/data/`.
+
+Scenario selection and the control buttons use local React state only. The page does not include a real simulation engine, backend APIs, NetworkX routing, real AI, real scenario calculations, real map integration, or live data fetching.
+
 ## Data Folder Purpose
 
 The `data` folder holds typed MVP mock datasets and fixtures, including Odisha Cyclone Corridor nodes, routes, scenarios, agents, metrics, alerts, reports, resources, settings, navigation, user, corridor, and system status data.
@@ -154,7 +172,7 @@ The `services` folder will hold frontend clients for future backend APIs and ext
 The following pages exist in the app:
 
 - Control Room: composed mock-data dashboard.
-- Scenario Simulator: placeholder.
+- Scenario Simulator: mock-data skeleton with local selection state.
 - Trade Sentinel
 - AI Parliament
 - Crisis Commander
