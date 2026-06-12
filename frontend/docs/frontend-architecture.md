@@ -18,7 +18,7 @@ Current product routes under `src/app`:
 - `/ai-parliament`: AI Parliament skeleton with mock multi-agent recommendations.
 - `/crisis-commander`: Crisis Commander executive command page with mock response plan.
 - `/impact-dashboard`: Impact Dashboard analytics page with mock impact charts and tables.
-- `/resources`
+- `/resources`: Resources data library page with mock files, source health, and MVP data-pack context.
 - `/reports`
 - `/settings`
 
@@ -44,6 +44,7 @@ Current product routes under `src/app`:
 - `components/scenario`: Scenario simulator components.
 - `components/agents`: AI Parliament and agent-facing components.
 - `components/commander`: Crisis Commander components.
+- `components/resources`: Resources page composition components.
 - `components/shared`: Small reusable components used across product areas.
 
 ## Layout Components Added
@@ -206,6 +207,24 @@ Impact-specific composition components live in `src/components/dashboard/`. Mock
 
 This page is mock impact analytics only. It does not include backend APIs, real calculations, real forecasting, real AI, live data fetching, or simulation execution. Future versions should connect to a validated impact engine and replace static chart datasets with model outputs.
 
+## Resources Page
+
+Issue #12 added the `/resources` page.
+
+The Resources page uses:
+
+- `PageHeader` for page identity and library readiness status.
+- `MetricCard` for resource library KPIs.
+- `SectionCard` for categories, featured resources, side panels, and integration notes.
+- `StatusBadge` for resource, category, and source status.
+- `TimelineItem` for recent resource updates.
+- `DataTable` for the full resource inventory.
+- `ProgressBar` for storage usage.
+
+Resources-specific composition components live in `src/components/resources/`. Mock resource data lives in `src/data/resources.ts`, with the shared resource domain type in `src/types/resource.ts`.
+
+This page is a mock resources and data library only. It does not include backend APIs, real uploads, real downloads, authentication, cloud storage, live data fetching, document processing, or AI summarization. Future versions should route resource reads through `src/services/` and connect to real APIs, government datasets, storage systems, and operational feeds.
+
 ## Data Folder Purpose
 
 The `data` folder holds typed MVP mock datasets and fixtures, including Odisha Cyclone Corridor nodes, routes, scenarios, agents, metrics, alerts, reports, resources, settings, navigation, user, corridor, and system status data.
@@ -250,6 +269,6 @@ The following pages exist in the app:
 - AI Parliament: mock multi-agent decision support page.
 - Crisis Commander: mock executive command and response plan page.
 - Impact Dashboard: mock impact analytics page with static Recharts visuals.
-- Resources
+- Resources: mock resources and data library page.
 - Reports
 - Settings

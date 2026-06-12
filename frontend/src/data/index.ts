@@ -56,7 +56,15 @@ export {
   stakeholderPriorities
 } from "./parliament";
 export { reports } from "./reports";
-export { resources } from "./resources";
+export {
+  dataSourceHealth,
+  futureResourcePipeline,
+  mvpDataPackItems,
+  recentResourceUpdates,
+  resourceCategories,
+  resources,
+  storageOverview
+} from "./resources";
 export { routes } from "./routes";
 export { scenarios } from "./scenarios";
 export {
@@ -90,3 +98,11 @@ export type {
   ScenarioSimulationImpact,
   ScenarioTimelineStep
 } from "./scenario-simulator";
+export type {
+  DataSourceHealthItem,
+  FutureResourceIntegration,
+  MvpDataPackItem,
+  ResourceCategory,
+  ResourceUpdate,
+  StorageOverview
+} from "./resources";

@@ -35,7 +35,7 @@ src/data/
 - `metrics.ts`: KPI-style mock values for dashboard components.
 - `alerts.ts`: Active alert examples for notification and incident surfaces.
 - `reports.ts`: Report metadata for future report listing and filtering.
-- `resources.ts`: Dataset, document, map, research, and guideline metadata.
+- `resources.ts`: Dataset, document, map, research, guideline, storage, data-source health, MVP data-pack, and future integration metadata.
 - `settings.ts`: Mock platform preferences and display settings.
 - `navigation.ts`: Sidebar navigation and page placeholder metadata.
 - `user.ts`: Current user mock profile.
@@ -53,6 +53,34 @@ Recommended migration path:
 2. Add API clients in `src/services/`.
 3. Replace page-level data imports gradually.
 4. Keep mock data available for tests, demos, and offline development.
+
+## Resource Data Structure
+
+Issue #12 expanded `src/data/resources.ts` into the source of truth for the Resources page.
+
+The file includes:
+
+- `resources`: At least 20 realistic mock resources covering datasets, maps, policies, emergency guidelines, trade documents, carbon references, simulation assets, and reports.
+- `resourceCategories`: Category cards shown on the Resources page.
+- `storageOverview`: Mock storage capacity and sync summary.
+- `recentResourceUpdates`: Timeline events for library changes.
+- `dataSourceHealth`: Current mock or planned status for weather, traffic, port, railway, hospital, and carbon sources.
+- `mvpDataPackItems`: Summary of the Odisha Cyclone Corridor demo data pack.
+- `futureResourcePipeline`: Planned real integrations for later issues.
+
+Resource rows use the shared `Resource` interface from `src/types/resource.ts`, including title, type, category, owner, source, updated date, format, status, description, and optional featured status.
+
+## Resources Migration To APIs And Storage
+
+When real storage arrives, keep `resources.ts` as the local demo fixture and move production reads behind `src/services/`.
+
+Recommended path:
+
+1. Keep `Resource` metadata fields stable.
+2. Add a backend resource listing endpoint.
+3. Store file objects in cloud storage and keep only metadata plus storage keys in API responses.
+4. Replace direct page imports with a service call or server component data boundary.
+5. Preserve mock data for offline demos and component tests.
 
 ## Naming Conventions
 
