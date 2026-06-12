@@ -1,15 +1,104 @@
-# Frontend
+# Project Aegis Frontend
 
-Planned frontend workspace for Project Aegis / Bharat Nerves.
+Frontend foundation for the Bharat Nerves Platform.
 
-This folder is currently structure only. The Next.js application has not been generated yet.
+Project Aegis is a self-healing digital nervous system for trade, logistics, and disaster resilience. This frontend will become the mission-control interface for digital twin simulation, scenario analysis, trade sentinel monitoring, AI Parliament, Crisis Commander, impact analysis, resources, reports, and settings.
 
-## Planned Stack
+## Tech Stack
 
-- Next.js
+- Next.js App Router
 - React
 - TypeScript
 - Tailwind CSS
-- React Leaflet
-- Recharts
-- Framer Motion
+- ESLint
+- lucide-react
+- clsx
+
+Future issues will add map, chart, animation, and product-specific libraries only when those features are implemented.
+
+## Setup Commands
+
+```bash
+npm install
+npm run dev
+npm run lint
+npm run build
+```
+
+The local development server will run from the `frontend/` directory.
+
+## Folder Structure
+
+```text
+frontend/
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   └── globals.css
+│   ├── components/
+│   │   ├── layout/
+│   │   ├── dashboard/
+│   │   ├── map/
+│   │   ├── scenario/
+│   │   ├── agents/
+│   │   ├── commander/
+│   │   └── shared/
+│   ├── layouts/
+│   ├── hooks/
+│   ├── lib/
+│   ├── services/
+│   ├── data/
+│   ├── types/
+│   ├── constants/
+│   ├── styles/
+│   └── utils/
+├── public/
+├── docs/
+├── package.json
+├── tsconfig.json
+├── tailwind.config.ts
+├── postcss.config.mjs
+├── next.config.ts
+└── README.md
+```
+
+## Theme Strategy
+
+The frontend is prepared for both light and dark themes.
+
+- Theme tokens are defined as CSS variables in `src/app/globals.css`.
+- Tailwind colors are mapped to semantic tokens in `tailwind.config.ts`.
+- Dark mode uses the Tailwind `class` strategy.
+- A future issue can add a ThemeProvider and theme toggle without changing the token model.
+
+Developers should use semantic utilities such as `bg-background`, `text-foreground`, `border-border`, and `text-muted-foreground` instead of hardcoded colors.
+
+## Current Status
+
+Frontend foundation initialized only.
+
+Implemented:
+
+- Next.js App Router foundation
+- TypeScript strict mode
+- Tailwind CSS configuration
+- ESLint configuration
+- Light and dark CSS variable theme tokens
+- Placeholder homepage
+- Placeholder index files
+- Frontend documentation
+
+Not implemented:
+
+- Dashboard pages
+- Navigation/sidebar
+- Maps
+- Charts
+- AI logic
+- Backend API integrations
+- Simulation or business logic
+
+## Next Issue
+
+Issue #3 - Build Global Application Layout and Navigation
