@@ -26,6 +26,10 @@ export { reports } from "./reports";
 export { resources } from "./resources";
 export { routes } from "./routes";
 export { scenarios } from "./scenarios";
+export {
+  scenarioSimulationImpacts,
+  scenarioTimelineSteps
+} from "./scenario-simulator";
 export { settings } from "./settings";
 export { systemStatus } from "./system-status";
 export { currentUser } from "./user";
@@ -39,3 +43,7 @@ export type {
   ControlRoomQuickAction,
   HealthRiskLevel
 } from "./control-room";
+export type {
+  ScenarioSimulationImpact,
+  ScenarioTimelineStep
+} from "./scenario-simulator";

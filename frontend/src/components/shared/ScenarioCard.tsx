@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode } from "react";
 import clsx from "clsx";
 import type { ScenarioSeverity } from "@/types";
@@ -11,6 +13,8 @@ export interface ScenarioCardProps {
   status: string;
   icon?: ReactNode;
   actionLabel?: string;
+  isSelected?: boolean;
+  onSelect?: () => void;
 }
 
 const severityToRisk: Record<ScenarioSeverity, "low" | "medium" | "high" | "critical"> = {
@@ -26,10 +30,32 @@ export function ScenarioCard({
   severity,
   status,
   icon,
-  actionLabel
+  actionLabel,
+  isSelected = false,
+  onSelect
 }: ScenarioCardProps) {
   return (
-    <article className="rounded-lg border border-border bg-card p-5 text-card-foreground">
+    <article
+      className={clsx(
+        "rounded-lg border bg-card p-5 text-card-foreground transition-colors",
+        isSelected ? "border-primary" : "border-border",
+        onSelect ? "cursor-pointer hover:bg-secondary/40" : null
+      )}
+      onClick={onSelect}
+      onKeyDown={(event) => {
+        if (!onSelect) {
+          return;
+        }
+
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onSelect();
+        }
+      }}
+      role={onSelect ? "button" : undefined}
+      tabIndex={onSelect ? 0 : undefined}
+      aria-pressed={onSelect ? isSelected : undefined}
+    >
       <div className="flex items-start justify-between gap-4">
         <div className="flex gap-3">
           {icon ? (
@@ -51,6 +77,10 @@ export function ScenarioCard({
         {actionLabel ? (
           <button
             type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              onSelect?.();
+            }}
             className={clsx(
               "rounded-md border border-border bg-background px-3 py-1.5 text-sm font-medium text-foreground",
               "transition-colors hover:bg-secondary"

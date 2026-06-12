@@ -1,17 +1,16 @@
-import { PageHeader } from "@/components/shared/PageHeader";
-import { SectionCard } from "@/components/shared/SectionCard";
-import { pageSkeletonMessage, scenarioSimulatorPage } from "@/data";
+import { ScenarioSimulatorDashboard } from "@/components/scenario";
+import { PageHeader, StatusBadge } from "@/components/shared";
+import { scenarioSimulatorPage } from "@/data";
 
 export default function ScenarioSimulatorPage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader
         title={scenarioSimulatorPage.title}
         description={scenarioSimulatorPage.description}
+        actions={<StatusBadge label="Simulation Ready" variant="success" />}
       />
-      <SectionCard title={scenarioSimulatorPage.skeletonTitle}>
-        {pageSkeletonMessage}
-      </SectionCard>
+      <ScenarioSimulatorDashboard />
     </div>
   );
 }
