@@ -63,6 +63,7 @@ frontend/
 │   │   ├── trade.ts
 │   │   ├── shipments.ts
 │   │   ├── parliament.ts
+│   │   ├── crisis-commander.ts
 │   │   ├── nodes.ts
 │   │   ├── routes.ts
 │   │   ├── scenarios.ts
@@ -104,7 +105,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #9 complete: AI Parliament skeleton added.
+Issue #10 complete: Crisis Commander page added.
 
 Implemented:
 
@@ -139,6 +140,9 @@ Implemented:
 - AI Parliament page at `/ai-parliament`
 - Agent-specific composition components in `src/components/agents`
 - Parliament mock data in `src/data/parliament.ts`
+- Crisis Commander page at `/crisis-commander`
+- Commander-specific composition components in `src/components/commander`
+- Crisis Commander mock data in `src/data/crisis-commander.ts`
 - Frontend documentation
 
 Not implemented:
@@ -153,4 +157,4 @@ Not implemented:
 
 ## Next Issue
 
-Issue #10 - Create Crisis Commander Page
+Issue #11 - Create Impact Dashboard
