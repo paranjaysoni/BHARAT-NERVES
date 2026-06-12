@@ -81,7 +81,19 @@ export {
   scenarioSimulationImpacts,
   scenarioTimelineSteps
 } from "./scenario-simulator";
-export { settings } from "./settings";
+export {
+  aiConfiguration,
+  dataSources,
+  devSettings,
+  futureIntegrations,
+  integrations,
+  notificationChannels,
+  platformInfo,
+  securityItems,
+  settings,
+  settingsKpis,
+  systemHealth
+} from "./settings";
 export { shipments } from "./shipments";
 export { systemStatus } from "./system-status";
 export {
@@ -95,7 +107,7 @@ export {
 } from "./trade";
 export { currentUser } from "./user";
 export type { NavigationIconName, NavigationItem } from "./navigation";
-export type { PlatformSettings } from "./settings";
+
 export type { SystemStatus } from "./system-status";
 export type { CurrentUser } from "./user";
 export type {

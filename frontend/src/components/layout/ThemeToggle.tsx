@@ -1,17 +1,33 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
-import { useState } from "react";
+
+export const THEME_STORAGE_KEY = "project-aegis-theme";
 
 type ThemeMode = "light" | "dark";
 
+function getInitialTheme(): ThemeMode {
+  if (typeof window === "undefined") return "light";
+  const stored = localStorage.getItem(THEME_STORAGE_KEY);
+  if (stored === "dark") return "dark";
+  if (stored === "system") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  return "light";
+}
+
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<ThemeMode>("light");
+  const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
 
   function toggleTheme() {
-    const nextTheme = theme === "dark" ? "light" : "dark";
+    const nextTheme: ThemeMode = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
-    window.localStorage.setItem("project-aegis-theme", nextTheme);
+    localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
     document.documentElement.classList.toggle("dark", nextTheme === "dark");
   }
 

@@ -250,6 +250,32 @@ The `ReportPreview` component receives a `report: Report | null` prop. When null
 
 The `ReportsTable` component accepts `onSelectReport` and `selectedReportId` props to wire the interactive row highlighting back to the parent page.
 
+## Settings Page
+
+Issue #14 added the `/settings` page and completed the skeleton phase of the Project Aegis frontend.
+
+The Settings page uses:
+
+- `PageHeader` for page identity and configuration center status.
+- `MetricCard` for 6 KPI cards across the top.
+- `SectionCard` for all panel wrappers.
+- `StatusBadge` for integration, security, data source, and dev mode status indicators.
+
+Settings-specific composition components live in `src/components/settings/`. Mock settings data lives in `src/data/settings.ts`, with supporting types in `src/types/settings.ts`.
+
+### Configuration Architecture
+
+The settings page is a read/display configuration panel. The only stateful behavior is:
+
+1. **Appearance** — `AppearanceSettings` uses `useState` + `localStorage` + DOM class manipulation to apply themes without a provider.
+2. **Notifications** — `NotificationSettings` uses `useState` initialized from mock data for toggle visual state. State is not persisted.
+
+All other panels are pure display components consuming static mock data. No backend calls, no API writes, no persistence beyond `localStorage` for theme.
+
+### Theme Architecture
+
+Both `ThemeToggle` (Topbar) and `AppearanceSettings` (Settings) write to and read from `localStorage` under `project-aegis-theme`. Both apply `.dark` on `document.documentElement`. No React context is needed — both components read the stored value on mount via `useEffect` and stay consistent on reload.
+
 ## Data Folder Purpose
 
 The `data` folder holds typed MVP mock datasets and fixtures, including Odisha Cyclone Corridor nodes, routes, scenarios, agents, metrics, alerts, reports, resources, settings, navigation, user, corridor, and system status data.
@@ -296,4 +322,4 @@ The following pages exist in the app:
 - Impact Dashboard: mock impact analytics page with static Recharts visuals.
 - Resources: mock resources and data library page.
 - Reports: centralized intelligence reporting hub with interactive table, preview panel, and executive briefs.
-- Settings
+- Settings: platform administration and configuration center with appearance, notifications, data sources, integrations, AI, security, and system health panels.
