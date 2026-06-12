@@ -53,6 +53,7 @@ frontend/
 │   │   ├── scenario/
 │   │   ├── agents/
 │   │   ├── commander/
+│   │   ├── resources/
 │   │   └── shared/
 │   ├── layouts/
 │   ├── hooks/
@@ -107,7 +108,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #11 complete: Impact Dashboard page added.
+Issue #12 complete: Resources page added.
 
 Implemented:
 
@@ -149,6 +150,9 @@ Implemented:
 - Impact dashboard components in `src/components/dashboard`
 - Impact mock data in `src/data/impact.ts`
 - Static Recharts visualizations for impact analytics
+- Resources page at `/resources`
+- Resources-specific composition components in `src/components/resources`
+- Expanded resource mock data in `src/data/resources.ts`
 - Frontend documentation
 
 Not implemented:
@@ -156,6 +160,8 @@ Not implemented:
 - Backend/API integrations
 - Real map integration
 - Real forecasting
+- Real uploads/downloads
+- Cloud storage
 - AI logic
 - Scenario simulation
 - NetworkX routing
@@ -163,4 +169,4 @@ Not implemented:
 
 ## Next Issue
 
-Issue #12 - Create Resources Page
+Issue #13 - Create Reports Page

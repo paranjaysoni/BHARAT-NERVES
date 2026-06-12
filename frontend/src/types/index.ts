@@ -43,7 +43,7 @@ export type {
   StakeholderPriority
 } from "./parliament";
 export type { Report, ReportStatus } from "./report";
-export type { Resource, ResourceType } from "./resource";
+export type { Resource, ResourceStatus, ResourceType } from "./resource";
 export type { AegisRoute, AegisRouteStatus } from "./route";
 export type { Scenario, ScenarioSeverity } from "./scenario";
 export type { Shipment, ShipmentPriority, ShipmentStatus } from "./shipment";

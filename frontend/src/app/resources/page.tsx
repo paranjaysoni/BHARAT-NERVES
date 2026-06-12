@@ -1,6 +1,26 @@
-import { PageHeader } from "@/components/shared/PageHeader";
-import { SectionCard } from "@/components/shared/SectionCard";
-import { pageSkeletonMessage, resourcesPage } from "@/data";
+import {
+  DataSourceHealth,
+  FeaturedResources,
+  FutureResourcePipeline,
+  IntegrationNotes,
+  MvpDataPack,
+  RecentResourceUpdates,
+  ResourceCategoryGrid,
+  ResourceKpiRow,
+  ResourcesTable,
+  StorageOverview
+} from "@/components/resources";
+import { PageHeader, StatusBadge } from "@/components/shared";
+import {
+  dataSourceHealth,
+  futureResourcePipeline,
+  mvpDataPackItems,
+  recentResourceUpdates,
+  resourceCategories,
+  resources,
+  resourcesPage,
+  storageOverview
+} from "@/data";
 
 export default function ResourcesPage() {
   return (
@@ -8,10 +28,35 @@ export default function ResourcesPage() {
       <PageHeader
         title={resourcesPage.title}
         description={resourcesPage.description}
+        actions={<StatusBadge label="Resource Library Ready" variant="success" />}
       />
-      <SectionCard title={resourcesPage.skeletonTitle}>
-        {pageSkeletonMessage}
-      </SectionCard>
+      <ResourceKpiRow
+        resources={resources}
+        connectedSources={dataSourceHealth.length}
+      />
+
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="space-y-6">
+          <ResourceCategoryGrid
+            categories={resourceCategories}
+            resources={resources}
+          />
+          <FeaturedResources resources={resources} />
+          <ResourcesTable resources={resources} />
+        </div>
+
+        <aside className="space-y-6">
+          <StorageOverview overview={storageOverview} />
+          <RecentResourceUpdates updates={recentResourceUpdates} />
+          <DataSourceHealth sources={dataSourceHealth} />
+          <MvpDataPack items={mvpDataPackItems} />
+        </aside>
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+        <IntegrationNotes />
+        <FutureResourcePipeline integrations={futureResourcePipeline} />
+      </div>
     </div>
   );
 }
