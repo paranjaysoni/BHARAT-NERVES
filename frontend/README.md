@@ -99,7 +99,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #4 complete: mock data architecture implemented.
+Issue #5 complete: reusable dashboard component system added.
 
 Implemented:
 
@@ -118,6 +118,9 @@ Implemented:
 - Strongly typed domain interfaces in `src/types`
 - Navigation config moved into centralized data
 - Placeholder pages consuming data imports
+- Reusable shared dashboard components
+- Shared component export barrel
+- Internal `/component-preview` route
 - Frontend documentation
 
 Not implemented:
@@ -131,4 +134,4 @@ Not implemented:
 
 ## Next Issue
 
-Issue #5 - Build Reusable Dashboard Components
+Issue #6 - Create National Control Room Dashboard

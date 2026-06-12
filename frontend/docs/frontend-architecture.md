@@ -59,6 +59,47 @@ Current product routes under `src/app` are skeleton pages only:
 - `components/shared/SectionCard.tsx`: Basic card wrapper for page sections.
 - `components/shared/StatusBadge.tsx`: Small semantic status badge for simple status labels.
 
+## Component System
+
+Issue #5 added a reusable shared component system under `src/components/shared/`.
+
+The shared component set includes:
+
+- `PageHeader`
+- `SectionCard`
+- `MetricCard`
+- `StatusBadge`
+- `RiskPill`
+- `ProgressBar`
+- `AlertCard`
+- `ScenarioCard`
+- `AgentCard`
+- `TimelineItem`
+- `ChartCard`
+- `EmptyState`
+- `DataTable`
+- `MapPlaceholder`
+
+These components are presentation-only and should not contain backend calls, AI integrations, map libraries, simulation engines, or business calculations.
+
+## Shared Component Export Strategy
+
+Shared components are exported from `src/components/shared/index.ts`.
+
+Preferred import pattern:
+
+```ts
+import { MetricCard, SectionCard } from "@/components/shared";
+```
+
+Component props interfaces are exported alongside the components so future pages can compose typed configuration safely.
+
+## Component Preview Route
+
+The `/component-preview` route displays examples of all reusable components using mock data from `src/data/`.
+
+This route is an internal development preview, not a product page. It exists so the team can inspect component behavior in both light and dark themes before composing final dashboards.
+
 ## Data Folder Purpose
 
 The `data` folder holds typed MVP mock datasets and fixtures, including Odisha Cyclone Corridor nodes, routes, scenarios, agents, metrics, alerts, reports, resources, settings, navigation, user, corridor, and system status data.
