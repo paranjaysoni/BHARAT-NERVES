@@ -10,9 +10,9 @@ The App Router lives in `src/app`.
 - `page.tsx` redirects `/` to `/control-room`.
 - `globals.css` defines Tailwind layers, base styles, and theme variables.
 
-Current product routes under `src/app` are skeleton pages only:
+Current product routes under `src/app`:
 
-- `/control-room`
+- `/control-room`: National Control Room dashboard built with mock data and reusable dashboard components.
 - `/scenario-simulator`
 - `/trade-sentinel`
 - `/ai-parliament`
@@ -100,6 +100,21 @@ The `/component-preview` route displays examples of all reusable components usin
 
 This route is an internal development preview, not a product page. It exists so the team can inspect component behavior in both light and dark themes before composing final dashboards.
 
+## Control Room Page
+
+Issue #6 added the first composed product page at `/control-room`.
+
+The Control Room page uses:
+
+- `PageHeader` for page identity and status context.
+- `MetricCard` for high-level KPIs.
+- `MapPlaceholder` for the India Digital Twin / Odisha Corridor preview.
+- `AlertCard` for active alerts.
+- `ProgressBar` and `RiskPill` for system health and stress summaries.
+- `TimelineItem` for recent activity.
+
+Dashboard-specific composition components live in `src/components/dashboard/` and consume centralized mock data from `src/data/`. The page does not include real map integration, backend calls, AI logic, scenario simulation, NetworkX routing, or business calculations.
+
 ## Data Folder Purpose
 
 The `data` folder holds typed MVP mock datasets and fixtures, including Odisha Cyclone Corridor nodes, routes, scenarios, agents, metrics, alerts, reports, resources, settings, navigation, user, corridor, and system status data.
@@ -136,10 +151,10 @@ The `services` folder will hold frontend clients for future backend APIs and ext
 
 ## Product Pages
 
-The following pages exist as placeholders and do not contain real product logic yet:
+The following pages exist in the app:
 
-- Control Room
-- Scenario Simulator
+- Control Room: composed mock-data dashboard.
+- Scenario Simulator: placeholder.
 - Trade Sentinel
 - AI Parliament
 - Crisis Commander

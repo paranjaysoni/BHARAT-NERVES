@@ -58,6 +58,7 @@ frontend/
 │   ├── lib/
 │   ├── services/
 │   ├── data/
+│   │   ├── control-room.ts
 │   │   ├── nodes.ts
 │   │   ├── routes.ts
 │   │   ├── scenarios.ts
@@ -99,7 +100,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #5 complete: reusable dashboard component system added.
+Issue #6 complete: National Control Room Dashboard skeleton added.
 
 Implemented:
 
@@ -121,17 +122,21 @@ Implemented:
 - Reusable shared dashboard components
 - Shared component export barrel
 - Internal `/component-preview` route
+- National Control Room dashboard at `/control-room`
+- Dashboard-specific composition components in `src/components/dashboard`
+- Control Room mock data slice in `src/data/control-room.ts`
 - Frontend documentation
 
 Not implemented:
 
-- Real dashboard logic
-- Maps
+- Backend/API integrations
+- Real map integration
 - Charts
 - AI logic
-- Backend API integrations
-- Simulation or business logic
+- Scenario simulation
+- NetworkX routing
+- Business calculations
 
 ## Next Issue
 
-Issue #6 - Create National Control Room Dashboard
+Issue #7 - Create Scenario Simulator Page

@@ -1,6 +1,12 @@
 export { agents } from "./agents";
 export { alerts } from "./alerts";
 export { corridors, selectedCorridor } from "./corridors";
+export {
+  controlRoomActivityItems,
+  controlRoomFeaturedNodeIds,
+  controlRoomHealthItems,
+  controlRoomQuickActions
+} from "./control-room";
 export { metrics } from "./metrics";
 export {
   aiParliamentPage,
@@ -27,3 +33,9 @@ export type { NavigationIconName, NavigationItem } from "./navigation";
 export type { PlatformSettings } from "./settings";
 export type { SystemStatus } from "./system-status";
 export type { CurrentUser } from "./user";
+export type {
+  ControlRoomActivityItem,
+  ControlRoomHealthItem,
+  ControlRoomQuickAction,
+  HealthRiskLevel
+} from "./control-room";
