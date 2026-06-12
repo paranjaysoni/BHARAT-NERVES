@@ -61,7 +61,33 @@ Current product routes under `src/app` are skeleton pages only:
 
 ## Data Folder Purpose
 
-The `data` folder will hold MVP JSON datasets and fixtures, including future Odisha Cyclone Corridor nodes, routes, stress indicators, and impact assumptions.
+The `data` folder holds typed MVP mock datasets and fixtures, including Odisha Cyclone Corridor nodes, routes, scenarios, agents, metrics, alerts, reports, resources, settings, navigation, user, corridor, and system status data.
+
+## Mock Data Layer
+
+Issue #4 added a centralized mock data layer under `src/data/`.
+
+- `src/data/index.ts` exports all frontend mock data.
+- Pages and layout components should import shared mock data from `@/data`.
+- Shared domain interfaces live in `src/types/`.
+- Data files should remain static and should not contain business calculations, simulation engines, API calls, or AI logic.
+
+## Data Ownership
+
+Until backend APIs exist, `src/data/` owns prototype content for the frontend. Components may render data, but they should not define their own parallel datasets. This keeps navigation, placeholder page metadata, reports, resources, metrics, and corridor entities consistent across the app.
+
+When APIs are introduced, service clients in `src/services/` should become the boundary for remote data. Existing mock data should remain useful for tests, demos, and fallback development.
+
+## Import Patterns
+
+Prefer importing from centralized barrels:
+
+```ts
+import { navigationItems, nodes, routes } from "@/data";
+import type { AegisNode, AegisRoute } from "@/types";
+```
+
+Avoid hardcoding repeated dashboard, navigation, report, resource, or scenario data inside components.
 
 ## Services Folder Purpose
 

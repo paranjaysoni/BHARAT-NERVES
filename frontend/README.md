@@ -58,6 +58,20 @@ frontend/
 │   ├── lib/
 │   ├── services/
 │   ├── data/
+│   │   ├── nodes.ts
+│   │   ├── routes.ts
+│   │   ├── scenarios.ts
+│   │   ├── agents.ts
+│   │   ├── metrics.ts
+│   │   ├── alerts.ts
+│   │   ├── reports.ts
+│   │   ├── resources.ts
+│   │   ├── settings.ts
+│   │   ├── navigation.ts
+│   │   ├── user.ts
+│   │   ├── corridors.ts
+│   │   ├── system-status.ts
+│   │   └── index.ts
 │   ├── types/
 │   ├── constants/
 │   ├── styles/
@@ -85,7 +99,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #3 completed: global application layout and navigation added.
+Issue #4 complete: mock data architecture implemented.
 
 Implemented:
 
@@ -100,7 +114,10 @@ Implemented:
 - Simple theme toggle
 - Placeholder pages for all primary app sections
 - Shared `PageHeader`, `SectionCard`, and `StatusBadge` components
-- Placeholder index files
+- Centralized mock data layer in `src/data`
+- Strongly typed domain interfaces in `src/types`
+- Navigation config moved into centralized data
+- Placeholder pages consuming data imports
 - Frontend documentation
 
 Not implemented:
@@ -114,4 +131,4 @@ Not implemented:
 
 ## Next Issue
 
-Issue #4 - Create Frontend Mock Data Layer
+Issue #5 - Build Reusable Dashboard Components

@@ -1,14 +1,17 @@
 import { PageHeader } from "@/components/shared/PageHeader";
 import { SectionCard } from "@/components/shared/SectionCard";
+import { pageSkeletonMessage, settingsPage } from "@/data";
 
 export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Settings"
-        description="Future configuration area for platform preferences, corridor scope, and user-level options."
+        title={settingsPage.title}
+        description={settingsPage.description}
       />
-      <SectionCard title="Settings Skeleton">Page skeleton ready.</SectionCard>
+      <SectionCard title={settingsPage.skeletonTitle}>
+        {pageSkeletonMessage}
+      </SectionCard>
     </div>
   );
 }

@@ -1,15 +1,16 @@
 import { PageHeader } from "@/components/shared/PageHeader";
 import { SectionCard } from "@/components/shared/SectionCard";
+import { impactDashboardPage, pageSkeletonMessage } from "@/data";
 
 export default function ImpactDashboardPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Impact Dashboard"
-        description="Future analytics view for economic impact, carbon impact, and resilience indicators."
+        title={impactDashboardPage.title}
+        description={impactDashboardPage.description}
       />
-      <SectionCard title="Impact Dashboard Skeleton">
-        Page skeleton ready.
+      <SectionCard title={impactDashboardPage.skeletonTitle}>
+        {pageSkeletonMessage}
       </SectionCard>
     </div>
   );

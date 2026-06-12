@@ -2,6 +2,7 @@
 
 import { Bell, ChevronDown } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { alerts, currentUser, selectedCorridor, settings } from "@/data";
 
 export function Topbar() {
   return (
@@ -9,7 +10,7 @@ export function Topbar() {
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Bharat Nerves Platform
+            {currentUser.organization}
           </p>
           <h1 className="text-lg font-semibold text-foreground">
             National Control Room
@@ -18,7 +19,7 @@ export function Topbar() {
 
         <div className="flex flex-wrap items-center gap-3">
           <button className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-card-foreground transition-colors hover:bg-secondary">
-            India (All Corridors)
+            {selectedCorridor.name}
             <ChevronDown className="h-4 w-4 text-muted-foreground" />
           </button>
 
@@ -28,15 +29,17 @@ export function Topbar() {
           >
             <Bell className="h-4 w-4" aria-hidden="true" />
             <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
-              3
+              {alerts.length}
             </span>
           </button>
 
           <div className="rounded-md border border-border bg-card px-3 py-2 text-right">
             <p className="text-sm font-semibold text-card-foreground">
-              11:42 AM
+              {settings.displayTime}
             </p>
-            <p className="text-xs text-muted-foreground">28 Nov 2024</p>
+            <p className="text-xs text-muted-foreground">
+              {settings.displayDate}
+            </p>
           </div>
 
           <ThemeToggle />

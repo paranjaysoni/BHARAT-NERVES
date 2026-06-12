@@ -15,18 +15,20 @@ import {
   ShieldAlert
 } from "lucide-react";
 import clsx from "clsx";
+import { navigationItems, systemStatus } from "@/data";
+import type { NavigationIconName } from "@/data";
 
-const navigationItems = [
-  { label: "Control Room", href: "/control-room", icon: Home },
-  { label: "Scenario Simulator", href: "/scenario-simulator", icon: Activity },
-  { label: "Trade Sentinel", href: "/trade-sentinel", icon: Network },
-  { label: "AI Parliament", href: "/ai-parliament", icon: Brain },
-  { label: "Crisis Commander", href: "/crisis-commander", icon: ShieldAlert },
-  { label: "Impact Dashboard", href: "/impact-dashboard", icon: BarChart3 },
-  { label: "Resources", href: "/resources", icon: Database },
-  { label: "Reports", href: "/reports", icon: FileText },
-  { label: "Settings", href: "/settings", icon: Settings }
-];
+const iconMap: Record<NavigationIconName, typeof Home> = {
+  Activity,
+  BarChart3,
+  Brain,
+  Database,
+  FileText,
+  Home,
+  Network,
+  Settings,
+  ShieldAlert
+};
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -48,7 +50,7 @@ export function Sidebar() {
 
         <nav className="flex-1 space-y-1 px-3 py-4" aria-label="Primary">
           {navigationItems.map((item) => {
-            const Icon = item.icon;
+            const Icon = iconMap[item.iconName];
             const isActive = pathname === item.href;
 
             return (
@@ -63,7 +65,7 @@ export function Sidebar() {
                 )}
               >
                 <Icon className="h-4 w-4" aria-hidden="true" />
-                <span>{item.label}</span>
+                <span>{item.title}</span>
               </Link>
             );
           })}
@@ -76,7 +78,9 @@ export function Sidebar() {
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   System Status
                 </p>
-                <p className="mt-1 text-sm font-semibold">Operational</p>
+                <p className="mt-1 text-sm font-semibold">
+                  {systemStatus.status}
+                </p>
               </div>
               <span className="relative flex h-3 w-3">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
@@ -84,7 +88,7 @@ export function Sidebar() {
               </span>
             </div>
             <p className="mt-3 text-xs text-muted-foreground">
-              Project Aegis v1.0.0
+              {systemStatus.version}
             </p>
           </div>
         </div>
