@@ -82,6 +82,39 @@ Recommended path:
 4. Replace direct page imports with a service call or server component data boundary.
 5. Preserve mock data for offline demos and component tests.
 
+## Report Data Structure
+
+Issue #13 expanded `src/data/reports.ts` into the full source of truth for the Reports page.
+
+The file includes:
+
+- `reports`: 22 realistic typed `Report` objects covering Crisis, Trade, Impact, AI Parliament, Carbon, Infrastructure, Logistics, Executive Briefing, Risk, Health, Policy, Environment, Operations, Technology, Baseline, Response, and Ports categories.
+- `reportCategories`: 8 `ReportCategoryCard` objects shown in the category grid.
+- `recentReportActivities`: 5 timeline entries for the recent reports sidebar panel.
+- `reportActivityTimeline`: 4 chronological timeline entries for the activity log.
+- `featuredIntelligenceBrief`: Single `FeaturedBrief` — the premium executive card.
+- `scenarioReports`: 5 compact report references linked to the active Cyclone Landfall scenario.
+- `futureReportingPipeline`: 7 planned reporting capabilities in the roadmap section.
+- `reportStatistics`: Object with `reportsThisWeek`, `reportsThisMonth`, `avgReviewTimeHours`, `criticalFindings`.
+- `reportsPageMeta`: Page title and description.
+
+Report rows use the expanded `Report` interface from `src/types/report.ts`, which now includes `priority`, `version`, `executiveSummary`, `keyFindings`, and `recommendations` fields — used by the `ReportPreview` panel.
+
+## Report Categories
+
+Report categories in `src/data/reports.ts` use the `ReportCategoryCard` type (defined in `src/types/report.ts`). Each category card shows count, description, and status. Categories are independent of the `Report.category` field — they are display constructs for the UI grid, not foreign-key relationships.
+
+## Reports Migration To Backend APIs
+
+When a backend reports API is introduced:
+
+1. Keep `Report` interface fields stable — they are already production-shaped.
+2. Add a reports listing endpoint in `src/services/`.
+3. Replace page-level `reports` imports with a server component or service call.
+4. Report preview content (summary, findings, recommendations) should be stored in the API response, not re-derived.
+5. Keep `src/data/reports.ts` as the demo fixture for offline development, tests, and demos.
+6. Report categories can either come from a separate API endpoint or be derived from the report list dynamically.
+
 ## Naming Conventions
 
 - Use plural names for dataset exports: `nodes`, `routes`, `reports`.
