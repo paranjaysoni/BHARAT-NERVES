@@ -3,6 +3,17 @@ export type { AegisAlert, AlertSeverity } from "./alert";
 export type { Corridor, CorridorStatus } from "./corridor";
 export type { Metric, MetricTrend } from "./metric";
 export type { AegisNode, AegisNodeStatus, AegisNodeType } from "./node";
+export type {
+  AgentRecommendation,
+  FinalRecommendation,
+  ParliamentAgentStatus,
+  ParliamentConflictLevel,
+  ParliamentConsensus,
+  ParliamentReadiness,
+  ParliamentSession,
+  ParliamentTimelineItem,
+  StakeholderPriority
+} from "./parliament";
 export type { Report, ReportStatus } from "./report";
 export type { Resource, ResourceType } from "./resource";
 export type { AegisRoute, AegisRouteStatus } from "./route";

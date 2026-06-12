@@ -15,7 +15,7 @@ Current product routes under `src/app`:
 - `/control-room`: National Control Room dashboard built with mock data and reusable dashboard components.
 - `/scenario-simulator`: Scenario Simulator skeleton with local scenario selection and mock impact preview.
 - `/trade-sentinel`: Trade Sentinel dashboard skeleton with mock trade intelligence.
-- `/ai-parliament`
+- `/ai-parliament`: AI Parliament skeleton with mock multi-agent recommendations.
 - `/crisis-commander`
 - `/impact-dashboard`
 - `/resources`
@@ -152,6 +152,25 @@ Trade-specific mock data lives in `src/data/trade.ts` and `src/data/shipments.ts
 
 This page is mock trade intelligence only. It does not include real trade APIs, live port data, backend calls, real map integration, AI logic, simulation logic, carbon calculation, business calculations, or live data fetching.
 
+## AI Parliament Page
+
+Issue #9 added the `/ai-parliament` page.
+
+The AI Parliament page uses:
+
+- `PageHeader` for page identity and deliberation readiness.
+- `AgentCard` for participating stakeholder agents.
+- `SectionCard` for session, consensus, recommendation, and note panels.
+- `MetricCard` for the consensus score.
+- `ProgressBar` for consensus and stakeholder priority breakdown.
+- `StatusBadge` for readiness, conflict, and matrix status.
+- `TimelineItem` for the recommendation timeline.
+- `DataTable` for the agent recommendation matrix.
+
+Agent-specific composition components live in `src/components/agents/`. Mock parliament data lives in `src/data/parliament.ts`, with supporting types in `src/types/parliament.ts`.
+
+This page uses mock data only. It does not include real Gemini/OpenAI calls, backend APIs, agent orchestration, decision engines, simulation logic, or live data fetching. Future real AI integration should use strict structured JSON output validated before rendering.
+
 ## Data Folder Purpose
 
 The `data` folder holds typed MVP mock datasets and fixtures, including Odisha Cyclone Corridor nodes, routes, scenarios, agents, metrics, alerts, reports, resources, settings, navigation, user, corridor, and system status data.
@@ -193,7 +212,7 @@ The following pages exist in the app:
 - Control Room: composed mock-data dashboard.
 - Scenario Simulator: mock-data skeleton with local selection state.
 - Trade Sentinel: mock trade intelligence dashboard.
-- AI Parliament
+- AI Parliament: mock multi-agent decision support page.
 - Crisis Commander
 - Impact Dashboard
 - Resources
