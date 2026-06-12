@@ -60,6 +60,8 @@ frontend/
 │   ├── data/
 │   │   ├── control-room.ts
 │   │   ├── scenario-simulator.ts
+│   │   ├── trade.ts
+│   │   ├── shipments.ts
 │   │   ├── nodes.ts
 │   │   ├── routes.ts
 │   │   ├── scenarios.ts
@@ -101,7 +103,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #7 complete: Scenario Simulator skeleton added.
+Issue #8 complete: Trade Sentinel dashboard skeleton added.
 
 Implemented:
 
@@ -129,6 +131,10 @@ Implemented:
 - Scenario Simulator page at `/scenario-simulator`
 - Scenario-specific composition components in `src/components/scenario`
 - Scenario Simulator mock data slice in `src/data/scenario-simulator.ts`
+- Trade Sentinel dashboard at `/trade-sentinel`
+- Trade-specific dashboard components in `src/components/dashboard`
+- Trade mock data in `src/data/trade.ts`
+- Shipment mock data in `src/data/shipments.ts`
 - Frontend documentation
 
 Not implemented:
@@ -143,4 +149,4 @@ Not implemented:
 
 ## Next Issue
 
-Issue #8 - Create Trade Sentinel Dashboard
+Issue #9 - Create AI Parliament Page

@@ -14,7 +14,7 @@ Current product routes under `src/app`:
 
 - `/control-room`: National Control Room dashboard built with mock data and reusable dashboard components.
 - `/scenario-simulator`: Scenario Simulator skeleton with local scenario selection and mock impact preview.
-- `/trade-sentinel`
+- `/trade-sentinel`: Trade Sentinel dashboard skeleton with mock trade intelligence.
 - `/ai-parliament`
 - `/crisis-commander`
 - `/impact-dashboard`
@@ -133,6 +133,25 @@ Scenario-specific composition components live in `src/components/scenario/`. The
 
 Scenario selection and the control buttons use local React state only. The page does not include a real simulation engine, backend APIs, NetworkX routing, real AI, real scenario calculations, real map integration, or live data fetching.
 
+## Trade Sentinel Page
+
+Issue #8 added the `/trade-sentinel` page.
+
+The Trade Sentinel page uses:
+
+- `PageHeader` for page identity and monitoring status.
+- `MetricCard` for trade KPIs.
+- `MapPlaceholder` for the trade network preview.
+- `ChartCard` for a trade flow trend placeholder.
+- `AlertCard` for active trade alerts.
+- `StatusBadge` and `RiskPill` for port, shipment, commodity, and corridor status.
+- `DataTable` for the shipment delay table.
+- `ProgressBar` for corridor health summaries.
+
+Trade-specific mock data lives in `src/data/trade.ts` and `src/data/shipments.ts`, with supporting types in `src/types/trade.ts` and `src/types/shipment.ts`.
+
+This page is mock trade intelligence only. It does not include real trade APIs, live port data, backend calls, real map integration, AI logic, simulation logic, carbon calculation, business calculations, or live data fetching.
+
 ## Data Folder Purpose
 
 The `data` folder holds typed MVP mock datasets and fixtures, including Odisha Cyclone Corridor nodes, routes, scenarios, agents, metrics, alerts, reports, resources, settings, navigation, user, corridor, and system status data.
@@ -173,7 +192,7 @@ The following pages exist in the app:
 
 - Control Room: composed mock-data dashboard.
 - Scenario Simulator: mock-data skeleton with local selection state.
-- Trade Sentinel
+- Trade Sentinel: mock trade intelligence dashboard.
 - AI Parliament
 - Crisis Commander
 - Impact Dashboard

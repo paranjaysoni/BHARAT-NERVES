@@ -7,3 +7,15 @@ export type { Report, ReportStatus } from "./report";
 export type { Resource, ResourceType } from "./resource";
 export type { AegisRoute, AegisRouteStatus } from "./route";
 export type { Scenario, ScenarioSeverity } from "./scenario";
+export type { Shipment, ShipmentPriority, ShipmentStatus } from "./shipment";
+export type {
+  CommodityStatus,
+  FutureRiskIndicator,
+  PortOperatingStatus,
+  PortStatus,
+  TradeAlert,
+  TradeCorridorHealth,
+  TradeFlowTrendPoint,
+  TradeKpi,
+  TradeRiskLevel
+} from "./trade";
