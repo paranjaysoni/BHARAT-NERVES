@@ -16,7 +16,7 @@ Current product routes under `src/app`:
 - `/scenario-simulator`: Scenario Simulator skeleton with local scenario selection and mock impact preview.
 - `/trade-sentinel`: Trade Sentinel dashboard skeleton with mock trade intelligence.
 - `/ai-parliament`: AI Parliament skeleton with mock multi-agent recommendations.
-- `/crisis-commander`
+- `/crisis-commander`: Crisis Commander executive command page with mock response plan.
 - `/impact-dashboard`
 - `/resources`
 - `/reports`
@@ -171,6 +171,24 @@ Agent-specific composition components live in `src/components/agents/`. Mock par
 
 This page uses mock data only. It does not include real Gemini/OpenAI calls, backend APIs, agent orchestration, decision engines, simulation logic, or live data fetching. Future real AI integration should use strict structured JSON output validated before rendering.
 
+## Crisis Commander Page
+
+Issue #10 added the `/crisis-commander` page.
+
+The Crisis Commander page uses:
+
+- `PageHeader` for page identity and command status.
+- `MetricCard` for crisis KPIs and expected outcomes.
+- `AlertCard` for active incidents from Control Room and Trade Sentinel.
+- `TimelineItem` for command timeline events.
+- `DataTable` for the response matrix.
+- `ProgressBar`, `RiskPill`, and `StatusBadge` for risk and approval state.
+- `SectionCard` for executive summary, situation overview, action plan, resource deployment, approval, and checklist panels.
+
+Commander-specific composition components live in `src/components/commander/`. Mock commander data lives in `src/data/crisis-commander.ts`, with supporting types in `src/types/crisis-commander.ts`.
+
+Crisis Commander is downstream of AI Parliament and Trade Sentinel. AI Parliament provides structured mock recommendations and consensus context; Trade Sentinel contributes trade alerts, port pressure, and freight delay context. This page does not include backend APIs, real AI calls, real decision engines, simulation execution, live data fetching, resource optimization algorithms, or report generation backend.
+
 ## Data Folder Purpose
 
 The `data` folder holds typed MVP mock datasets and fixtures, including Odisha Cyclone Corridor nodes, routes, scenarios, agents, metrics, alerts, reports, resources, settings, navigation, user, corridor, and system status data.
@@ -213,7 +231,7 @@ The following pages exist in the app:
 - Scenario Simulator: mock-data skeleton with local selection state.
 - Trade Sentinel: mock trade intelligence dashboard.
 - AI Parliament: mock multi-agent decision support page.
-- Crisis Commander
+- Crisis Commander: mock executive command and response plan page.
 - Impact Dashboard
 - Resources
 - Reports
