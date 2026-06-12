@@ -1,15 +1,16 @@
 import { PageHeader } from "@/components/shared/PageHeader";
 import { SectionCard } from "@/components/shared/SectionCard";
+import { pageSkeletonMessage, scenarioSimulatorPage } from "@/data";
 
 export default function ScenarioSimulatorPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Scenario Simulator"
-        description="Future workspace for testing disruption scenarios and comparing corridor response options."
+        title={scenarioSimulatorPage.title}
+        description={scenarioSimulatorPage.description}
       />
-      <SectionCard title="Scenario Simulator Skeleton">
-        Page skeleton ready.
+      <SectionCard title={scenarioSimulatorPage.skeletonTitle}>
+        {pageSkeletonMessage}
       </SectionCard>
     </div>
   );
