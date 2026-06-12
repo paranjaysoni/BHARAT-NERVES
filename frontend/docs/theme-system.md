@@ -31,11 +31,22 @@ The variables use HSL channel values so Tailwind utilities can reference them wi
 - `danger`
 - `info`
 
-## Future Theme Toggle Plan
+## Theme Switching — Implemented (Issue #14)
 
-A later issue should add a small theme provider and user-facing toggle. The toggle should persist the selected theme, respect system preference where appropriate, and apply the `dark` class without changing component APIs.
+Issue #14 added functional theme switching via two entry points:
 
-`next-themes` may be added later if the project needs persisted theme state and hydration-safe switching.
+**1. ThemeToggle (Topbar)**
+`src/components/layout/ThemeToggle.tsx` provides a compact light/dark toggle button in the Topbar. On mount it reads `localStorage` under the key `project-aegis-theme` and applies the correct class. On click it toggles between light and dark, writes the choice to `localStorage`, and updates `document.documentElement`.
+
+**2. AppearanceSettings (Settings page)**
+`src/components/settings/AppearanceSettings.tsx` provides a three-way selector on the Settings page:
+- **Light** — applies light mode and stores `"light"` in `localStorage`
+- **Dark** — applies dark mode and stores `"dark"` in `localStorage`
+- **System** — reads `window.matchMedia("(prefers-color-scheme: dark)")` and applies accordingly, stores `"system"`
+
+Both components use the same key `project-aegis-theme` so they stay consistent on page reload. No React context, no theme provider, no server component hydration complexity — purely DOM + `localStorage`.
+
+`next-themes` may be added in a future phase if hydration-safe multi-layout theme support is needed. The current approach is sufficient for the MVP single-layout architecture.
 
 ## Developer Rules
 

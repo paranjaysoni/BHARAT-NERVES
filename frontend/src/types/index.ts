@@ -53,6 +53,22 @@ export type {
   ReportStatus
 } from "./report";
 export type { Resource, ResourceStatus, ResourceType } from "./resource";
+export type {
+  DataSourceItem,
+  DataSourceStatus,
+  DevSettingItem,
+  FutureIntegrationItem,
+  IntegrationItem,
+  IntegrationStatus,
+  NotificationChannel,
+  NotificationSettings,
+  PlatformInfo,
+  PlatformSettings,
+  SecurityItem,
+  SecurityStatus,
+  SystemHealthItem,
+  ThemePreference
+} from "./settings";
 export type { AegisRoute, AegisRouteStatus } from "./route";
 export type { Scenario, ScenarioSeverity } from "./scenario";
 export type { Shipment, ShipmentPriority, ShipmentStatus } from "./shipment";

@@ -108,7 +108,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #13 complete: Reports page added.
+Issue #14 complete: Settings page added. Skeleton phase complete.
 
 Implemented:
 
@@ -157,6 +157,10 @@ Implemented:
 - Reports-specific composition components in `src/components/reports`
 - Expanded report mock data in `src/data/reports.ts` (22 reports with full executive preview content)
 - Interactive report selection with local state preview panel
+- Settings page at `/settings`
+- Settings-specific composition components in `src/components/settings`
+- Full settings data in `src/data/settings.ts`
+- Functional theme switching (Light / Dark / System) shared between Topbar and Settings page
 - Frontend documentation
 
 Not implemented:
@@ -171,6 +175,17 @@ Not implemented:
 - NetworkX routing
 - Business calculations
 
-## Next Issue
+## Next Phase
 
-Issue #14 - Create Settings Page
+Phase 2 — Intelligence Layer & Real Product Logic
+
+Skeleton phase complete. All 9 product pages implemented with mock data.
+
+Suggested Phase 2 priorities:
+- Real map integration (MapLibre GL or Leaflet)
+- Live weather data feed (IMD API)
+- Port AIS data integration
+- Authentication and user management
+- Recharts → live data binding
+- Backend API layer (Next.js API routes or separate service)
+- AI Parliament live agent calls (Gemini 2.5)
