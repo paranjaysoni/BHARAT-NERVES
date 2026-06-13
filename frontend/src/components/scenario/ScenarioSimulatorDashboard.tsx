@@ -44,9 +44,9 @@ export function ScenarioSimulatorDashboard() {
   }
 
   return (
-    <div className="space-y-8">
-      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(340px,0.85fr)]">
-        <div className="space-y-6">
+    <div className="app-page-stack">
+      <section className="app-section-grid xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.85fr)]">
+        <div className="app-column-stack">
           <ScenarioGrid
             scenarios={scenarios}
             impacts={scenarioSimulationImpacts}
@@ -60,7 +60,7 @@ export function ScenarioSimulatorDashboard() {
           <ScenarioTimeline />
         </div>
 
-        <aside className="space-y-6">
+        <aside className="app-column-stack">
           <SelectedScenarioPanel
             scenario={selectedScenario}
             impact={selectedImpact}

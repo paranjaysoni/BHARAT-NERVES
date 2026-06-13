@@ -26,11 +26,11 @@ export function AlertCard({
   icon
 }: AlertCardProps) {
   return (
-    <article className="rounded-lg border border-border bg-card p-4 text-card-foreground">
-      <div className="flex gap-3">
+    <article className="rounded-md border border-border bg-card p-3.5 text-card-foreground">
+      <div className="flex gap-2.5">
         <div
           className={clsx(
-            "flex h-10 w-10 shrink-0 items-center justify-center rounded-md border",
+            "flex h-8 w-8 shrink-0 items-center justify-center rounded-md border",
             severityClasses[severity]
           )}
         >
@@ -43,10 +43,10 @@ export function AlertCard({
               {severity}
             </span>
           </div>
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          <p className="mt-1 text-sm leading-5 text-muted-foreground">
             {description}
           </p>
-          <time className="mt-2 block text-xs text-muted-foreground">
+          <time className="mt-1.5 block text-xs text-muted-foreground">
             {timestamp}
           </time>
         </div>

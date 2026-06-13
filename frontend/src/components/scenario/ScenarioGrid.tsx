@@ -26,7 +26,7 @@ export function ScenarioGrid({
   onSelectScenario
 }: ScenarioGridProps) {
   return (
-    <section className="grid gap-4 md:grid-cols-2">
+    <section className="grid gap-3 md:grid-cols-2">
       {scenarios.map((scenario) => {
         const impact = impacts.find((item) => item.scenarioId === scenario.id);
 

@@ -10,7 +10,7 @@ export interface ChartCardProps {
 export function ChartCard({ title, description, children }: ChartCardProps) {
   return (
     <SectionCard title={title} description={description}>
-      <div className="flex min-h-56 items-center justify-center rounded-md border border-dashed border-border bg-background">
+      <div className="flex min-h-48 items-center justify-center rounded-md border border-dashed border-border bg-background">
         {children}
       </div>
     </SectionCard>

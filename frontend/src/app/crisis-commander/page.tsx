@@ -17,7 +17,7 @@ import { crisisCommanderPage } from "@/data";
 
 export default function CrisisCommanderPage() {
   return (
-    <div className="space-y-8">
+    <div className="app-page-stack">
       <PageHeader
         title={crisisCommanderPage.title}
         description={crisisCommanderPage.description}
@@ -26,15 +26,15 @@ export default function CrisisCommanderPage() {
 
       <CrisisKpiRow />
 
-      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(340px,0.85fr)]">
-        <div className="space-y-6">
+      <section className="app-section-grid xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.85fr)]">
+        <div className="app-column-stack">
           <SituationOverview />
           <ActionPlan />
           <ResourceDeployment />
           <CommandTimeline />
         </div>
 
-        <aside className="space-y-6">
+        <aside className="app-column-stack">
           <ExecutiveSummary />
           <ActiveIncidents />
           <RiskAssessment />

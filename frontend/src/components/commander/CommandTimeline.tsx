@@ -7,7 +7,7 @@ export function CommandTimeline() {
       title="Command Timeline"
       description="Static command sequence for the current response plan."
     >
-      <div className="space-y-5">
+      <div className="app-scroll-region space-y-4 pr-1">
         {commandTimeline.map((item) => (
           <TimelineItem
             key={item.id}

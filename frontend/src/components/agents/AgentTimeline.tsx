@@ -7,7 +7,7 @@ export function AgentTimeline() {
       title="Recommendation Timeline"
       description="Static multi-agent deliberation flow. No AI process is running."
     >
-      <div className="space-y-5">
+      <div className="app-scroll-region space-y-4 pr-1">
         {parliamentTimeline.map((item) => (
           <TimelineItem
             key={item.id}

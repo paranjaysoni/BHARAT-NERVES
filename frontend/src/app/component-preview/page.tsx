@@ -82,14 +82,14 @@ export default function ComponentPreviewPage() {
   const previewAlert = alerts[0];
 
   return (
-    <div className="space-y-8">
+    <div className="app-page-stack">
       <PageHeader
         title="Component Preview"
         description="Internal development route for inspecting reusable Project Aegis dashboard components before composing full product pages."
         actions={<StatusBadge label="Development" variant="info" />}
       />
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className="app-kpi-grid md:grid-cols-2 xl:grid-cols-4">
         {previewMetrics.map((metric, index) => (
           <MetricCard
             key={metric.id}
@@ -104,7 +104,7 @@ export default function ComponentPreviewPage() {
         ))}
       </section>
 
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="app-section-grid xl:grid-cols-2">
         <SectionCard
           title="Status and Risk Primitives"
           description="Reusable compact indicators for operational surfaces."
@@ -135,7 +135,7 @@ export default function ComponentPreviewPage() {
         />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="app-section-grid xl:grid-cols-2">
         <ScenarioCard
           title={previewScenario.title}
           description={previewScenario.description}
@@ -155,7 +155,7 @@ export default function ComponentPreviewPage() {
         />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="app-section-grid xl:grid-cols-2">
         <ChartCard
           title="Chart Card"
           description="Wrapper for future Recharts visualizations."

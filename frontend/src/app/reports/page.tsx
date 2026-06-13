@@ -31,7 +31,7 @@ export default function ReportsPage() {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
   return (
-    <div className="space-y-6">
+    <div className="app-page-stack">
       <PageHeader
         title={reportsPageMeta.title}
         description={reportsPageMeta.description}
@@ -40,8 +40,8 @@ export default function ReportsPage() {
 
       <ReportKpiRow />
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="space-y-6">
+      <div className="app-section-grid xl:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="app-column-stack">
           <ReportCategories categories={reportCategories} />
 
           <ReportsTable
@@ -53,7 +53,7 @@ export default function ReportsPage() {
           <ReportPreview report={selectedReport} />
         </div>
 
-        <aside className="space-y-6">
+        <aside className="app-column-stack">
           <RecentReports activities={recentReportActivities} />
 
           <ReportStatistics
@@ -69,7 +69,7 @@ export default function ReportsPage() {
         </aside>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+      <div className="app-section-grid xl:grid-cols-[0.85fr_1.15fr]">
         <ReportTimeline activities={reportActivityTimeline} />
         <FutureReportingPipeline items={futureReportingPipeline} />
       </div>

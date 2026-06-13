@@ -12,7 +12,7 @@ const iconByKpiId = {
 
 export function CrisisKpiRow() {
   return (
-    <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+    <section className="app-kpi-grid xl:grid-cols-5">
       {crisisKpis.map((kpi) => (
         <MetricCard
           key={kpi.id}

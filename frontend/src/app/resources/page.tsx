@@ -24,7 +24,7 @@ import {
 
 export default function ResourcesPage() {
   return (
-    <div className="space-y-6">
+    <div className="app-page-stack">
       <PageHeader
         title={resourcesPage.title}
         description={resourcesPage.description}
@@ -35,8 +35,8 @@ export default function ResourcesPage() {
         connectedSources={dataSourceHealth.length}
       />
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="space-y-6">
+      <div className="app-section-grid xl:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="app-column-stack">
           <ResourceCategoryGrid
             categories={resourceCategories}
             resources={resources}
@@ -45,7 +45,7 @@ export default function ResourcesPage() {
           <ResourcesTable resources={resources} />
         </div>
 
-        <aside className="space-y-6">
+        <aside className="app-column-stack">
           <StorageOverview overview={storageOverview} />
           <RecentResourceUpdates updates={recentResourceUpdates} />
           <DataSourceHealth sources={dataSourceHealth} />
@@ -53,7 +53,7 @@ export default function ResourcesPage() {
         </aside>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+      <div className="app-section-grid xl:grid-cols-[0.85fr_1.15fr]">
         <IntegrationNotes />
         <FutureResourcePipeline integrations={futureResourcePipeline} />
       </div>

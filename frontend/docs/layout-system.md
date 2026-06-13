@@ -12,6 +12,8 @@ The layout system defines the global application shell for the Bharat Nerves Pla
 
 The root Next.js layout wraps all route content in `AppShell`, so future pages automatically inherit the global navigation and spacing.
 
+Issue #15 tightened the shell for desktop density. The desktop sidebar is 220px wide, the topbar targets a compact 48px to 56px height, and the main content area uses viewport-aware height with reduced global padding.
+
 ## Sidebar Structure
 
 `src/components/layout/Sidebar.tsx` contains:
@@ -23,6 +25,8 @@ The root Next.js layout wraps all route content in `AppShell`, so future pages a
 - System Status card with operational status and version label
 
 The sidebar is fixed on desktop and uses semantic theme classes such as `bg-card`, `text-card-foreground`, `border-border`, `bg-primary`, and `text-muted-foreground`.
+
+Desktop sidebar width should stay near 220px unless navigation labels change materially. Keep logo, menu item, and footer status spacing compact.
 
 ## Topbar Structure
 
@@ -36,6 +40,20 @@ The sidebar is fixed on desktop and uses semantic theme classes such as `bg-card
 - Theme toggle
 
 The topbar is sticky and uses background, card, border, foreground, and muted tokens.
+
+Topbar controls should use compact 36px control heights where possible so the bar does not consume dashboard viewport space.
+
+## Density Classes
+
+Shared density helpers live in `src/app/globals.css`:
+
+- `app-page-stack`: top-level route spacing.
+- `app-section-grid`: major dashboard grids.
+- `app-column-stack`: stacked panels inside a column.
+- `app-kpi-grid`: KPI rows.
+- `app-scroll-region`: long internal panel content.
+
+See `docs/layout-refinement.md` for the full Issue #15 density standard.
 
 ## Route List
 

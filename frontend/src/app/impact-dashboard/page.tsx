@@ -17,7 +17,7 @@ import { impactDashboardPage } from "@/data";
 
 export default function ImpactDashboardPage() {
   return (
-    <div className="space-y-8">
+    <div className="app-page-stack">
       <PageHeader
         title={impactDashboardPage.title}
         description={impactDashboardPage.description}
@@ -26,15 +26,15 @@ export default function ImpactDashboardPage() {
 
       <ImpactKpiRow />
 
-      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.55fr)_minmax(340px,0.85fr)]">
-        <div className="space-y-6">
+      <section className="app-section-grid xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.85fr)]">
+        <div className="app-column-stack">
           <ImpactOverTimeChart />
           <RecoveryComparisonChart />
           <SectorImpactBreakdown />
           <GeographicImpactPanel />
         </div>
 
-        <aside className="space-y-6">
+        <aside className="app-column-stack">
           <ImpactSummary />
           <RiskDistribution />
           <ResilienceRecoveryScore />

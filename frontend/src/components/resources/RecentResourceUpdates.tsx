@@ -11,7 +11,7 @@ export function RecentResourceUpdates({ updates }: RecentResourceUpdatesProps) {
       title="Recent Updates"
       description="Latest staged changes in the MVP resource library."
     >
-      <div className="space-y-4">
+      <div className="app-scroll-region space-y-4 pr-1">
         {updates.map((update) => (
           <TimelineItem
             key={update.id}

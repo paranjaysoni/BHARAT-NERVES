@@ -42,21 +42,23 @@ export function MetricCard({
   return (
     <article
       className={clsx(
-        "rounded-lg border border-border bg-card p-5 text-card-foreground",
+        "rounded-md border border-border bg-card p-3.5 text-card-foreground lg:p-4",
         className
       )}
     >
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <p className="mt-3 text-3xl font-semibold tracking-normal text-foreground">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="truncate text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            {title}
+          </p>
+          <p className="mt-2 text-2xl font-semibold tracking-normal text-foreground">
             {value}
           </p>
         </div>
         {icon ? (
           <div
             className={clsx(
-              "flex h-10 w-10 items-center justify-center rounded-md bg-secondary",
+              "flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-secondary",
               statusClasses[status]
             )}
           >
@@ -65,7 +67,7 @@ export function MetricCard({
         ) : null}
       </div>
       {subtitle || trend ? (
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+        <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
           {trend ? (
             <span className={clsx("font-medium", trendClasses[trendDirection])}>
               {trend}

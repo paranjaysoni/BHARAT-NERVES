@@ -108,7 +108,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #14 complete: Settings page added. Skeleton phase complete.
+Issue #15 complete: Global layout refinement applied. Skeleton phase complete.
 
 Implemented:
 
@@ -161,6 +161,8 @@ Implemented:
 - Settings-specific composition components in `src/components/settings`
 - Full settings data in `src/data/settings.ts`
 - Functional theme switching (Light / Dark / System) shared between Topbar and Settings page
+- Global layout density refinement for AppShell, Sidebar, Topbar, PageHeader, cards, KPI rows, grids, tables, and long scroll regions
+- `frontend/docs/layout-refinement.md` density, spacing, viewport, and scrolling standards
 - Frontend documentation
 
 Not implemented:

@@ -15,7 +15,7 @@ export function DigitalTwinOverview() {
       className="h-full"
       action={<StatusBadge label={selectedCorridor.status} variant="warning" size="sm" />}
     >
-      <div className="space-y-4">
+      <div className="space-y-3">
         <MapPlaceholder
           title={`${selectedCorridor.name} Preview`}
           description={`${nodes.length} monitored demo nodes and ${routes.length} route links represented as a polished placeholder. Leaflet integration is planned for a later issue.`}

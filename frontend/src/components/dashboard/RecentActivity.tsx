@@ -7,7 +7,7 @@ export function RecentActivity() {
       title="Recent Activity"
       description="Mock decision and monitoring timeline for the control room."
     >
-      <div className="space-y-5">
+      <div className="app-scroll-region space-y-4 pr-1">
         {controlRoomActivityItems.map((item) => (
           <TimelineItem
             key={item.id}

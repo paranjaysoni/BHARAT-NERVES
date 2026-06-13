@@ -7,7 +7,7 @@ export function TradeAlertsPanel() {
       title="Active Trade Alerts"
       description="Mock trade intelligence alerts for corridor monitoring."
     >
-      <div className="space-y-3">
+      <div className="app-scroll-region space-y-2.5 pr-1">
         {tradeAlerts.map((alert) => (
           <AlertCard
             key={alert.id}

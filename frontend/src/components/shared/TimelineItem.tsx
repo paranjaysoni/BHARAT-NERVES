@@ -24,7 +24,7 @@ export function TimelineItem({
   status = "neutral"
 }: TimelineItemProps) {
   return (
-    <article className="relative pl-6">
+    <article className="relative pl-5">
       <span
         className={clsx(
           "absolute left-0 top-1.5 h-2.5 w-2.5 rounded-full",
@@ -36,7 +36,7 @@ export function TimelineItem({
           <h3 className="text-sm font-semibold text-foreground">{title}</h3>
           <time className="text-xs text-muted-foreground">{timestamp}</time>
         </div>
-        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+        <p className="mt-1 text-sm leading-5 text-muted-foreground">
           {description}
         </p>
       </div>

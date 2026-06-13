@@ -3,7 +3,7 @@ import { FileText, AlertTriangle, Clock, Brain, TrendingUp, Activity } from "luc
 
 export function ReportKpiRow() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+    <div className="app-kpi-grid lg:grid-cols-3 xl:grid-cols-6">
       <MetricCard
         title="Total Reports"
         value="124"

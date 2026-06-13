@@ -54,6 +54,18 @@ Current product routes under `src/app`:
 - `components/layout/Topbar.tsx`: Provides platform heading, corridor selector placeholder, notification indicator, time widget, and theme control.
 - `components/layout/ThemeToggle.tsx`: Provides a small class-based light/dark theme toggle using the existing CSS variable strategy.
 
+## Global Layout Density
+
+Issue #15 refined the global shell and shared layout rhythm for denser desktop dashboards.
+
+- `AppShell` now uses a 220px desktop sidebar, compact main padding, and viewport-aware main height below the topbar.
+- `Topbar` targets a compact 48px to 56px desktop height.
+- `PageHeader`, `SectionCard`, `MetricCard`, `ChartCard`, `MapPlaceholder`, `AlertCard`, `TimelineItem`, and `DataTable` have tighter global defaults.
+- `globals.css` defines reusable layout classes: `app-page-stack`, `app-section-grid`, `app-column-stack`, `app-kpi-grid`, and `app-scroll-region`.
+- Long tables, alert lists, and timelines should prefer internal scrolling over expanding the full page.
+
+See `docs/layout-refinement.md` for the spacing, card sizing, viewport, scrolling, and dashboard density standards.
+
 ## Shared Components Added
 
 - `components/shared/PageHeader.tsx`: Standard title and description block for placeholder pages.
@@ -323,3 +335,7 @@ The following pages exist in the app:
 - Resources: mock resources and data library page.
 - Reports: centralized intelligence reporting hub with interactive table, preview panel, and executive briefs.
 - Settings: platform administration and configuration center with appearance, notifications, data sources, integrations, AI, security, and system health panels.
+
+## Current Layout Status
+
+Issue #15 Complete: global layout refinement applied across the shared shell, reusable primitives, KPI rows, route composition spacing, internal table/list scrolling, and frontend documentation.
