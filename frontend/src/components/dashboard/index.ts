@@ -1,4 +1,5 @@
 export { ActiveAlertsPanel } from "./ActiveAlertsPanel";
+export { ControlRoomAnalyticsRow } from "./ControlRoomAnalyticsRow";
 export { ControlRoomKpis } from "./ControlRoomKpis";
 export { CorridorOverview } from "./CorridorOverview";
 export { DigitalTwinOverview } from "./DigitalTwinOverview";

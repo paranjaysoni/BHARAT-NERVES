@@ -108,7 +108,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #16 complete: Design system refinement applied. Skeleton phase complete.
+Issue #17 revision complete: Control Room MVP redesign applied. Skeleton phase complete.
 
 Implemented:
 
@@ -165,6 +165,7 @@ Implemented:
 - `frontend/docs/layout-refinement.md` density, spacing, viewport, and scrolling standards
 - Global design system refinement for typography, semantic colors, premium surfaces, KPI cards, badges, tables, timelines, buttons, focus rings, and motion standards
 - `frontend/docs/design-system.md` typography, colors, spacing, cards, badges, buttons, tables, and motion standards
+- Control Room MVP redesign with reference-aligned command header, dominant digital twin map, right-side system overview and active alerts, bottom analytics row, quick actions, and footer status strip
 - Frontend documentation
 
 Not implemented:

@@ -64,8 +64,8 @@ export const controlRoomHealthItems: ControlRoomHealthItem[] = [
 export const controlRoomQuickActions: ControlRoomQuickAction[] = [
   {
     id: "action-open-scenario-simulator",
-    label: "Open Scenario Simulator",
-    description: "Compare disruption scenarios against current corridor posture.",
+    label: "Run Scenario",
+    description: "Stress-test the corridor against current disruption signals.",
     href: "/scenario-simulator"
   },
   {
@@ -75,8 +75,14 @@ export const controlRoomQuickActions: ControlRoomQuickAction[] = [
     href: "/trade-sentinel"
   },
   {
+    id: "action-review-ai-parliament",
+    label: "Review AI Parliament",
+    description: "Open multi-agent policy and logistics recommendations.",
+    href: "/ai-parliament"
+  },
+  {
     id: "action-view-crisis-commander",
-    label: "View Crisis Commander",
+    label: "Launch Crisis Commander",
     description: "Prepare response options for operator review.",
     href: "/crisis-commander"
   },
