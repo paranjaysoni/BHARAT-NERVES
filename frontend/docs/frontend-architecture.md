@@ -354,3 +354,8 @@ Issue #15 Complete: global layout refinement applied across the shared shell, re
 ## Current Design Status
 
 Issue #16 Complete: global design system refinement applied across theme tokens, typography utilities, shared surfaces, KPI cards, badges, tables, timelines, buttons, and frontend documentation.
+
+## Current Page Refinement Status
+
+- Issue #17 Revision Complete: Control Room MVP redesign applied with reference-aligned command header, dominant digital twin map, right-side system overview and active alerts, bottom analytics row, quick actions, and footer status strip.
+- Issue #18 Complete: Scenario Simulator MVP refinement applied with reference-aligned scenario selection, simulation overview, scenario details, impact summary, dominant impact preview map, simulation controls, and results preview.

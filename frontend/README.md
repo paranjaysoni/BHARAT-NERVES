@@ -108,7 +108,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #17 revision complete: Control Room MVP redesign applied. Skeleton phase complete.
+Issue #18 complete: Scenario Simulator MVP refinement applied. Skeleton phase complete.
 
 Implemented:
 
@@ -166,6 +166,7 @@ Implemented:
 - Global design system refinement for typography, semantic colors, premium surfaces, KPI cards, badges, tables, timelines, buttons, focus rings, and motion standards
 - `frontend/docs/design-system.md` typography, colors, spacing, cards, badges, buttons, tables, and motion standards
 - Control Room MVP redesign with reference-aligned command header, dominant digital twin map, right-side system overview and active alerts, bottom analytics row, quick actions, and footer status strip
+- Scenario Simulator MVP refinement with reference-aligned scenario selection, simulation overview, scenario details, impact summary, dominant impact preview map, simulation controls, and results preview
 - Frontend documentation
 
 Not implemented:

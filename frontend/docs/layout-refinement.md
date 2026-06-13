@@ -32,6 +32,8 @@ Issue #15 refines the global layout system for higher desktop density across Pro
 - Desktop topbar controls should stay near 48px to 56px total height.
 - Sidebar branding, navigation, and status content should remain readable without returning to a 240px+ width.
 - Use viewport-aware max heights for long regions instead of letting every list expand the page.
+- Page-level viewport sizing must account for topbar height, main padding, section gaps, and any footer/status strip. Do not set `overflow-hidden` on a full page unless every child row has an explicit flexible height strategy.
+- Prefer `min-h-0`, normal document flow, and grid/flex rows that can shrink over hard `max-height` wrappers that clip bottom content.
 
 ## Scrolling Rules
 
@@ -39,6 +41,22 @@ Issue #15 refines the global layout system for higher desktop density across Pro
 - `DataTable` has internal overflow with sticky headers and a default `maxHeight` of `calc(100vh - 22rem)`.
 - `app-scroll-region` provides a reusable `calc(100vh - 18rem)` max height for long panel content.
 - Do not force internal scrolling on short static content; apply it to content types that naturally grow.
+- If a page needs to scroll, the page should scroll naturally. Do not hide overflow on route containers when bottom cards, controls, or results panels may extend below the first viewport.
+
+## Footer And Status Strip Rules
+
+- Footer/status strips must sit in normal layout flow below page content.
+- Never use negative positioning or fixed overlays for page footers unless a dedicated shell offset is also reserved.
+- A footer should not cover cards, controls, tables, or result panels.
+- Footer height must be included in any viewport-first page calculations.
+- Platform status strips should be visually compact: small text, semantic status dot, subtle border/background, and no large vertical padding.
+
+## Overflow Handling Strategy
+
+- Use internal scrolling only for content that is naturally long, such as tables, alert feeds, reports, and activity streams.
+- Keep command controls and result summaries fully visible; these should not be clipped behind a footer or hidden by `overflow-hidden`.
+- For desktop-first command pages, reduce rigid hero `min-height` values before clipping bottom sections.
+- Use responsive min heights such as smaller base values with larger `xl:` values only when the available viewport can support them.
 
 ## Dashboard Density Standards
 
