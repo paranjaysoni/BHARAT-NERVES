@@ -28,20 +28,20 @@ export function ProgressBar({
   return (
     <div>
       {label ? (
-        <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
+        <div className="mb-2 flex items-center justify-between text-xs font-medium text-muted-foreground">
           <span>{label}</span>
           <span>{Math.round(percentage)}%</span>
         </div>
       ) : null}
       <div
-        className="h-2 overflow-hidden rounded-full bg-secondary"
+        className="h-2 overflow-hidden rounded-full border border-border bg-secondary shadow-inner"
         role="progressbar"
         aria-valuenow={value}
         aria-valuemin={0}
         aria-valuemax={max}
       >
         <div
-          className={clsx("h-full rounded-full", variantClasses[variant])}
+          className={clsx("h-full rounded-full transition-[width] duration-200", variantClasses[variant])}
           style={{ width: `${percentage}%` }}
         />
       </div>

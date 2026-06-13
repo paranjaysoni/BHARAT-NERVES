@@ -215,7 +215,7 @@ export default function ComponentPreviewPage() {
         action={
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+            className="btn btn-outline"
           >
             <Boxes className="h-4 w-4" aria-hidden="true" />
             Prepare Workspace
@@ -226,7 +226,7 @@ export default function ComponentPreviewPage() {
       <SectionCard title="Semantic Action Example">
         <button
           type="button"
-          className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          className="btn btn-primary"
         >
           <ShieldCheck className="h-4 w-4" aria-hidden="true" />
           Confirm Readiness

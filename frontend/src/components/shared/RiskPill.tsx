@@ -8,10 +8,17 @@ export interface RiskPillProps {
 }
 
 const riskClasses: Record<RiskLevel, string> = {
-  low: "border-success/30 bg-success/10 text-success",
-  medium: "border-info/35 bg-info/10 text-info",
-  high: "border-warning/40 bg-warning/10 text-warning",
-  critical: "border-danger/35 bg-danger/10 text-danger"
+  low: "border-success/25 bg-success/10 text-success",
+  medium: "border-info/25 bg-info/10 text-info",
+  high: "border-warning/30 bg-warning/10 text-warning",
+  critical: "border-danger/25 bg-danger/10 text-danger"
+};
+
+const dotClasses: Record<RiskLevel, string> = {
+  low: "bg-success",
+  medium: "bg-info",
+  high: "bg-warning",
+  critical: "bg-danger"
 };
 
 const defaultLabels: Record<RiskLevel, string> = {
@@ -25,10 +32,11 @@ export function RiskPill({ level, label }: RiskPillProps) {
   return (
     <span
       className={clsx(
-        "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium",
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold leading-4 shadow-sm transition-colors duration-200",
         riskClasses[level]
       )}
     >
+      <span className={clsx("h-1.5 w-1.5 rounded-full", dotClasses[level])} />
       {label ?? defaultLabels[level]}
     </span>
   );

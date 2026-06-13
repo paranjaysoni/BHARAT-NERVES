@@ -34,10 +34,10 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="border-border bg-card text-card-foreground lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-[220px] lg:flex-col lg:border-r">
+    <aside className="border-border bg-card text-card-foreground shadow-[1px_0_2px_rgb(15_23_42/0.04)] lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-[220px] lg:flex-col lg:border-r">
       <div className="flex h-full flex-col">
         <div className="border-border flex items-center gap-2.5 border-b px-4 py-3.5">
-          <div className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-md">
+          <div className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-md shadow-sm">
             <Bell className="h-4 w-4" aria-hidden="true" />
           </div>
           <div className="min-w-0">
@@ -58,7 +58,7 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={clsx(
-                  "group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium transition-colors",
+                  "focus-ring group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium transition-[background-color,color,box-shadow] duration-200",
                   isActive
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-secondary hover:text-secondary-foreground"
@@ -72,7 +72,7 @@ export function Sidebar() {
         </nav>
 
         <div className="border-border border-t p-3">
-          <div className="rounded-md border border-border bg-background p-3">
+          <div className="surface-inset rounded-md p-3">
             <div className="flex items-center justify-between gap-2">
               <div>
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">

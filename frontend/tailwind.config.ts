@@ -14,7 +14,10 @@ const config: Config = {
         foreground: "hsl(var(--foreground))",
         card: "hsl(var(--card))",
         "card-foreground": "hsl(var(--card-foreground))",
+        surface: "hsl(var(--surface))",
+        "surface-strong": "hsl(var(--surface-strong))",
         border: "hsl(var(--border))",
+        "border-strong": "hsl(var(--border-strong))",
         primary: "hsl(var(--primary))",
         "primary-foreground": "hsl(var(--primary-foreground))",
         secondary: "hsl(var(--secondary))",
@@ -24,7 +27,8 @@ const config: Config = {
         success: "hsl(var(--success))",
         warning: "hsl(var(--warning))",
         danger: "hsl(var(--danger))",
-        info: "hsl(var(--info))"
+        info: "hsl(var(--info))",
+        "focus-ring": "hsl(var(--focus-ring))"
       }
     }
   },

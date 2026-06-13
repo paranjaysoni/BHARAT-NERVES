@@ -53,10 +53,10 @@ export function AppearanceSettings() {
                 type="button"
                 onClick={() => handleSelect(value)}
                 className={[
-                  "relative flex flex-col items-start gap-2 rounded-lg border p-4 text-left transition-colors",
+                  "surface-card focus-ring relative flex flex-col items-start gap-2 rounded-md p-4 text-left",
                   isActive
-                    ? "border-primary bg-primary/5"
-                    : "border-border bg-card hover:bg-muted/50"
+                    ? "border-primary bg-primary/5 shadow-[0_0_0_1px_hsl(var(--primary)/0.25)]"
+                    : "hover:bg-secondary/35"
                 ].join(" ")}
               >
                 {isActive && (
@@ -76,7 +76,7 @@ export function AppearanceSettings() {
           })}
         </div>
 
-        <div className="rounded-lg border border-border bg-muted/30 p-3">
+        <div className="surface-inset rounded-md p-3">
           <p className="text-xs text-muted-foreground">
             Theme preference is stored in your browser. The platform uses semantic CSS variables — all components respond automatically to theme changes.
           </p>

@@ -10,7 +10,7 @@ export interface ChartCardProps {
 export function ChartCard({ title, description, children }: ChartCardProps) {
   return (
     <SectionCard title={title} description={description}>
-      <div className="flex min-h-48 items-center justify-center rounded-md border border-dashed border-border bg-background">
+      <div className="surface-inset flex min-h-48 items-center justify-center rounded-md border-dashed bg-[radial-gradient(circle_at_50%_0%,hsl(var(--primary)/0.08),transparent_18rem)]">
         {children}
       </div>
     </SectionCard>

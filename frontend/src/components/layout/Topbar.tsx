@@ -6,10 +6,10 @@ import { alerts, currentUser, selectedCorridor, settings } from "@/data";
 
 export function Topbar() {
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-background/95 px-4 py-2 backdrop-blur sm:px-5 lg:px-6">
+    <header className="sticky top-0 z-30 border-b border-border bg-background/90 px-4 py-2 shadow-[0_1px_2px_rgb(15_23_42/0.04)] backdrop-blur sm:px-5 lg:px-6">
       <div className="flex min-h-9 flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <p className="type-micro-label">
             {currentUser.organization}
           </p>
           <h1 className="text-base font-semibold leading-5 text-foreground">
@@ -18,13 +18,13 @@ export function Topbar() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <button className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-card px-3 text-sm font-medium text-card-foreground transition-colors hover:bg-secondary">
+          <button className="btn btn-secondary">
             {selectedCorridor.name}
             <ChevronDown className="h-4 w-4 text-muted-foreground" />
           </button>
 
           <button
-            className="relative inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-card-foreground transition-colors hover:bg-secondary"
+            className="btn btn-secondary btn-icon relative"
             aria-label="Notifications"
           >
             <Bell className="h-4 w-4" aria-hidden="true" />
@@ -33,7 +33,7 @@ export function Topbar() {
             </span>
           </button>
 
-          <div className="rounded-md border border-border bg-card px-3 py-1.5 text-right">
+          <div className="surface-card rounded-md px-3 py-1.5 text-right">
             <p className="text-sm font-semibold leading-4 text-card-foreground">
               {settings.displayTime}
             </p>

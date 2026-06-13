@@ -28,7 +28,7 @@ export function NotificationSettings({ channels }: NotificationSettingsProps) {
           return (
             <div
               key={channel.id}
-              className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3"
+              className="surface-card flex items-center justify-between rounded-md px-4 py-3"
             >
               <div className="min-w-0 pr-4">
                 <p className="text-sm font-medium text-foreground">{channel.label}</p>
@@ -40,7 +40,7 @@ export function NotificationSettings({ channels }: NotificationSettingsProps) {
                 aria-checked={enabled}
                 onClick={() => toggle(channel.id)}
                 className={[
-                  "relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-none",
+                  "focus-ring relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200",
                   enabled ? "bg-primary" : "bg-muted"
                 ].join(" ")}
               >

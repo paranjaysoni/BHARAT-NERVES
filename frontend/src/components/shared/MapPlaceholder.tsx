@@ -9,9 +9,9 @@ export interface MapPlaceholderProps {
 }
 
 const variantClasses: Record<MapPlaceholderVariant, string> = {
-  default: "from-secondary to-background",
-  corridor: "from-info/20 to-background",
-  risk: "from-warning/20 to-background"
+  default: "from-surface-strong via-card to-background",
+  corridor: "from-info/15 via-card to-background",
+  risk: "from-warning/15 via-card to-background"
 };
 
 export function MapPlaceholder({
@@ -22,21 +22,21 @@ export function MapPlaceholder({
   return (
     <div
       className={clsx(
-        "relative min-h-64 overflow-hidden rounded-md border border-border bg-gradient-to-br p-4 text-card-foreground lg:p-5",
+        "surface-card relative min-h-64 overflow-hidden rounded-md bg-gradient-to-br p-4 text-card-foreground lg:p-5",
         variantClasses[variant]
       )}
     >
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:32px_32px] opacity-30" />
-      <div className="absolute left-10 top-12 h-3 w-3 rounded-full bg-primary" />
-      <div className="absolute right-16 top-20 h-3 w-3 rounded-full bg-success" />
-      <div className="absolute bottom-16 left-1/3 h-3 w-3 rounded-full bg-warning" />
-      <div className="absolute bottom-12 right-1/4 h-3 w-3 rounded-full bg-info" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:32px_32px] opacity-35" />
+      <div className="absolute left-10 top-12 h-3 w-3 rounded-full border border-primary/30 bg-primary shadow-[0_0_0_5px_hsl(var(--primary)/0.12)]" />
+      <div className="absolute right-16 top-20 h-3 w-3 rounded-full border border-success/30 bg-success shadow-[0_0_0_5px_hsl(var(--success)/0.12)]" />
+      <div className="absolute bottom-16 left-1/3 h-3 w-3 rounded-full border border-warning/30 bg-warning shadow-[0_0_0_5px_hsl(var(--warning)/0.12)]" />
+      <div className="absolute bottom-12 right-1/4 h-3 w-3 rounded-full border border-info/30 bg-info shadow-[0_0_0_5px_hsl(var(--info)/0.12)]" />
       <div className="relative z-10 flex h-full min-h-56 flex-col justify-end">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <p className="type-micro-label">
           Digital Twin Placeholder
         </p>
-        <h3 className="mt-1.5 text-lg font-semibold text-foreground">{title}</h3>
-        <p className="mt-1.5 max-w-lg text-sm leading-5 text-muted-foreground">
+        <h3 className="mt-1.5 text-lg font-semibold leading-6 text-foreground">{title}</h3>
+        <p className="type-body mt-1.5 max-w-lg">
           {description}
         </p>
       </div>

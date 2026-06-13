@@ -66,6 +66,17 @@ Issue #15 refined the global shell and shared layout rhythm for denser desktop d
 
 See `docs/layout-refinement.md` for the spacing, card sizing, viewport, scrolling, and dashboard density standards.
 
+## Global Design System
+
+Issue #16 refined the shared visual system without redesigning individual pages.
+
+- `globals.css` now defines typography helpers, premium surface classes, focus rings, button variants, motion defaults, and density helpers.
+- `tailwind.config.ts` maps additional semantic surface, border, and focus-ring tokens.
+- Shared primitives now provide stronger hierarchy through premium card surfaces, status accents, better table headers, clearer timeline markers, refined badges, and standardized buttons.
+- Components should use shared classes such as `surface-card`, `surface-inset`, `btn`, `btn-primary`, `btn-secondary`, `btn-outline`, `type-section-title`, `type-body`, and `type-micro-label`.
+
+See `docs/design-system.md` for typography, colors, spacing, cards, badges, buttons, tables, and motion standards.
+
 ## Shared Components Added
 
 - `components/shared/PageHeader.tsx`: Standard title and description block for placeholder pages.
@@ -339,3 +350,7 @@ The following pages exist in the app:
 ## Current Layout Status
 
 Issue #15 Complete: global layout refinement applied across the shared shell, reusable primitives, KPI rows, route composition spacing, internal table/list scrolling, and frontend documentation.
+
+## Current Design Status
+
+Issue #16 Complete: global design system refinement applied across theme tokens, typography utilities, shared surfaces, KPI cards, badges, tables, timelines, buttons, and frontend documentation.
