@@ -1,39 +1,31 @@
 import {
   CommodityBreakdown,
-  FutureRiskIndicators,
   PortStatusPanel,
-  ShipmentDelayTable,
+  SupplyChainHealthPanel,
+  TopTradeCorridors,
   TradeAlertsPanel,
-  TradeCorridorHealthSummary,
   TradeKpiRow,
-  TradeNetworkOverview
+  TradeNetworkOverview,
+  TradeRecentActivity
 } from "@/components/dashboard";
-import { PageHeader, StatusBadge } from "@/components/shared";
-import { tradeSentinelPage } from "@/data";
 
 export default function TradeSentinelPage() {
   return (
-    <div className="app-page-stack">
-      <PageHeader
-        title={tradeSentinelPage.title}
-        description={tradeSentinelPage.description}
-        actions={<StatusBadge label="Monitoring Active" variant="success" />}
-      />
-
+    <div className="grid min-h-0 gap-4">
       <TradeKpiRow />
 
-      <section className="app-section-grid xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.85fr)]">
+      <section className="grid min-h-0 gap-4 xl:grid-cols-[minmax(520px,1.22fr)_minmax(360px,0.95fr)_minmax(320px,0.82fr)]">
         <TradeNetworkOverview />
-        <aside className="app-column-stack">
-          <TradeAlertsPanel />
-          <PortStatusPanel />
-          <FutureRiskIndicators />
-        </aside>
+        <TopTradeCorridors />
+        <TradeAlertsPanel />
       </section>
 
-      <ShipmentDelayTable />
-      <CommodityBreakdown />
-      <TradeCorridorHealthSummary />
+      <section className="grid min-h-0 gap-4 xl:grid-cols-[minmax(260px,0.95fr)_minmax(360px,1.1fr)_minmax(300px,0.95fr)_minmax(320px,1.05fr)]">
+        <CommodityBreakdown />
+        <PortStatusPanel />
+        <SupplyChainHealthPanel />
+        <TradeRecentActivity />
+      </section>
     </div>
   );
 }
