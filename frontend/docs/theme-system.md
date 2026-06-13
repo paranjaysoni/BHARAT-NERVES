@@ -19,7 +19,10 @@ The variables use HSL channel values so Tailwind utilities can reference them wi
 - `foreground`
 - `card`
 - `card-foreground`
+- `surface`
+- `surface-strong`
 - `border`
+- `border-strong`
 - `primary`
 - `primary-foreground`
 - `secondary`
@@ -30,6 +33,18 @@ The variables use HSL channel values so Tailwind utilities can reference them wi
 - `warning`
 - `danger`
 - `info`
+- `focus-ring`
+
+## Theme Refinement — Implemented (Issue #16)
+
+Issue #16 refined the light and dark palettes for a more premium mission-control feel.
+
+- Light mode now uses a cooler operational background, stronger foreground contrast, softer card surfaces, and clearer semantic status colors.
+- Dark mode now uses deeper base surfaces, less flat card contrast, stronger borders, and brighter status tokens for readability.
+- `surface` and `surface-strong` support nested panels, table headers, chart wells, and premium inset regions.
+- `border-strong` provides a second border tier for hover states, table headers, and selected surfaces.
+- `focus-ring` standardizes visible keyboard focus across buttons, cards, switches, and interactive controls.
+- Shared design classes in `globals.css` keep both themes consistent: `surface-card`, `surface-inset`, `btn`, `btn-primary`, `btn-secondary`, `btn-outline`, `btn-ghost`, and typography helpers.
 
 ## Theme Switching — Implemented (Issue #14)
 
@@ -54,4 +69,4 @@ Both components use the same key `project-aegis-theme` so they stay consistent o
 - Use semantic tokens such as `bg-background`, `text-foreground`, `border-border`, and `text-muted-foreground`.
 - Ensure every component works in both light and dark themes.
 - Add new tokens only when the existing semantic set cannot describe the UI need.
-- Keep visual styling restrained until the product layout and design system are defined.
+- Keep visual styling restrained, enterprise-grade, and consistent with `docs/design-system.md`.

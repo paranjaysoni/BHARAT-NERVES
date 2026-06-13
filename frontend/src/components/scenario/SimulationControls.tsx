@@ -62,15 +62,15 @@ function ControlButton({
     <button
       type="button"
       onClick={onClick}
-      className="rounded-md border border-border bg-background p-4 text-left transition-colors hover:bg-secondary"
+      className="surface-card focus-ring rounded-md p-4 text-left hover:bg-secondary/35"
     >
       <span className="flex items-start gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-secondary text-primary">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary shadow-sm">
           {icon}
         </span>
         <span>
-          <span className="block text-sm font-semibold text-foreground">{label}</span>
-          <span className="mt-1 block text-xs leading-5 text-muted-foreground">
+          <span className="type-card-title block">{label}</span>
+          <span className="type-caption mt-1 block">
             {description}
           </span>
         </span>

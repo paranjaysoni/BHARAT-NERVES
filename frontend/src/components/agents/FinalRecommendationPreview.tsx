@@ -22,7 +22,7 @@ export function FinalRecommendationPreview() {
         />
         <Link
           href={finalRecommendation.href}
-          className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          className="btn btn-primary"
         >
           {finalRecommendation.nextStep}
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -34,11 +34,11 @@ export function FinalRecommendationPreview() {
 
 function RecommendationBlock({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md border border-border bg-background p-4">
-      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+    <div className="surface-inset rounded-md p-4">
+      <p className="type-micro-label">
         {label}
       </p>
-      <p className="mt-2 text-sm leading-6 text-foreground">{value}</p>
+      <p className="mt-2 text-sm leading-5 text-foreground">{value}</p>
     </div>
   );
 }

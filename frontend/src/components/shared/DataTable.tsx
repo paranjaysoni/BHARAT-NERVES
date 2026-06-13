@@ -21,23 +21,23 @@ export function DataTable<T extends object>({
 }: DataTableProps<T>) {
   if (rows.length === 0) {
     return (
-      <div className="rounded-md border border-dashed border-border bg-background p-6 text-center text-sm text-muted-foreground">
+      <div className="surface-inset rounded-md border-dashed p-6 text-center text-sm text-muted-foreground">
         {emptyMessage}
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-md border border-border bg-card">
+    <div className="surface-card overflow-hidden rounded-md">
       <div className="overflow-auto" style={{ maxHeight }}>
         <table className="min-w-full divide-y divide-border text-sm">
-          <thead className="sticky top-0 z-10 bg-secondary text-secondary-foreground">
+          <thead className="sticky top-0 z-10 border-b border-border-strong bg-surface-strong text-secondary-foreground shadow-sm">
             <tr>
               {columns.map((column) => (
                 <th
                   key={column.key}
                   scope="col"
-                  className="px-3 py-2 text-left font-medium"
+                  className="type-micro-label px-3 py-2.5 text-left"
                 >
                   {column.header}
                 </th>
@@ -46,9 +46,12 @@ export function DataTable<T extends object>({
           </thead>
           <tbody className="divide-y divide-border">
             {rows.map((row, index) => (
-              <tr key={index} className="text-card-foreground">
+              <tr
+                key={index}
+                className="text-card-foreground transition-colors duration-150 hover:bg-secondary/55"
+              >
                 {columns.map((column) => (
-                  <td key={column.key} className="px-3 py-2 text-muted-foreground">
+                  <td key={column.key} className="px-3 py-2.5 text-muted-foreground">
                     {column.cell(row)}
                   </td>
                 ))}

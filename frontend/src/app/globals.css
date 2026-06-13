@@ -3,39 +3,47 @@
 @tailwind utilities;
 
 :root {
-  --background: 210 40% 98%;
-  --foreground: 222 47% 11%;
+  --background: 210 36% 97%;
+  --foreground: 222 47% 10%;
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --border: 214 32% 91%;
-  --primary: 221 83% 53%;
+  --card-foreground: 222 47% 10%;
+  --surface: 210 40% 99%;
+  --surface-strong: 214 32% 96%;
+  --border: 214 27% 88%;
+  --border-strong: 215 20% 78%;
+  --primary: 221 83% 48%;
   --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 94%;
+  --secondary: 214 32% 94%;
   --secondary-foreground: 222 47% 11%;
-  --muted: 210 40% 94%;
-  --muted-foreground: 215 16% 47%;
-  --success: 142 71% 36%;
-  --warning: 38 92% 50%;
-  --danger: 0 84% 60%;
-  --info: 199 89% 48%;
+  --muted: 214 32% 93%;
+  --muted-foreground: 215 18% 42%;
+  --success: 153 66% 31%;
+  --warning: 35 92% 43%;
+  --danger: 0 72% 50%;
+  --info: 204 82% 42%;
+  --focus-ring: 221 83% 48%;
 }
 
 .dark {
-  --background: 222 47% 11%;
-  --foreground: 210 40% 98%;
-  --card: 224 42% 14%;
+  --background: 222 44% 8%;
+  --foreground: 210 40% 96%;
+  --card: 224 38% 12%;
   --card-foreground: 210 40% 98%;
-  --border: 217 33% 24%;
-  --primary: 217 91% 60%;
-  --primary-foreground: 222 47% 11%;
-  --secondary: 217 33% 18%;
+  --surface: 224 34% 14%;
+  --surface-strong: 224 30% 18%;
+  --border: 222 24% 22%;
+  --border-strong: 220 20% 32%;
+  --primary: 217 91% 62%;
+  --primary-foreground: 222 47% 8%;
+  --secondary: 224 29% 17%;
   --secondary-foreground: 210 40% 98%;
-  --muted: 217 33% 18%;
-  --muted-foreground: 215 20% 65%;
-  --success: 142 70% 45%;
-  --warning: 38 92% 55%;
-  --danger: 0 84% 64%;
-  --info: 199 89% 58%;
+  --muted: 224 29% 17%;
+  --muted-foreground: 215 20% 68%;
+  --success: 151 67% 46%;
+  --warning: 38 92% 57%;
+  --danger: 0 84% 65%;
+  --info: 199 89% 62%;
+  --focus-ring: 217 91% 62%;
 }
 
 * {
@@ -50,11 +58,81 @@ html {
 
 body {
   min-height: 100vh;
-  background: hsl(var(--background));
+  background:
+    radial-gradient(circle at 50% -20%, hsl(var(--primary) / 0.08), transparent 32rem),
+    hsl(var(--background));
   color: hsl(var(--foreground));
 }
 
 @layer components {
+  .type-display {
+    @apply text-3xl font-semibold leading-tight tracking-normal text-foreground;
+  }
+
+  .type-page-title {
+    @apply text-2xl font-semibold leading-tight tracking-normal text-foreground lg:text-[1.65rem];
+  }
+
+  .type-section-title {
+    @apply text-base font-semibold leading-6 text-foreground;
+  }
+
+  .type-card-title {
+    @apply text-sm font-semibold leading-5 text-foreground;
+  }
+
+  .type-body {
+    @apply text-sm leading-5 text-muted-foreground;
+  }
+
+  .type-caption {
+    @apply text-xs leading-4 text-muted-foreground;
+  }
+
+  .type-micro-label {
+    @apply text-[0.68rem] font-semibold uppercase leading-4 tracking-[0.08em] text-muted-foreground;
+  }
+
+  .surface-card {
+    @apply border border-border bg-card shadow-[0_1px_2px_rgb(15_23_42/0.05)] transition-[background-color,border-color,box-shadow,transform] duration-200;
+  }
+
+  .surface-card:hover {
+    @apply border-border-strong shadow-[0_10px_24px_rgb(15_23_42/0.07)];
+  }
+
+  .surface-inset {
+    @apply border border-border bg-surface shadow-inner shadow-slate-950/[0.025];
+  }
+
+  .focus-ring {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-focus-ring/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  .btn {
+    @apply inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium outline-none transition-[background-color,border-color,color,box-shadow,transform] duration-200 focus-visible:ring-2 focus-visible:ring-focus-ring/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground shadow-[0_1px_2px_rgb(15_23_42/0.12)] hover:bg-primary/90;
+  }
+
+  .btn-secondary {
+    @apply border border-border bg-card text-card-foreground hover:border-border-strong hover:bg-secondary;
+  }
+
+  .btn-outline {
+    @apply border border-border bg-background text-foreground hover:border-border-strong hover:bg-secondary;
+  }
+
+  .btn-ghost {
+    @apply text-muted-foreground hover:bg-secondary hover:text-foreground;
+  }
+
+  .btn-icon {
+    @apply h-9 w-9 px-0;
+  }
+
   .app-page-stack {
     @apply space-y-5 lg:space-y-6;
   }

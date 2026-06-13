@@ -19,16 +19,16 @@ export function SectionCard({
   return (
     <section
       className={clsx(
-        "rounded-md border border-border bg-card p-4 text-card-foreground lg:p-5",
+        "surface-card rounded-md p-4 text-card-foreground lg:p-5",
         className
       )}
     >
       {title || description || action ? (
-        <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="mb-3 flex items-start justify-between gap-3 border-b border-border/70 pb-3">
           <div>
-            {title ? <h3 className="text-base font-semibold">{title}</h3> : null}
+            {title ? <h3 className="type-section-title">{title}</h3> : null}
             {description ? (
-              <p className="mt-1 text-sm leading-5 text-muted-foreground">
+              <p className="type-body mt-1">
                 {description}
               </p>
             ) : null}
@@ -36,7 +36,7 @@ export function SectionCard({
           {action ? <div className="shrink-0">{action}</div> : null}
         </div>
       ) : null}
-      <div className="text-sm leading-5 text-muted-foreground">{children}</div>
+      <div className="type-body">{children}</div>
     </section>
   );
 }

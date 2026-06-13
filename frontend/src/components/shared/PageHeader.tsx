@@ -10,13 +10,13 @@ export function PageHeader({ title, description, actions }: PageHeaderProps) {
   return (
     <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
       <div>
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <p className="type-micro-label">
           Project Aegis
         </p>
-        <h2 className="mt-1 text-2xl font-semibold tracking-normal text-foreground lg:text-[1.65rem]">
+        <h2 className="type-page-title mt-1">
           {title}
         </h2>
-        <p className="mt-1.5 max-w-3xl text-sm leading-5 text-muted-foreground">
+        <p className="type-body mt-1.5 max-w-3xl">
           {description}
         </p>
       </div>

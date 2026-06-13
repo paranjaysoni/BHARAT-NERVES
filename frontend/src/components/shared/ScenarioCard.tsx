@@ -37,9 +37,9 @@ export function ScenarioCard({
   return (
     <article
       className={clsx(
-        "rounded-lg border bg-card p-5 text-card-foreground transition-colors",
-        isSelected ? "border-primary" : "border-border",
-        onSelect ? "cursor-pointer hover:bg-secondary/40" : null
+        "surface-card focus-ring rounded-md p-4 text-card-foreground lg:p-5",
+        isSelected ? "border-primary shadow-[0_0_0_1px_hsl(var(--primary)/0.35)]" : null,
+        onSelect ? "cursor-pointer hover:bg-secondary/30" : null
       )}
       onClick={onSelect}
       onKeyDown={(event) => {
@@ -59,13 +59,13 @@ export function ScenarioCard({
       <div className="flex items-start justify-between gap-4">
         <div className="flex gap-3">
           {icon ? (
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-secondary text-primary">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary shadow-sm">
               {icon}
             </div>
           ) : null}
           <div>
-            <h3 className="text-base font-semibold text-foreground">{title}</h3>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            <h3 className="type-section-title">{title}</h3>
+            <p className="type-body mt-2">
               {description}
             </p>
           </div>
@@ -82,8 +82,7 @@ export function ScenarioCard({
               onSelect?.();
             }}
             className={clsx(
-              "rounded-md border border-border bg-background px-3 py-1.5 text-sm font-medium text-foreground",
-              "transition-colors hover:bg-secondary"
+              "btn btn-outline h-8 px-2.5"
             )}
           >
             {actionLabel}

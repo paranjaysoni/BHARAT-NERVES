@@ -108,7 +108,7 @@ Developers should use semantic utilities such as `bg-background`, `text-foregrou
 
 ## Current Status
 
-Issue #15 complete: Global layout refinement applied. Skeleton phase complete.
+Issue #16 complete: Design system refinement applied. Skeleton phase complete.
 
 Implemented:
 
@@ -163,6 +163,8 @@ Implemented:
 - Functional theme switching (Light / Dark / System) shared between Topbar and Settings page
 - Global layout density refinement for AppShell, Sidebar, Topbar, PageHeader, cards, KPI rows, grids, tables, and long scroll regions
 - `frontend/docs/layout-refinement.md` density, spacing, viewport, and scrolling standards
+- Global design system refinement for typography, semantic colors, premium surfaces, KPI cards, badges, tables, timelines, buttons, focus rings, and motion standards
+- `frontend/docs/design-system.md` typography, colors, spacing, cards, badges, buttons, tables, and motion standards
 - Frontend documentation
 
 Not implemented:
