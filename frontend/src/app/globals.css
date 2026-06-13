@@ -54,6 +54,29 @@ body {
   color: hsl(var(--foreground));
 }
 
+@layer components {
+  .app-page-stack {
+    @apply space-y-5 lg:space-y-6;
+  }
+
+  .app-section-grid {
+    @apply grid gap-4 lg:gap-5;
+  }
+
+  .app-column-stack {
+    @apply space-y-4 lg:space-y-5;
+  }
+
+  .app-kpi-grid {
+    @apply grid gap-3 sm:grid-cols-2;
+  }
+
+  .app-scroll-region {
+    max-height: calc(100vh - 18rem);
+    @apply overflow-auto;
+  }
+}
+
 ::selection {
   background: hsl(var(--primary));
   color: hsl(var(--primary-foreground));

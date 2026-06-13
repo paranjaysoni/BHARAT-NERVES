@@ -22,7 +22,7 @@ export function MapPlaceholder({
   return (
     <div
       className={clsx(
-        "relative min-h-80 overflow-hidden rounded-lg border border-border bg-gradient-to-br p-6 text-card-foreground",
+        "relative min-h-64 overflow-hidden rounded-md border border-border bg-gradient-to-br p-4 text-card-foreground lg:p-5",
         variantClasses[variant]
       )}
     >
@@ -31,12 +31,12 @@ export function MapPlaceholder({
       <div className="absolute right-16 top-20 h-3 w-3 rounded-full bg-success" />
       <div className="absolute bottom-16 left-1/3 h-3 w-3 rounded-full bg-warning" />
       <div className="absolute bottom-12 right-1/4 h-3 w-3 rounded-full bg-info" />
-      <div className="relative z-10 flex h-full min-h-72 flex-col justify-end">
+      <div className="relative z-10 flex h-full min-h-56 flex-col justify-end">
         <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           Digital Twin Placeholder
         </p>
-        <h3 className="mt-2 text-xl font-semibold text-foreground">{title}</h3>
-        <p className="mt-2 max-w-lg text-sm leading-6 text-muted-foreground">
+        <h3 className="mt-1.5 text-lg font-semibold text-foreground">{title}</h3>
+        <p className="mt-1.5 max-w-lg text-sm leading-5 text-muted-foreground">
           {description}
         </p>
       </div>

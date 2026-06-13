@@ -3,7 +3,7 @@ import { agentRecommendations, agents } from "@/data";
 
 export function AgentGrid() {
   return (
-    <section className="grid gap-4 md:grid-cols-2">
+    <section className="grid gap-3 md:grid-cols-2">
       {agents.map((agent) => {
         const recommendation = agentRecommendations.find(
           (item) => item.agentId === agent.id

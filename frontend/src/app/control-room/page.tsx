@@ -12,7 +12,7 @@ import { controlRoomPage, selectedCorridor, systemStatus } from "@/data";
 
 export default function ControlRoomPage() {
   return (
-    <div className="space-y-8">
+    <div className="app-page-stack">
       <PageHeader
         title="National Control Room"
         description={controlRoomPage.description}
@@ -26,15 +26,15 @@ export default function ControlRoomPage() {
 
       <ControlRoomKpis />
 
-      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_minmax(340px,0.8fr)]">
+      <section className="app-section-grid xl:grid-cols-[minmax(0,1.7fr)_minmax(320px,0.8fr)]">
         <DigitalTwinOverview />
-        <div className="space-y-6">
+        <div className="app-column-stack">
           <ActiveAlertsPanel />
           <SystemHealthSummary />
         </div>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
+      <section className="app-section-grid xl:grid-cols-[minmax(0,1.15fr)_minmax(300px,0.85fr)]">
         <CorridorOverview />
         <QuickActions />
       </section>

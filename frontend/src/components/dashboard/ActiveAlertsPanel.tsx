@@ -7,7 +7,7 @@ export function ActiveAlertsPanel() {
       title="Active Alerts"
       description="Current mock watchlist for the national control room."
     >
-      <div className="space-y-3">
+      <div className="app-scroll-region space-y-2.5 pr-1">
         {alerts.slice(0, 4).map((alert) => (
           <AlertCard
             key={alert.id}

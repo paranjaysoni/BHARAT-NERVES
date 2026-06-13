@@ -7,7 +7,7 @@ export function ScenarioTimeline() {
       title="Simulation Timeline Preview"
       description="Static future-flow preview. No actual simulation process is running."
     >
-      <div className="space-y-5">
+      <div className="app-scroll-region space-y-4 pr-1">
         {scenarioTimelineSteps.map((step) => (
           <TimelineItem
             key={step.id}

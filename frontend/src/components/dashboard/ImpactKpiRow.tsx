@@ -13,7 +13,7 @@ const iconByKpiId = {
 
 export function ImpactKpiRow() {
   return (
-    <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
+    <section className="app-kpi-grid xl:grid-cols-6">
       {impactKpis.map((kpi) => (
         <MetricCard
           key={kpi.id}

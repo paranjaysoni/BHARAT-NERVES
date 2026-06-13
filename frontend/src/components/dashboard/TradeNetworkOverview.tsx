@@ -11,13 +11,13 @@ export function TradeNetworkOverview() {
   ).length;
 
   return (
-    <div className="space-y-6">
+    <div className="app-column-stack">
       <SectionCard
         title="Trade Network Overview"
         description="Mock India trade corridor view with ports, warehouses, route stress, and bottleneck indicators."
         action={<StatusBadge label="Map Placeholder" variant="info" size="sm" />}
       >
-        <div className="space-y-4">
+        <div className="space-y-3">
           <MapPlaceholder
             title="India Trade Corridor Preview"
             description="Port nodes, warehouse nodes, and stressed route indicators are represented as a digital twin placeholder. No real map library is loaded."
@@ -52,10 +52,10 @@ export function TradeNetworkOverview() {
         title="Trade Flow Trend"
         description="Dummy trend placeholder. Recharts is not installed for this issue."
       >
-        <div className="flex h-full w-full items-end gap-3 px-4 py-6">
+        <div className="flex h-full w-full items-end gap-3 px-3 py-4">
           {tradeFlowTrend.map((point) => (
             <div key={point.id} className="flex flex-1 flex-col items-center gap-2">
-              <div className="flex h-36 w-full items-end rounded-md bg-secondary">
+              <div className="flex h-28 w-full items-end rounded-md bg-secondary">
                 <div
                   className="w-full rounded-md bg-primary"
                   style={{ height: `${point.value}%` }}

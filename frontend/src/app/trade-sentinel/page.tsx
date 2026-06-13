@@ -13,7 +13,7 @@ import { tradeSentinelPage } from "@/data";
 
 export default function TradeSentinelPage() {
   return (
-    <div className="space-y-8">
+    <div className="app-page-stack">
       <PageHeader
         title={tradeSentinelPage.title}
         description={tradeSentinelPage.description}
@@ -22,9 +22,9 @@ export default function TradeSentinelPage() {
 
       <TradeKpiRow />
 
-      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.55fr)_minmax(340px,0.85fr)]">
+      <section className="app-section-grid xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.85fr)]">
         <TradeNetworkOverview />
-        <aside className="space-y-6">
+        <aside className="app-column-stack">
           <TradeAlertsPanel />
           <PortStatusPanel />
           <FutureRiskIndicators />

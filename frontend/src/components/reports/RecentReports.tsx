@@ -11,7 +11,7 @@ export function RecentReports({ activities }: RecentReportsProps) {
       title="Recent Reports"
       description="Latest reporting activity across all domains"
     >
-      <div className="space-y-1">
+      <div className="app-scroll-region space-y-1 pr-1">
         {activities.map((activity) => (
           <TimelineItem
             key={activity.id}

@@ -11,7 +11,7 @@ export function ReportTimeline({ activities }: ReportTimelineProps) {
       title="Report Activity Timeline"
       description="Chronological log of reporting actions during the current operational period"
     >
-      <div className="space-y-1">
+      <div className="app-scroll-region space-y-1 pr-1">
         {activities.map((activity) => (
           <TimelineItem
             key={activity.id}

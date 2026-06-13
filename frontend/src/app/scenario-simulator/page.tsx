@@ -4,7 +4,7 @@ import { scenarioSimulatorPage } from "@/data";
 
 export default function ScenarioSimulatorPage() {
   return (
-    <div className="space-y-8">
+    <div className="app-page-stack">
       <PageHeader
         title={scenarioSimulatorPage.title}
         description={scenarioSimulatorPage.description}

@@ -9,7 +9,7 @@ function getMetricValue(metricId: string) {
 
 export function ControlRoomKpis() {
   return (
-    <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+    <section className="app-kpi-grid xl:grid-cols-5">
       <MetricCard
         title="Resilience Score"
         value={getMetricValue("metric-resilience-score")}

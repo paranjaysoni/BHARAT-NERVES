@@ -12,21 +12,21 @@ import { aiParliamentPage } from "@/data";
 
 export default function AiParliamentPage() {
   return (
-    <div className="space-y-8">
+    <div className="app-page-stack">
       <PageHeader
         title={aiParliamentPage.title}
         description={aiParliamentPage.description}
         actions={<StatusBadge label="Deliberation Ready" variant="success" />}
       />
 
-      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(340px,0.85fr)]">
-        <div className="space-y-6">
+      <section className="app-section-grid xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.85fr)]">
+        <div className="app-column-stack">
           <ParliamentSessionSummary />
           <AgentGrid />
           <AgentTimeline />
         </div>
 
-        <aside className="space-y-6">
+        <aside className="app-column-stack">
           <ConsensusPanel />
           <PriorityBreakdown />
           <FinalRecommendationPreview />

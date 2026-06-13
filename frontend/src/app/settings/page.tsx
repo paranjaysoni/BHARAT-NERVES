@@ -29,7 +29,7 @@ import {
 
 export default function SettingsPage() {
   return (
-    <div className="space-y-6">
+    <div className="app-page-stack">
       <PageHeader
         title="Settings"
         description="Platform administration and configuration center for Project Aegis — Bharat Nerves Platform."
@@ -45,15 +45,15 @@ export default function SettingsPage() {
         systemVersion={settingsKpis.systemVersion}
       />
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="space-y-6">
+      <div className="app-section-grid xl:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="app-column-stack">
           <AppearanceSettings />
           <NotificationSettings channels={notificationChannels} />
           <DataSourceSettings sources={dataSources} />
           <IntegrationSettings integrations={integrations} />
         </div>
 
-        <aside className="space-y-6">
+        <aside className="app-column-stack">
           <AIConfiguration
             primaryModel={aiConfiguration.primaryModel}
             backupModel={aiConfiguration.backupModel}
