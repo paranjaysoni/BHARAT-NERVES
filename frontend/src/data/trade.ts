@@ -12,36 +12,36 @@ export const tradeKpis: TradeKpi[] = [
   {
     id: "trade-flow-index",
     title: "Trade Flow Index",
-    value: "84%",
-    subtitle: "Corridor throughput health",
+    value: "87",
+    subtitle: "Healthy",
     status: "success"
   },
   {
     id: "supply-chain-stress",
     title: "Supply Chain Stress",
-    value: "Moderate",
-    subtitle: "Freight and staging pressure",
+    value: "65",
+    subtitle: "Moderate",
     status: "warning"
   },
   {
     id: "transit-delay",
-    title: "Transit Delay",
-    value: "+12 hrs",
-    subtitle: "Average delayed shipment",
-    status: "warning"
+    title: "Avg. Transit Delay",
+    value: "1.8 Days",
+    subtitle: "0.3 vs yesterday",
+    status: "success"
   },
   {
     id: "active-bottlenecks",
-    title: "Active Bottlenecks",
-    value: "5",
-    subtitle: "Ports and corridor nodes",
+    title: "Critical Bottlenecks",
+    value: "04",
+    subtitle: "High Priority",
     status: "danger"
   },
   {
-    id: "port-health",
-    title: "Port Health",
-    value: "72%",
-    subtitle: "Mock aggregate port score",
+    id: "trade-volume",
+    title: "Trade Volume",
+    value: "₹12.4 Cr",
+    subtitle: "8.6% vs yesterday",
     status: "info"
   }
 ];
