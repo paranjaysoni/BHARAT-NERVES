@@ -30,6 +30,9 @@ All static data endpoints return JSON through the shared response helpers in `sr
 | --- | --- | --- |
 | `GET` | `/api/nodes` | List infrastructure nodes. |
 | `GET` | `/api/nodes/:id` | Get one infrastructure node by ID. |
+| `GET` | `/api/route-graph/health` | Return graph connectivity and route availability health. |
+| `POST` | `/api/route-graph/shortest-path` | Find the shortest route between two nodes. |
+| `POST` | `/api/route-graph/recover` | Find an alternate route with supplied routes excluded. |
 | `GET` | `/api/routes` | List corridor routes. |
 | `GET` | `/api/routes/:id` | Get one corridor route by ID. |
 | `GET` | `/api/scenarios` | List local scenarios. |
@@ -56,6 +59,36 @@ Missing scenario engine IDs return HTTP `404` with `code: "SCENARIO_NOT_FOUND"`.
   "intensity": "standard"
 }
 ```
+
+## Route Graph Requests
+
+Shortest path:
+
+```json
+{
+  "sourceNodeId": "paradip_port",
+  "destinationNodeId": "aiims_bhubaneswar",
+  "costMode": "time"
+}
+```
+
+Route recovery:
+
+```json
+{
+  "sourceNodeId": "paradip_port",
+  "destinationNodeId": "aiims_bhubaneswar",
+  "blockedRouteIds": ["route_paradip_bhubaneswar"],
+  "costMode": "time"
+}
+```
+
+Validation errors return HTTP `400` with one of:
+
+- `INVALID_SOURCE_NODE`
+- `INVALID_DESTINATION_NODE`
+- `INVALID_BLOCKED_ROUTE`
+- `INVALID_COST_MODE`
 
 Successful scenario runs return:
 

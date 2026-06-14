@@ -343,5 +343,37 @@
     "baselineCarbonKg": 154,
     "baselineCostInr": 2100,
     "description": "Short link from Dhamra to Balasore. Important for northern Odisha supply redistribution when Paradip-Cuttack routes are compromised."
+  },
+  {
+    "id": "route_bhubaneswar_command_warehouse",
+    "name": "Bhubaneswar Command Center → Bhubaneswar Relief Warehouse",
+    "sourceNodeId": "bhubaneswar_command",
+    "destinationNodeId": "bhubaneswar_relief_warehouse",
+    "distanceKm": 12,
+    "travelTimeMinutes": 22,
+    "routeType": "ROAD",
+    "highway": "Urban Relief Link",
+    "status": "ACTIVE",
+    "corridor": "Bhubaneswar Relief Network",
+    "riskLevel": "LOW",
+    "baselineCarbonKg": 34,
+    "baselineCostInr": 450,
+    "description": "Urban connector between the state command center and Bhubaneswar relief warehouse. Enables medical and relief dispatch toward AIIMS Bhubaneswar."
+  },
+  {
+    "id": "route_cuttack_logistics_warehouse",
+    "name": "Cuttack Logistics Hub → Cuttack Relief Warehouse",
+    "sourceNodeId": "cuttack_logistics_hub",
+    "destinationNodeId": "cuttack_relief_warehouse",
+    "distanceKm": 10,
+    "travelTimeMinutes": 18,
+    "routeType": "ROAD",
+    "highway": "Urban Relief Link",
+    "status": "ACTIVE",
+    "corridor": "Cuttack Relief Network",
+    "riskLevel": "LOW",
+    "baselineCarbonKg": 28,
+    "baselineCostInr": 390,
+    "description": "Urban connector between the Cuttack logistics hub and relief warehouse. Keeps medical supply movement to SCB Medical Cuttack inside the route graph."
   }
 ]
