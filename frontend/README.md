@@ -140,7 +140,7 @@ Implemented:
 - Trade-specific dashboard components in `src/components/dashboard`
 - Trade mock data in `src/data/trade.ts`
 - Shipment mock data in `src/data/shipments.ts`
-- AI Parliament page at `/ai-parliament`
+- AI Parliament page at `/ai-parliament` — full MVP refinement (Issue #20): live deliberation storytelling, SVG consensus gauge, animated agent cards, decision timeline, discussion insights, key metrics, reduced table dominance
 - Agent-specific composition components in `src/components/agents`
 - Parliament mock data in `src/data/parliament.ts`
 - Crisis Commander page at `/crisis-commander`

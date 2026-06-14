@@ -1,49 +1,35 @@
 import {
   AgentGrid,
-  AgentRecommendationMatrix,
   AgentTimeline,
   ConsensusPanel,
   FinalRecommendationPreview,
+  KeyDiscussionInsights,
+  KeyMetrics,
   ParliamentSessionSummary,
-  PriorityBreakdown
+  ParliamentSessionTabs
 } from "@/components/agents";
-import { PageHeader, SectionCard, StatusBadge } from "@/components/shared";
-import { aiParliamentPage } from "@/data";
 
 export default function AiParliamentPage() {
   return (
-    <div className="app-page-stack">
-      <PageHeader
-        title={aiParliamentPage.title}
-        description={aiParliamentPage.description}
-        actions={<StatusBadge label="Deliberation Ready" variant="success" />}
-      />
+    <div className="flex h-full min-h-0 flex-col gap-3 overflow-hidden">
+      <ParliamentSessionTabs />
 
-      <section className="app-section-grid xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.85fr)]">
-        <div className="app-column-stack">
+      <div className="grid min-h-0 flex-1 gap-3 xl:grid-cols-[minmax(0,1fr)_350px]">
+        <div className="grid min-h-0 grid-rows-[118px_minmax(0,1fr)_250px] gap-3">
           <ParliamentSessionSummary />
           <AgentGrid />
-          <AgentTimeline />
+          <div className="grid min-h-0 gap-3 lg:grid-cols-[minmax(0,0.96fr)_minmax(0,1fr)]">
+            <FinalRecommendationPreview />
+            <KeyDiscussionInsights />
+          </div>
         </div>
 
-        <aside className="app-column-stack">
+        <aside className="grid min-h-0 grid-rows-[250px_minmax(0,1fr)_190px] gap-3">
           <ConsensusPanel />
-          <PriorityBreakdown />
-          <FinalRecommendationPreview />
+          <AgentTimeline />
+          <KeyMetrics />
         </aside>
-      </section>
-
-      <AgentRecommendationMatrix />
-
-      <SectionCard
-        title="Current Limitations / Future AI Integration"
-        description="This staged implementation uses structured mock recommendations."
-      >
-        Future versions will connect Gemini or OpenAI APIs with strict JSON output
-        for live multi-agent reasoning, validation, and human-reviewed Crisis
-        Commander handoff. The current page is intentionally frontend-only and
-        keeps all agent responses in centralized mock data.
-      </SectionCard>
+      </div>
     </div>
   );
 }

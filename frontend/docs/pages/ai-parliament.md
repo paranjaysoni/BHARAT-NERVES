@@ -1,92 +1,200 @@
 # AI Parliament
 
-AI Parliament is the multi-stakeholder decision support interface for Project Aegis / Bharat Nerves Platform.
+AI Parliament is the flagship multi-agent deliberation and consensus engine for Project Aegis / Bharat Nerves Platform. It is the most architecturally unique feature in the system.
+
+## Concept
+
+AI Parliament simulates a National Decision Council — 8 specialized AI expert agents debating and negotiating a crisis response plan. The page tells a deliberation story:
+
+1. **Crisis arrives** — a scenario is loaded and briefed to all agents.
+2. **Agents debate** — each agent submits its position based on its domain expertise.
+3. **Agents disagree** — conflict levels and opposing positions are surfaced.
+4. **Consensus emerges** — rounds of deliberation reduce conflict and build alignment.
+5. **Recommendation is produced** — a governance-ready output is generated.
+6. **Crisis Commander receives final plan** — the recommendation is handed off for human approval.
 
 ## Page Purpose
 
-The page presents a structured, mock multi-agent deliberation for a crisis scenario. It shows participating agents, their priorities, recommendations, consensus score, conflict level, stakeholder priorities, and a final recommendation ready for Crisis Commander.
+Present a live-feeling multi-agent deliberation experience that makes judges immediately understand this is a different kind of intelligence product — not a dashboard, not a table of cards. A strategic consensus platform.
 
-No real AI calls run in this issue.
+## AI Parliament Role in Project Aegis
 
-## AI Parliament Role
+AI Parliament is the reasoning layer between Scenario Simulator and Crisis Commander. It converts corridor stress, humanitarian priorities, trade risk, and policy constraints into structured, consensus-backed recommendations ready for human review.
 
-Inside Project Aegis, AI Parliament is planned as the reasoning layer between scenario analysis and crisis command. It will later help convert corridor stress, humanitarian priorities, trade risk, and policy constraints into structured recommendations.
+## Agent Roster
 
-## Agent List
+| Agent | Role | Focus |
+|---|---|---|
+| Infrastructure Guardian | Infrastructure Resilience | Ports, roads, power assets, logistics hubs |
+| Environment Sentinel | Environmental Risk | Carbon exposure, floodplain risk, ecological sensitivity |
+| Humanitarian Advocate | Citizen Safety | Hospitals, relief centers, evacuation access |
+| Economic Strategist | Economic Continuity | Trade disruption, port downtime, recovery implications |
+| Logistics Optimizer | Supply Chain Routing | Corridor alternatives, supply movement options |
+| Risk Analyst | Risk Intelligence | Cascading risks across infrastructure and health systems |
+| Tech Innovator | Digital Systems | Automation, data platforms, predictive tools |
+| Policy Advisor | Governance | Administrative feasibility, compliance, coordination |
 
-- Infrastructure Guardian: Protect critical infrastructure and restore routes.
-- Environment Sentinel: Reduce emissions and environmental damage.
-- Humanitarian Advocate: Protect citizens, hospitals, and vulnerable populations.
-- Economic Strategist: Reduce economic losses and trade disruption.
-- Logistics Optimizer: Find fastest and safest recovery routes.
-- Risk Analyst: Identify cascading failures and future risks.
-- Tech Innovator: Suggest digital, autonomous, and predictive solutions.
-- Policy Advisor: Convert recommendations into governance-ready actions.
+## Deliberation Workflow
 
-## Layout Structure
+```
+Scenario Loaded
+     ↓
+All 8 Agents Briefed
+     ↓
+Agents Submit Initial Positions
+     ↓
+Round 1 Deliberation (cross-agent conflict detection)
+     ↓
+Consensus Building (alignment scoring)
+     ↓
+Final Recommendation Generated
+     ↓
+Crisis Commander Handoff
+```
 
-- Top section: `PageHeader` with `Deliberation Ready` status.
-- Main left section: active session summary, agent cards grid, and recommendation timeline.
-- Right section: consensus score, stakeholder priority breakdown, and final recommendation preview.
-- Bottom section: agent recommendation matrix and staged implementation note.
+## Consensus Scoring
 
-The layout is responsive:
+The consensus score (0–100%) measures agent alignment across all recommendations:
 
-- Desktop: agent grid and timeline beside decision panels.
-- Tablet: stacked sections.
-- Mobile: single-column layout.
+- **72%+** — Good Agreement (green gauge)
+- **50–71%** — Partial Agreement (yellow gauge)
+- **< 50%** — Low Agreement (red gauge)
 
-## Components Used
+Breakdown categories: Agree / Partial / Disagree / Neutral
 
-- `PageHeader`
-- `AgentCard`
-- `SectionCard`
-- `MetricCard`
-- `ProgressBar`
-- `StatusBadge`
-- `TimelineItem`
-- `DataTable`
+## Layout Structure (Issue #20 Reference Design)
 
-Agent-specific composition components live in `src/components/agents/`:
+```
+┌─────────────────────────────────────────────────────────┐
+│  Parliament tabs + New Session action                   │
+├──────────────────────────────┬──────────────────────────┤
+│  Session Header              │  Consensus Summary       │
+│  — scenario, session ID      │  — large gauge           │
+│  — start time, participants  │  — agreement breakdown   │
+│  — objectives, timer, brief  │  — agreed priority       │
+├──────────────────────────────┼──────────────────────────┤
+│  AI Agents Grid (8 cards)    │  Decision Timeline       │
+│  — live position             │  — live indicator        │
+│  — confidence bar            │  — time markers          │
+│  — status dot (animated)     │  — connected live nodes  │
+│  — View All Discussions btn  │  — status markers        │
+│                              │  — step-by-step progress │
+├─────────────────┬────────────────────┬──────────────────┤
+│  Parliament     │  Key Discussion     │  Key Metrics     │
+│  Recommendation │  Insights           │  — 4 compact KPIs│
+│  — proposed     │  — 4 dense rows     │                  │
+│  — priorities   │  — rail + icon      │                  │
+│  — CTA button   │                    │                  │
+└─────────────────────────────────────────────────────────┘
+```
 
-- `ParliamentSessionSummary`
-- `AgentGrid`
-- `ConsensusPanel`
-- `PriorityBreakdown`
-- `AgentTimeline`
-- `FinalRecommendationPreview`
-- `AgentRecommendationMatrix`
+Single-screen hierarchy:
 
-## Data Sources Used
+- Top navigation strip: `ParliamentSessionTabs`
+- Left operational column: `ParliamentSessionSummary` above the 4-column × 2-row `AgentGrid`
+- Right operational column: large `ConsensusPanel` above full-height `AgentTimeline`
+- Bottom row: `FinalRecommendationPreview`, `KeyDiscussionInsights`, and `KeyMetrics`
+- The route intentionally renders no below-fold sections and no page scrollbar
 
-The page consumes centralized mock data from `src/data/`:
+The screen is intentionally dense for 1440×900, 1512×982, and MacBook-class screens. AI Parliament follows the standard app theme system and must render cleanly in both light and dark modes.
 
-- `agents`
-- `parliamentSession`
-- `agentRecommendations`
-- `parliamentConsensus`
-- `stakeholderPriorities`
-- `parliamentTimeline`
-- `finalRecommendation`
+Historical sidebar variant, now superseded:
 
-## Current Limitations
+```
+┌─────────────────┬───────────────────────────────────────┐
+│  Parliament     │  Key Discussion Insights              │
+│  Recommendation │  — agree/debate/info insight cards    │
+│  — proposed     │                                       │
+│  — priorities   │                                       │
+│  — CTA button   │                                       │
+│                 │  Key Metrics were formerly sidebar    │
+└─────────────────┴───────────────────────────────────────┘
+```
 
-- No real AI calls.
-- No Gemini/OpenAI API integration.
-- No backend APIs.
-- No agent orchestration.
-- No real decision engine.
-- No simulation logic.
-- No live data fetching.
+## Components
 
-## Future Real AI Integration Plan
+Agent-specific components in `src/components/agents/`:
 
-Future versions should connect Gemini or OpenAI APIs through a backend boundary and require strict structured JSON output. The UI should keep the current typed data contracts where possible so mock recommendations can be replaced with validated live multi-agent responses.
+| Component | Purpose |
+|---|---|
+| `ParliamentSessionTabs` | Compact tab strip with New Session action |
+| `ParliamentSessionSummary` | Compact session header with scenario, meta, timer, objectives, and View Brief |
+| `AgentGrid` | 8 live deliberation cards with animated status dots |
+| `ConsensusPanel` | SVG gauge + agree/partial/disagree breakdown |
+| `AgentTimeline` | Step-by-step decision timeline with live indicator |
+| `FinalRecommendationPreview` | Parliament recommendation with priority bars + CTA |
+| `KeyDiscussionInsights` | Four dense insight rows with status icons and colored rails |
+| `KeyMetrics` | Compact 4-metric command-center widget in the bottom-right slot |
+| `PriorityBreakdown` | Stakeholder priority weight bars |
+| `AgentRecommendationMatrix` | Detail table component retained for future detail surfaces; not rendered on AI Parliament |
 
-Planned integration path:
+Shared components are still available for lower-detail content, but the first-viewport AI Parliament widgets use direct `surface-card` compositions to control density and reference-image proportions.
 
-1. Define strict agent response schemas.
-2. Add backend orchestration endpoints.
-3. Validate model output before rendering.
-4. Preserve human review before Crisis Commander activation.
-5. Keep mock data available for demos and offline development.
+## Data Sources
+
+All mock data in `src/data/parliament.ts`:
+
+- `parliamentSession` — scenario, session ID, start time, timer, objectives
+- `agentRecommendations` — each agent's position, confidence, conflict level, status
+- `parliamentConsensus` — score, agree/partial/disagree/neutral %, top priority
+- `parliamentTimeline` — step-by-step deliberation milestones
+- `finalRecommendation` — proposed decision, implementation priorities, CTA
+- `keyDiscussionInsights` — insight cards with type (agree/debate/info)
+- `parliamentMetrics` — 4 key metrics (agents, factors, rounds, response time)
+- `stakeholderPriorities` — priority weight breakdown
+
+## Visual Design Principles
+
+- **Animated live dots**: pulsing green (aligned), pulsing yellow (reviewing), static blue (prepared)
+- **Per-agent color accents**: each of the 8 agents has a distinct icon + color accent
+- **SVG gauge**: semicircular arc showing consensus score with smooth transition
+- **Colored insight cards**: green/yellow/blue borders matching insight type
+- **Bottom-right metrics**: four icon KPIs placed beside recommendation and insights, not in the right sidebar
+- **No page scrolling**: the complete AI Parliament route fits inside one viewport
+- **No dominant table on the route**: the matrix is removed from this single-screen command view
+- **Theme compatibility**: all widgets use CSS variable tokens and support both light and dark themes
+
+## Current Implementation Notes
+
+- Frontend-only. No real AI calls run.
+- No Gemini/OpenAI/backend integration.
+- All deliberation is structured mock data.
+- The page intentionally looks live (status dots, timer, Live badge) to communicate the future real architecture.
+- The route is viewport-constrained and hides overflow to preserve the reference command-center composition.
+
+## Future Real AI Architecture
+
+1. Define strict JSON response schemas per agent.
+2. Backend orchestration endpoint handles multi-model calls in parallel.
+3. Structured outputs validated before rendering.
+4. Conflict detection run server-side.
+5. Human review gate before Crisis Commander activation.
+6. Mock data remains available for demos and offline dev.
+
+## Issue History
+
+- **Issue #20** — AI Parliament MVP Refinement: Full redesign from static card list to live deliberation storytelling page. Added gauge consensus, animated agent cards, decision timeline, discussion insights, key metrics. Reduced table dominance.
+- **Issue #20 Full Rebuild Pass** — Complete ground-up rebuild targeting 95% visual parity with reference. Changes:
+  - Session header made compact and horizontal: tabs above, scenario + Live badge + meta row + objectives + timer in one card
+  - Agent grid moved to **4-column × 2-row** layout (all 8 visible simultaneously), compact `h-7` icon badges, per-agent color-coded confidence bars, smaller text scale, no `SectionCard` wrapper
+  - ConsensusPanel redesigned: SVG gauge + agreement legend rendered side-by-side; shield icon + "Good Agreement" badge at bottom; removed status tile grid
+  - AgentTimeline uses smaller dot-and-line structure with timestamps right-aligned; pending items dimmed; no `SectionCard` wrapper
+  - FinalRecommendationPreview renamed to "Parliament Recommendation"; numbered priority bars replacing labeled grid; compact footer link + CTA
+  - KeyDiscussionInsights simplified to plain icon+text vertical list — no colored backgrounds, cleaner contrast
+  - KeyMetrics moved into right sidebar below timeline; uses distinct icon accent colors
+  - Page layout: right sidebar = ConsensusPanel → AgentTimeline → KeyMetrics; bottom row = Recommendation left + Insights right (inside left column); matrix below fold
+  - All `SectionCard` wrappers removed from agent-specific components to enable tighter density control via direct surface classes
+  - Decision Timeline rebuilt with timestamp LEFT of avatar circles, gradient-fill circles with step numbers (01–05), vertical connecting lines
+  - KeyMetrics uses full-circle gradient icon badges matching reference
+  - Page layout: `space-y-3/4` throughout, `290px` fixed sidebar, left column flex-col with agent grid hero + bottom row
+  - All components use consistent `0.62rem` micro-label style, tight `p-4` or `p-3` padding, no wasted vertical space
+  - **Status: AI Parliament MVP Refinement Finalized — Full Reference Rebuild Complete**
+- **Issue #20 Final Reference Pass** — Ground-up pixel parity rebuild:
+  - Added `isAiParliament` topbar variant in `Topbar.tsx`: "AI PARLIAMENT" title + "Multi-Agent Deliberation & Consensus Engine" subtitle, same corridor selector + notification + time + theme toggle layout as other pages
+  - Removed `PageHeader` from page entirely — title lives in topbar, matching reference exactly
+  - Session card: 3-column layout with `divide-x divide-border` vertical separators between title/meta, objectives, timer
+  - Agent grid: `rounded-full` circular icon avatars per-agent, centered "View All Agent Discussions →" link at bottom
+  - Consensus SVG: green filled arc + red warning tip overlay, score centered in gauge with "Consensus Score" label
+  - Decision Timeline: timestamp LEFT column (`w-[62px]`) → gradient avatar circles with domain icons (Globe/Brain/Users/Cpu/CheckCircle) → title + description
+  - All gaps `gap-3` throughout, no `PageHeader` wrapper, fits within single viewport
+  - Light and dark themes fully supported via CSS variable tokens (`hsl(var(--*))` throughout)
