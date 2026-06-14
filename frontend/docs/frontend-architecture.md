@@ -40,7 +40,7 @@ Current product routes under `src/app`:
 
 - `components/layout`: Shell, header, sidebar, and navigation components.
 - `components/dashboard`: Dashboard-specific presentation components.
-- `components/map`: Map-related presentation components.
+- `components/maps`: Reusable Leaflet/OpenStreetMap digital twin components.
 - `components/scenario`: Scenario simulator components.
 - `components/agents`: AI Parliament and agent-facing components.
 - `components/commander`: Crisis Commander components.
@@ -106,6 +106,37 @@ The shared component set includes:
 
 These components are presentation-only and should not contain backend calls, AI integrations, map libraries, simulation engines, or business calculations.
 
+## Reusable Digital Twin Map System
+
+Issue #64 added the shared digital twin map system under `src/components/maps`.
+
+The map stack uses:
+
+- Leaflet
+- React Leaflet
+- OpenStreetMap tiles
+- Static backend APIs from Issue #55
+
+Primary components:
+
+- `AegisMap.tsx`: shared map engine and backend data fetcher.
+- `NodeMarker.tsx`: node status markers, tooltips, and popups.
+- `RouteLayer.tsx`: route polylines between backend node coordinates.
+- `MapLegend.tsx`: node, route, and impact legends.
+- `MapControls.tsx`: zoom and fit-to-India controls.
+- `HeatmapLayer.tsx`: lightweight static impact circles.
+
+Pages using the shared map:
+
+- `/control-room`
+- `/scenario-simulator`
+- `/trade-sentinel`
+- `/impact-dashboard`
+
+The map system is visualization-only. It does not execute simulations, block routes, recover routes, calculate impact, call AI systems, consume weather APIs, or connect live traffic/port feeds.
+
+See `docs/digital-twin-map.md` for the full map architecture and future GIS roadmap.
+
 ## Shared Component Export Strategy
 
 Shared components are exported from `src/components/shared/index.ts`.
@@ -132,12 +163,12 @@ The Control Room page uses:
 
 - `PageHeader` for page identity and status context.
 - `MetricCard` for high-level KPIs.
-- `MapPlaceholder` for the India Digital Twin / Odisha Corridor preview.
+- `AegisMap` for the India Digital Twin / national infrastructure network.
 - `AlertCard` for active alerts.
 - `ProgressBar` and `RiskPill` for system health and stress summaries.
 - `TimelineItem` for recent activity.
 
-Dashboard-specific composition components live in `src/components/dashboard/` and consume centralized mock data from `src/data/`. The page does not include real map integration, backend calls, AI logic, scenario simulation, NetworkX routing, or business calculations.
+Dashboard-specific composition components live in `src/components/dashboard/` and consume centralized mock data from `src/data/`. The map consumes backend static node and route APIs. The page does not include AI logic, scenario simulation, NetworkX routing, or business calculations.
 
 ## Scenario Simulator Page
 
@@ -149,13 +180,13 @@ The Scenario Simulator page uses:
 - `ScenarioCard` for predefined scenario selection.
 - `SectionCard` for simulator panels.
 - `MetricCard` for expected impact summary values.
-- `MapPlaceholder` for a visual impact preview without real map integration.
+- `AegisMap` for a visual impact preview with affected node and route highlighting.
 - `TimelineItem` for the static simulation timeline preview.
 - `DataTable` for scenario comparison.
 
 Scenario-specific composition components live in `src/components/scenario/`. The page consumes `scenarios`, `scenarioSimulationImpacts`, and `scenarioTimelineSteps` from `src/data/`.
 
-Scenario selection and the control buttons use local React state only. The page does not include a real simulation engine, backend APIs, NetworkX routing, real AI, real scenario calculations, real map integration, or live data fetching.
+Scenario selection and the control buttons use local React state only. The map consumes backend static node and route APIs for visualization. The page does not include a real simulation engine, NetworkX routing, real AI, real scenario calculations, or live data fetching beyond the static map data.
 
 ## Trade Sentinel Page
 
@@ -165,7 +196,7 @@ The Trade Sentinel page uses:
 
 - `PageHeader` for page identity and monitoring status.
 - `MetricCard` for trade KPIs.
-- `MapPlaceholder` for the trade network preview.
+- `AegisMap` for the trade network preview.
 - `ChartCard` for a trade flow trend placeholder.
 - `AlertCard` for active trade alerts.
 - `StatusBadge` and `RiskPill` for port, shipment, commodity, and corridor status.
@@ -174,7 +205,7 @@ The Trade Sentinel page uses:
 
 Trade-specific mock data lives in `src/data/trade.ts` and `src/data/shipments.ts`, with supporting types in `src/types/trade.ts` and `src/types/shipment.ts`.
 
-This page is mock trade intelligence only. It does not include real trade APIs, live port data, backend calls, real map integration, AI logic, simulation logic, carbon calculation, business calculations, or live data fetching.
+This page is mock trade intelligence with a real OpenStreetMap route visualization from backend static data. It does not include real trade APIs, live port data, AI logic, simulation logic, carbon calculation, business calculations, or live data fetching beyond the static map data.
 
 ## AI Parliament Page
 

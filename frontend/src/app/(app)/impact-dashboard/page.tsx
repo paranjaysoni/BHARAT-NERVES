@@ -7,14 +7,13 @@ import {
   Factory,
   IndianRupee,
   Leaf,
-  Minus,
-  Plus,
   ShieldAlert,
   Target,
   Users,
   Zap
 } from "lucide-react";
 import clsx from "clsx";
+import { AegisMap, type HeatZone } from "@/components/maps";
 import { PageHeader } from "@/components/shared";
 import { impactDashboardPage } from "@/data";
 
@@ -109,6 +108,49 @@ const insights = [
 
 const panelClass = "surface-card rounded-md p-3.5 text-card-foreground";
 
+const impactHeatZones: HeatZone[] = [
+  {
+    id: "impact-odisha-coast",
+    name: "Odisha Coastal Corridor",
+    latitude: 20.26,
+    longitude: 86.68,
+    level: "CRITICAL",
+    radiusKm: 105
+  },
+  {
+    id: "impact-puri-khordha",
+    name: "Puri-Khordha Relief Belt",
+    latitude: 19.91,
+    longitude: 85.86,
+    level: "HIGH",
+    radiusKm: 74
+  },
+  {
+    id: "impact-nh16",
+    name: "NH-16 Freight Stress",
+    latitude: 20.46,
+    longitude: 85.88,
+    level: "MEDIUM",
+    radiusKm: 58
+  },
+  {
+    id: "impact-balasore",
+    name: "Balasore North Corridor",
+    latitude: 21.49,
+    longitude: 86.93,
+    level: "MEDIUM",
+    radiusKm: 52
+  },
+  {
+    id: "impact-command-core",
+    name: "Command Core",
+    latitude: 20.3,
+    longitude: 85.82,
+    level: "LOW",
+    radiusKm: 42
+  }
+];
+
 export default function ImpactDashboardPage() {
   return (
     <div className="space-y-3.5">
@@ -193,60 +235,15 @@ function KpiStrip() {
 function ImpactHeatmap() {
   return (
     <Panel title="IMPACT HEATMAP" subtitle="Impact intensity across states" className="min-h-[330px]">
-      <div className="relative h-[282px] overflow-hidden rounded-md border border-border bg-background">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_54%,hsl(var(--primary)/0.18),transparent_16rem),linear-gradient(135deg,hsl(var(--card)),hsl(var(--background)))]" />
-        <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(hsl(var(--info)/0.14)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--info)/0.14)_1px,transparent_1px)] [background-size:26px_26px]" />
-
-        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 560 310" role="img" aria-label="India impact heatmap">
-          <path
-            d="M168 35 L230 18 L294 35 L344 28 L397 58 L438 104 L455 155 L490 194 L462 240 L410 264 L356 287 L303 294 L260 268 L232 222 L196 196 L176 150 L137 112 Z"
-            fill="hsl(var(--primary) / 0.15)"
-            stroke="hsl(var(--info) / 0.68)"
-            strokeWidth="1.4"
-          />
-          <path
-            d="M170 62 L230 78 L292 68 L350 82 L420 122 M152 115 L236 132 L310 122 L388 154 L464 168 M192 170 L260 186 L342 178 L424 212 M240 220 L310 235 L380 224 M284 42 L274 114 L290 180 L274 270 M358 58 L342 128 L355 198 L338 270"
-            fill="none"
-            stroke="hsl(var(--foreground) / 0.22)"
-            strokeDasharray="3 4"
-          />
-          <HeatBlob x={335} y={204} color="danger" size={64} />
-          <HeatBlob x={275} y={250} color="danger" size={58} />
-          <HeatBlob x={246} y={160} color="warning" size={46} />
-          <HeatBlob x={188} y={186} color="warning" size={40} />
-          <HeatBlob x={304} y={134} color="yellow" size={36} />
-          <HeatBlob x={388} y={184} color="yellow" size={34} />
-          <HeatBlob x={414} y={100} color="info" size={46} />
-          <HeatBlob x={214} y={86} color="info" size={42} />
-        </svg>
-
-        <div className="absolute left-3 top-16 flex flex-col overflow-hidden rounded-md border border-border bg-card/80 backdrop-blur">
-          <button className="flex h-8 w-8 items-center justify-center border-b border-border text-muted-foreground hover:bg-secondary">
-            <Plus className="h-4 w-4" />
-          </button>
-          <button className="flex h-8 w-8 items-center justify-center border-b border-border text-muted-foreground hover:bg-secondary">
-            <Minus className="h-4 w-4" />
-          </button>
-          <button className="flex h-8 w-8 items-center justify-center text-muted-foreground hover:bg-secondary">
-            <Target className="h-4 w-4" />
-          </button>
-        </div>
-
-        <div className="absolute bottom-4 left-5 space-y-2 text-xs text-muted-foreground">
-          {[
-            ["Very High", "bg-danger"],
-            ["High", "bg-warning"],
-            ["Medium", "bg-yellow-300"],
-            ["Low", "bg-primary"],
-            ["Very Low", "bg-blue-700"]
-          ].map(([label, color]) => (
-            <div key={label} className="flex items-center gap-2">
-              <span className={clsx("h-2.5 w-2.5 rounded-sm", color)} />
-              {label}
-            </div>
-          ))}
-        </div>
-      </div>
+      <AegisMap
+        title="Static Impact Heat Zones"
+        description="Mock intensity zones over backend infrastructure data."
+        heatZones={impactHeatZones}
+        showImpactLegend
+        heightClassName="h-[282px]"
+        compactMarkers
+        stats={false}
+      />
     </Panel>
   );
 }
@@ -517,33 +514,6 @@ function Sparkline({ path, tone }: { path: string; tone: keyof typeof toneClasse
       <path d={`${path} L154 46 L0 46 Z`} className={sparkFillClasses[tone]} />
       <path d={path} fill="none" stroke="currentColor" strokeWidth="2" className={sparkStrokeClasses[tone]} />
     </svg>
-  );
-}
-
-function HeatBlob({
-  x,
-  y,
-  color,
-  size
-}: {
-  x: number;
-  y: number;
-  color: "danger" | "warning" | "yellow" | "info";
-  size: number;
-}) {
-  const fill = {
-    danger: "hsl(var(--danger))",
-    warning: "hsl(var(--warning))",
-    yellow: "rgb(250 204 21)",
-    info: "hsl(var(--primary))"
-  }[color];
-
-  return (
-    <g>
-      <circle cx={x} cy={y} r={size * 0.55} fill={fill} opacity="0.12" />
-      <circle cx={x} cy={y} r={size * 0.34} fill={fill} opacity="0.28" />
-      <circle cx={x} cy={y} r={size * 0.14} fill={fill} opacity="0.72" />
-    </g>
   );
 }
 

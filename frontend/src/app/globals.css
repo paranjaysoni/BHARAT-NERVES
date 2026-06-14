@@ -214,6 +214,99 @@ body {
   .animate-badge-pulse {
     animation: badge-pulse 1.8s ease-out infinite;
   }
+
+  .aegis-map {
+    min-height: 320px;
+    isolation: isolate;
+  }
+
+  .aegis-map .leaflet-container {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    min-height: inherit;
+    width: 100%;
+    background: hsl(var(--background));
+    font-family: inherit;
+  }
+
+  .dark .aegis-map .leaflet-tile {
+    filter: invert(1) hue-rotate(180deg) saturate(0.82) brightness(0.72) contrast(1.08);
+  }
+
+  .aegis-map .leaflet-control-attribution {
+    border-top-left-radius: 6px;
+    background: rgb(2 6 23 / 0.72);
+    color: rgb(226 232 240 / 0.82);
+    font-size: 10px;
+  }
+
+  .aegis-map .leaflet-control-attribution a {
+    color: rgb(125 211 252);
+  }
+
+  .aegis-map .leaflet-popup-content-wrapper,
+  .aegis-map .leaflet-popup-tip {
+    border: 1px solid rgb(51 65 85 / 0.9);
+    background: rgb(15 23 42 / 0.96);
+    color: rgb(248 250 252);
+    box-shadow: 0 18px 42px rgb(2 6 23 / 0.35);
+  }
+
+  .aegis-map .leaflet-popup-content {
+    margin: 12px;
+    min-width: 180px;
+  }
+
+  .aegis-map .leaflet-popup-close-button {
+    color: rgb(226 232 240 / 0.72);
+  }
+
+  .aegis-map .leaflet-tooltip {
+    border: 1px solid rgb(51 65 85 / 0.85);
+    border-radius: 6px;
+    background: rgb(15 23 42 / 0.92);
+    color: rgb(248 250 252);
+    box-shadow: 0 8px 18px rgb(2 6 23 / 0.22);
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .aegis-map-popup-title {
+    margin: 0 0 0.5rem;
+    color: rgb(248 250 252);
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .aegis-map-popup dl {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0;
+  }
+
+  .aegis-map-popup div {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 0.5rem;
+    align-items: start;
+  }
+
+  .aegis-map-popup dt {
+    color: rgb(148 163 184);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .aegis-map-popup dd {
+    margin: 0;
+    color: rgb(226 232 240);
+    font-size: 0.75rem;
+    line-height: 1.25;
+  }
 }
 
 ::selection {
