@@ -1,0 +1,172 @@
+[
+  {
+    "id": "odisha_cyclone_corridor",
+    "name": "Odisha Cyclone Corridor",
+    "category": "CYCLONE",
+    "severity": "CRITICAL",
+    "region": "Eastern Odisha Coast",
+    "country": "India",
+    "description": "Severe Category 4 cyclone making landfall near Paradip on the Odisha coast. Inspired by Cyclone Fani (2019) and Yaas (2021) event profiles. Triggers cascading disruption across the eastern logistics corridor — port operations suspended, coastal routes flooded, relief supply chains stressed.",
+    "affectedNodeIds": [
+      "paradip_port",
+      "dhamra_port",
+      "puri_district_hub",
+      "kendrapara_district_hub",
+      "jagatsinghpur_district_hub",
+      "paradip_fuel_depot",
+      "coastal_cyclone_shelters"
+    ],
+    "affectedRouteIds": [
+      "route_paradip_bhubaneswar",
+      "route_paradip_cuttack",
+      "route_bhubaneswar_puri",
+      "route_cuttack_kendrapara",
+      "route_kendrapara_paradip",
+      "route_fuel_depot_paradip",
+      "route_shelters_puri",
+      "route_shelters_kendrapara",
+      "route_jagatsinghpur_paradip"
+    ],
+    "blockedRouteIds": [
+      "route_kendrapara_paradip",
+      "route_shelters_kendrapara",
+      "route_fuel_depot_paradip"
+    ],
+    "expectedImpacts": {
+      "delayHours": 36,
+      "economicLossCr": 1240,
+      "carbonIncreasePercent": 28,
+      "populationAffected": 2480000,
+      "resilienceBefore": 38,
+      "resilienceAfter": 76,
+      "recoveryDays": 14
+    },
+    "tags": ["cyclone", "landfall", "coastal", "port-disruption", "fani-profile"]
+  },
+  {
+    "id": "paradip_port_shutdown",
+    "name": "Paradip Port Total Shutdown",
+    "category": "PORT_SHUTDOWN",
+    "severity": "HIGH",
+    "region": "Jagatsinghpur District, Odisha",
+    "country": "India",
+    "description": "Complete suspension of Paradip Port operations due to severe weather, equipment failure, or cyclone approach. All incoming and outgoing vessel movements halted for 72 hours. Trade corridor rerouted to Dhamra and Kolkata ports causing significant supply chain delays.",
+    "affectedNodeIds": [
+      "paradip_port",
+      "paradip_fuel_depot",
+      "jagatsinghpur_district_hub",
+      "cuttack_logistics_hub"
+    ],
+    "affectedRouteIds": [
+      "route_paradip_bhubaneswar",
+      "route_paradip_cuttack",
+      "route_fuel_depot_paradip",
+      "route_jagatsinghpur_paradip",
+      "route_kendrapara_paradip"
+    ],
+    "blockedRouteIds": [
+      "route_fuel_depot_paradip",
+      "route_kendrapara_paradip"
+    ],
+    "expectedImpacts": {
+      "delayHours": 72,
+      "economicLossCr": 420,
+      "carbonIncreasePercent": 18,
+      "populationAffected": 850000,
+      "resilienceBefore": 55,
+      "resilienceAfter": 82,
+      "recoveryDays": 4
+    },
+    "tags": ["port-closure", "trade-disruption", "jagatsinghpur", "rerouting"]
+  },
+  {
+    "id": "nh16_highway_blockage",
+    "name": "NH-16 Highway Blockage",
+    "category": "HIGHWAY_BLOCKAGE",
+    "severity": "HIGH",
+    "region": "NH-16 Odisha Segment",
+    "country": "India",
+    "description": "Major blockage on National Highway 16 — the primary north-south logistics artery of Odisha — due to a combination of flash flooding, bridge damage, and multi-vehicle accident near Bhadrak. Disrupts all freight and relief movement between Bhubaneswar/Cuttack and Balasore district.",
+    "affectedNodeIds": [
+      "balasore_district_hub",
+      "cuttack_logistics_hub",
+      "cuttack_rail_hub"
+    ],
+    "affectedRouteIds": [
+      "route_cuttack_balasore",
+      "route_ndrf_balasore"
+    ],
+    "blockedRouteIds": [
+      "route_cuttack_balasore"
+    ],
+    "expectedImpacts": {
+      "delayHours": 18,
+      "economicLossCr": 85,
+      "carbonIncreasePercent": 22,
+      "populationAffected": 320000,
+      "resilienceBefore": 62,
+      "resilienceAfter": 88,
+      "recoveryDays": 2
+    },
+    "tags": ["highway", "blockage", "nh-16", "bhadrak", "north-corridor"]
+  },
+  {
+    "id": "warehouse_fire_cuttack",
+    "name": "Cuttack Relief Warehouse Fire",
+    "category": "WAREHOUSE_FIRE",
+    "severity": "HIGH",
+    "region": "Cuttack, Odisha",
+    "country": "India",
+    "description": "Fire outbreak at the Cuttack Relief Warehouse destroys approximately 30% of pre-positioned food and medical supplies. Requires emergency reallocation from Bhubaneswar warehouse and triggers urgent replenishment from central government stockpiles.",
+    "affectedNodeIds": [
+      "cuttack_relief_warehouse",
+      "cuttack_logistics_hub",
+      "scb_medical_cuttack"
+    ],
+    "affectedRouteIds": [
+      "route_cuttack_warehouse_scb",
+      "route_cuttack_kendrapara"
+    ],
+    "blockedRouteIds": [],
+    "expectedImpacts": {
+      "delayHours": 12,
+      "economicLossCr": 32,
+      "carbonIncreasePercent": 8,
+      "populationAffected": 180000,
+      "resilienceBefore": 70,
+      "resilienceAfter": 91,
+      "recoveryDays": 7
+    },
+    "tags": ["fire", "warehouse", "supply-loss", "cuttack", "reallocation"]
+  },
+  {
+    "id": "medical_resource_shortage",
+    "name": "Medical Resource Shortage — Coastal Districts",
+    "category": "MEDICAL_SHORTAGE",
+    "severity": "MEDIUM",
+    "region": "Coastal Districts, Odisha",
+    "country": "India",
+    "description": "Critical shortage of blood bags, surgical kits, and dialysis consumables across coastal Odisha hospitals following prolonged cyclone recovery. SCB Medical College and AIIMS face supply chain gaps for 72 hours. Emergency air drops and central govt replenishment activated.",
+    "affectedNodeIds": [
+      "aiims_bhubaneswar",
+      "scb_medical_cuttack",
+      "bhubaneswar_relief_warehouse",
+      "cuttack_relief_warehouse"
+    ],
+    "affectedRouteIds": [
+      "route_bhubaneswar_warehouse_aiims",
+      "route_cuttack_warehouse_scb"
+    ],
+    "blockedRouteIds": [],
+    "expectedImpacts": {
+      "delayHours": 24,
+      "economicLossCr": 18,
+      "carbonIncreasePercent": 12,
+      "populationAffected": 95000,
+      "resilienceBefore": 48,
+      "resilienceAfter": 85,
+      "recoveryDays": 5
+    },
+    "tags": ["medical", "shortage", "hospital", "aiims", "scb", "air-supply"]
+  }
+]

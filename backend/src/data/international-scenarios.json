@@ -1,0 +1,102 @@
+[
+  {
+    "id": "tokyo_earthquake_m73",
+    "name": "Tokyo Earthquake M7.3 — Supply Chain Shock",
+    "category": "EARTHQUAKE",
+    "severity": "CRITICAL",
+    "region": "Greater Tokyo Area, Kanto Plain",
+    "country": "Japan",
+    "description": "Magnitude 7.3 earthquake strikes the Tokyo metropolitan region during peak trade hours. Port of Tokyo and Yokohama sustain partial structural damage. Global automotive, semiconductor, and electronics supply chains disrupted. Asia-Pacific freight rates spike 240% within 48 hours.",
+    "affectedNodeIds": [],
+    "affectedRouteIds": [],
+    "blockedRouteIds": [],
+    "expectedImpacts": {
+      "delayHours": 120,
+      "economicLossCr": 189000,
+      "carbonIncreasePercent": 34,
+      "populationAffected": 8900000,
+      "resilienceBefore": 42,
+      "resilienceAfter": 71,
+      "recoveryDays": 45
+    },
+    "globalRelevance": "Japan supplies 38% of global automotive components and 22% of industrial robotics. Port of Yokohama alone handles 800,000 TEU/month. Disruption cascades into Indian auto sector within 10 days via knock-on parts shortage.",
+    "tradeImpactUsd": 48000000000,
+    "geopoliticalContext": "Japan's seismic risk is well-modelled but scale of a Tokyo-area event exceeds most simulation scenarios. India has bilateral trade agreements and emergency logistics cooperation protocols with Japan.",
+    "tags": ["earthquake", "japan", "tokyo", "semiconductor", "auto", "asia-pacific"]
+  },
+  {
+    "id": "california_wildfire_2025",
+    "name": "California Wildfire — Pacific Port Disruption",
+    "category": "WILDFIRE",
+    "severity": "HIGH",
+    "region": "Southern California / Los Angeles Basin",
+    "country": "United States",
+    "description": "Extreme wildfire event driven by Santa Ana wind conditions destroys power infrastructure serving the Port of Los Angeles and Long Beach — the busiest port complex in the Western Hemisphere. Smoke, road closures, and power outages halt container operations for 72 hours. Indian pharmaceutical and IT hardware imports via the Pacific face 3-week backlogs.",
+    "affectedNodeIds": [],
+    "affectedRouteIds": [],
+    "blockedRouteIds": [],
+    "expectedImpacts": {
+      "delayHours": 72,
+      "economicLossCr": 65000,
+      "carbonIncreasePercent": 45,
+      "populationAffected": 3100000,
+      "resilienceBefore": 38,
+      "resilienceAfter": 74,
+      "recoveryDays": 21
+    },
+    "globalRelevance": "LA / Long Beach handles 40% of US container imports. Indian pharma and electronics exports to the US are significantly impacted. Alternative routing via East Coast adds 18 days transit time.",
+    "tradeImpactUsd": 12000000000,
+    "geopoliticalContext": "Climate-driven wildfire risk in California is increasing annually. India-US bilateral trade in 2023 exceeded $190B. A Pacific port disruption directly affects Indian export timelines.",
+    "tags": ["wildfire", "usa", "california", "los-angeles", "pacific-port", "pharma"]
+  },
+  {
+    "id": "rotterdam_port_blockage",
+    "name": "Rotterdam Port Disruption",
+    "category": "TRADE_DISRUPTION",
+    "severity": "HIGH",
+    "region": "Rhine-Meuse Delta, Netherlands",
+    "country": "Netherlands",
+    "description": "Extreme low Rhine river water levels combined with dock worker strike cause a 96-hour near-total halt at the Port of Rotterdam — Europe's largest port. 42 nations dependent on Rotterdam for container transshipment face cascading import/export delays. Inland barge network severely constrained.",
+    "affectedNodeIds": [],
+    "affectedRouteIds": [],
+    "blockedRouteIds": [],
+    "expectedImpacts": {
+      "delayHours": 96,
+      "economicLossCr": 58000,
+      "carbonIncreasePercent": 15,
+      "populationAffected": 420000000,
+      "resilienceBefore": 45,
+      "resilienceAfter": 89,
+      "recoveryDays": 8
+    },
+    "globalRelevance": "Rotterdam handles 14.5 million TEU/year serving 42+ nations. India's textile and chemical exports to Europe transship through Rotterdam. Disruption shifts cargo to Antwerp and Hamburg at premium freight rates.",
+    "tradeImpactUsd": 8600000000,
+    "geopoliticalContext": "Europe's gateway port is increasingly at risk from climate-driven Rhine water level drops. India-EU FTA negotiations make European port reliability strategically important for Indian export planning.",
+    "tags": ["port", "rotterdam", "europe", "rhine", "strike", "transshipment"]
+  },
+  {
+    "id": "red_sea_corridor_crisis",
+    "name": "Red Sea Trade Corridor Crisis",
+    "category": "SEA_BLOCKADE",
+    "severity": "CRITICAL",
+    "region": "Red Sea / Bab-el-Mandeb Strait",
+    "country": "International Waters",
+    "description": "Ongoing Houthi attacks on commercial shipping in the Red Sea force 85% of container traffic to divert around the Cape of Good Hope, adding 10–14 days to Europe-Asia transit. Insurance surcharges, fuel costs, and vessel diversions push freight rates to 2021 pandemic-era highs. Indian export competitiveness severely impacted.",
+    "affectedNodeIds": [],
+    "affectedRouteIds": [],
+    "blockedRouteIds": [],
+    "expectedImpacts": {
+      "delayHours": 336,
+      "economicLossCr": 250000,
+      "carbonIncreasePercent": 68,
+      "populationAffected": 2800000000,
+      "resilienceBefore": 22,
+      "resilienceAfter": 58,
+      "recoveryDays": 120
+    },
+    "globalRelevance": "12% of global trade transits the Red Sea / Suez Canal route. Indian textile, pharmaceutical, and IT exports to Europe add 14 days via Cape routing. Energy imports and fertilizer supply chains directly affected, raising food inflation risk.",
+    "tradeImpactUsd": 200000000000,
+    "geopoliticalContext": "Red Sea crisis (2023–2024) is an active real-world scenario. Indian Navy deployed to escort commercial vessels. Direct link between geopolitical instability and economic resilience planning.",
+    "tags": ["red-sea", "houthi", "shipping", "suez", "geopolitical", "global-trade"]
+  }
+]

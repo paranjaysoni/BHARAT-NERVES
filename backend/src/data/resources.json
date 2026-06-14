@@ -1,0 +1,233 @@
+[
+  {
+    "id": "food_kits_bhubaneswar",
+    "name": "Emergency Food Kits",
+    "category": "FOOD",
+    "quantity": 80000,
+    "unit": "kits",
+    "locationNodeId": "bhubaneswar_relief_warehouse",
+    "status": "AVAILABLE",
+    "priority": "CRITICAL",
+    "description": "7-day dry ration kits containing rice, dal, salt, cooking oil, and biscuits. Packaged for distribution to cyclone-affected families."
+  },
+  {
+    "id": "food_kits_cuttack",
+    "name": "Emergency Food Kits",
+    "category": "FOOD",
+    "quantity": 45000,
+    "unit": "kits",
+    "locationNodeId": "cuttack_relief_warehouse",
+    "status": "AVAILABLE",
+    "priority": "CRITICAL",
+    "description": "7-day dry ration kits for northern Odisha district distribution. Pre-positioned ahead of cyclone season."
+  },
+  {
+    "id": "water_tankers_bhubaneswar",
+    "name": "Potable Water Tankers",
+    "category": "WATER",
+    "quantity": 120,
+    "unit": "tankers",
+    "locationNodeId": "bhubaneswar_relief_warehouse",
+    "status": "AVAILABLE",
+    "priority": "CRITICAL",
+    "description": "10,000-litre water tankers for deployment to areas with contaminated or cut groundwater supply post-cyclone."
+  },
+  {
+    "id": "water_purification_cuttack",
+    "name": "Portable Water Purification Units",
+    "category": "WATER",
+    "quantity": 85,
+    "unit": "units",
+    "locationNodeId": "cuttack_relief_warehouse",
+    "status": "AVAILABLE",
+    "priority": "HIGH",
+    "description": "Reverse osmosis water purification units capable of processing 5,000 litres/hour. Deployed to shelters and medical facilities."
+  },
+  {
+    "id": "medical_kits_bhubaneswar",
+    "name": "Emergency Medical Kits",
+    "category": "MEDICAL",
+    "quantity": 5000,
+    "unit": "kits",
+    "locationNodeId": "bhubaneswar_relief_warehouse",
+    "status": "AVAILABLE",
+    "priority": "CRITICAL",
+    "description": "WHO-standard emergency medical kits covering wound care, ORS, antibiotics, and trauma supplies. Each kit serves 10 patients for one week."
+  },
+  {
+    "id": "medical_kits_cuttack",
+    "name": "Emergency Medical Kits",
+    "category": "MEDICAL",
+    "quantity": 2800,
+    "unit": "kits",
+    "locationNodeId": "cuttack_relief_warehouse",
+    "status": "LIMITED",
+    "priority": "CRITICAL",
+    "description": "Emergency medical kits pre-positioned for northern Odisha districts. Stock is limited after last quarter's flood response draw-down."
+  },
+  {
+    "id": "surgical_kits_aiims",
+    "name": "Surgical Supply Kits",
+    "category": "MEDICAL",
+    "quantity": 800,
+    "unit": "kits",
+    "locationNodeId": "aiims_bhubaneswar",
+    "status": "AVAILABLE",
+    "priority": "HIGH",
+    "description": "Sterile surgical supply kits for mass casualty event response. Maintained at AIIMS Bhubaneswar for surge capacity activation."
+  },
+  {
+    "id": "trucks_bhubaneswar",
+    "name": "Emergency Relief Trucks",
+    "category": "TRANSPORT",
+    "quantity": 220,
+    "unit": "vehicles",
+    "locationNodeId": "bhubaneswar_relief_warehouse",
+    "status": "AVAILABLE",
+    "priority": "HIGH",
+    "description": "10-tonne capacity flat-bed and enclosed trucks for relief supply movement. Maintained by state civil defence and private requisition pool."
+  },
+  {
+    "id": "trucks_ndrf",
+    "name": "NDRF Response Vehicles",
+    "category": "TRANSPORT",
+    "quantity": 65,
+    "unit": "vehicles",
+    "locationNodeId": "ndrf_odraf_base",
+    "status": "AVAILABLE",
+    "priority": "CRITICAL",
+    "description": "Specialised NDRF fleet including 4WD command vehicles, communication vans, and light rescue trucks. Ready for rapid deployment within 2 hours of activation."
+  },
+  {
+    "id": "inflatable_boats_ndrf",
+    "name": "Inflatable Rescue Boats",
+    "category": "TRANSPORT",
+    "quantity": 145,
+    "unit": "boats",
+    "locationNodeId": "ndrf_odraf_base",
+    "status": "DEPLOYED",
+    "priority": "CRITICAL",
+    "description": "Motorised inflatable rescue boats for flood and storm surge rescue operations. Currently deployed to Kendrapara and Puri coastal areas."
+  },
+  {
+    "id": "helicopters_bhubaneswar",
+    "name": "Emergency Helicopters",
+    "category": "TRANSPORT",
+    "quantity": 8,
+    "unit": "aircraft",
+    "locationNodeId": "bhubaneswar_airport",
+    "status": "AVAILABLE",
+    "priority": "CRITICAL",
+    "description": "State government and Air Force helicopters tasked for disaster relief. Capable of aerial supply drops, medical evacuation, and search-and-rescue over flooded terrain."
+  },
+  {
+    "id": "fuel_reserves_paradip",
+    "name": "Fuel Reserves (Diesel / Aviation)",
+    "category": "FUEL",
+    "quantity": 180000,
+    "unit": "kilolitres",
+    "locationNodeId": "paradip_fuel_depot",
+    "status": "AT_RISK",
+    "priority": "CRITICAL",
+    "description": "IOCL strategic fuel reserves at Paradip. Supplies diesel for emergency vehicles, generators, and aviation fuel for relief helicopters. At high risk during cyclone landfall."
+  },
+  {
+    "id": "fuel_cuttack",
+    "name": "Fuel Reserves (Diesel)",
+    "category": "FUEL",
+    "quantity": 25000,
+    "unit": "kilolitres",
+    "locationNodeId": "cuttack_logistics_hub",
+    "status": "AVAILABLE",
+    "priority": "HIGH",
+    "description": "Secondary diesel reserve at Cuttack logistics hub for emergency vehicle fuelling during road relief operations."
+  },
+  {
+    "id": "generators_bhubaneswar",
+    "name": "Portable Generators",
+    "category": "POWER",
+    "quantity": 340,
+    "unit": "units",
+    "locationNodeId": "bhubaneswar_relief_warehouse",
+    "status": "AVAILABLE",
+    "priority": "HIGH",
+    "description": "15–30 kVA diesel generators for hospitals, shelters, and command centers during grid power outages. Essential for hospital operations post-landfall."
+  },
+  {
+    "id": "generators_ndrf",
+    "name": "Field Portable Generators",
+    "category": "POWER",
+    "quantity": 80,
+    "unit": "units",
+    "locationNodeId": "ndrf_odraf_base",
+    "status": "AVAILABLE",
+    "priority": "HIGH",
+    "description": "Compact field generators for NDRF rescue camp operations, field hospitals, and temporary command posts in disaster zones."
+  },
+  {
+    "id": "satcom_units_bhubaneswar",
+    "name": "Satellite Communication Units (VSAT)",
+    "category": "COMMUNICATION",
+    "quantity": 45,
+    "unit": "units",
+    "locationNodeId": "bhubaneswar_command",
+    "status": "AVAILABLE",
+    "priority": "CRITICAL",
+    "description": "VSAT satellite communication terminals for deployment to field command posts when terrestrial telecom networks fail during cyclone. ISRO SATCOM bandwidth allocated."
+  },
+  {
+    "id": "satcom_ndrf",
+    "name": "HF/VHF Radio Sets",
+    "category": "COMMUNICATION",
+    "quantity": 280,
+    "unit": "units",
+    "locationNodeId": "ndrf_odraf_base",
+    "status": "AVAILABLE",
+    "priority": "HIGH",
+    "description": "High-frequency and VHF handheld radio sets for field team communication. Primary fallback when mobile networks are down."
+  },
+  {
+    "id": "temporary_shelters_coastal",
+    "name": "Temporary Shelter Kits",
+    "category": "SHELTER",
+    "quantity": 12000,
+    "unit": "kits",
+    "locationNodeId": "coastal_cyclone_shelters",
+    "status": "AVAILABLE",
+    "priority": "HIGH",
+    "description": "Waterproof tarpaulin and pole shelter kits for families whose homes are destroyed or inaccessible. Each kit shelters one family of 5 for 4 weeks."
+  },
+  {
+    "id": "rescue_teams_ndrf",
+    "name": "NDRF Rescue Teams",
+    "category": "RESCUE",
+    "quantity": 24,
+    "unit": "teams",
+    "locationNodeId": "ndrf_odraf_base",
+    "status": "DEPLOYED",
+    "priority": "CRITICAL",
+    "description": "Each NDRF team consists of 45 trained rescuers with specialised equipment for flood, building collapse, and water rescue. Teams currently deployed to high-risk coastal districts."
+  },
+  {
+    "id": "ambulances_aiims",
+    "name": "Ambulances",
+    "category": "TRANSPORT",
+    "quantity": 32,
+    "unit": "vehicles",
+    "locationNodeId": "aiims_bhubaneswar",
+    "status": "AVAILABLE",
+    "priority": "HIGH",
+    "description": "Advanced life support ambulances at AIIMS Bhubaneswar for mass casualty transport from field triage points to tertiary hospital."
+  },
+  {
+    "id": "ambulances_scb",
+    "name": "Ambulances",
+    "category": "TRANSPORT",
+    "quantity": 28,
+    "unit": "vehicles",
+    "locationNodeId": "scb_medical_cuttack",
+    "status": "AVAILABLE",
+    "priority": "HIGH",
+    "description": "SCB Medical College ambulance fleet for casualty transport across northern Odisha districts."
+  }
+]
