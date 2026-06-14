@@ -2,24 +2,20 @@
 
 import { useMemo, useState } from "react";
 import {
-  Anchor,
   ArrowRight,
-  Boxes,
   Flame,
   Gauge,
-  Home,
   Pause,
   Play,
   RotateCcw,
   Ship,
   TrafficCone,
-  Waves,
-  Warehouse
+  Waves
 } from "lucide-react";
-import type { ReactNode } from "react";
 import clsx from "clsx";
+import { AegisMap } from "@/components/maps";
 import { RiskPill, StatusBadge } from "@/components/shared";
-import { nodes, routes, scenarioSimulationImpacts, scenarios } from "@/data";
+import { scenarioSimulationImpacts, scenarios } from "@/data";
 import type { ScenarioSimulationImpact } from "@/data";
 import type { Scenario, ScenarioSeverity } from "@/types";
 
@@ -28,13 +24,6 @@ type ScenarioOption = Scenario & {
   type: string;
   weather: string;
   confidence: number;
-};
-
-type NodePoint = {
-  id: string;
-  x: number;
-  y: number;
-  label?: string;
 };
 
 export type SimulationMode = "idle" | "running" | "paused";
@@ -79,49 +68,61 @@ const customScenario = {
   weather: "Operator-defined"
 } satisfies ScenarioOption;
 
-const nodePoints: NodePoint[] = [
-  { id: "node-balasore-hub", x: 75, y: 22, label: "Balasore" },
-  { id: "node-bhadrak-hub", x: 67, y: 34 },
-  { id: "node-dhamra-port", x: 78, y: 36 },
-  { id: "node-kendrapara-hub", x: 67, y: 47 },
-  { id: "node-relief-alpha", x: 72, y: 48 },
-  { id: "node-paradip-port", x: 78, y: 58, label: "Paradip Port" },
-  { id: "node-jajpur-road-junction", x: 57, y: 41 },
-  { id: "node-cuttack-warehouse", x: 58, y: 55, label: "Cuttack" },
-  { id: "node-scb-medical-college", x: 62, y: 54 },
-  { id: "node-bhubaneswar-warehouse", x: 51, y: 66 },
-  { id: "node-aiims-bhubaneswar", x: 47, y: 69 },
-  { id: "node-khurda-road-junction", x: 43, y: 71 },
-  { id: "node-puri-hub", x: 59, y: 78, label: "Puri" },
-  { id: "node-relief-bravo", x: 66, y: 80, label: "Jagatsinghpur" },
-  { id: "node-talcher-power-station", x: 39, y: 43 },
-  { id: "node-gopalpur-logistics-yard", x: 47, y: 89, label: "Gopalpur Port" }
-];
-
-const pointById = new Map(nodePoints.map((point) => [point.id, point]));
-
 const impactedRouteIds: Record<string, string[]> = {
   "scenario-cyclone-landfall": [
-    "route-paradip-kendrapara",
-    "route-bhubaneswar-puri",
-    "route-puri-relief-bravo",
-    "route-dhamra-paradip",
-    "route-gopalpur-puri"
+    "route_paradip_bhubaneswar",
+    "route_paradip_cuttack",
+    "route_bhubaneswar_puri",
+    "route_cuttack_kendrapara",
+    "route_kendrapara_paradip",
+    "route_fuel_depot_paradip",
+    "route_shelters_puri",
+    "route_shelters_kendrapara",
+    "route_jagatsinghpur_paradip"
   ],
   "scenario-highway-blockage": [
-    "route-khurda-puri",
-    "route-bhubaneswar-puri",
-    "route-puri-relief-bravo"
+    "route_cuttack_balasore",
+    "route_ndrf_balasore"
   ],
   "scenario-port-shutdown": [
-    "route-paradip-cuttack",
-    "route-dhamra-paradip",
-    "route-paradip-kendrapara"
+    "route_paradip_bhubaneswar",
+    "route_paradip_cuttack",
+    "route_fuel_depot_paradip",
+    "route_jagatsinghpur_paradip",
+    "route_kendrapara_paradip"
   ],
   "scenario-warehouse-fire": [
-    "route-cuttack-bhubaneswar",
-    "route-cuttack-scb",
-    "route-paradip-cuttack"
+    "route_bhubaneswar_cuttack",
+    "route_cuttack_scb",
+    "route_cuttack_balasore"
+  ]
+};
+
+const impactedNodeIds: Record<string, string[]> = {
+  "scenario-cyclone-landfall": [
+    "paradip_port",
+    "dhamra_port",
+    "puri_district_hub",
+    "kendrapara_district_hub",
+    "jagatsinghpur_district_hub",
+    "paradip_fuel_depot",
+    "coastal_cyclone_shelters"
+  ],
+  "scenario-highway-blockage": [
+    "balasore_district_hub",
+    "cuttack_logistics_hub",
+    "cuttack_rail_hub"
+  ],
+  "scenario-port-shutdown": [
+    "paradip_port",
+    "paradip_fuel_depot",
+    "jagatsinghpur_district_hub",
+    "cuttack_logistics_hub"
+  ],
+  "scenario-warehouse-fire": [
+    "cuttack_logistics_hub",
+    "cuttack_warehouse",
+    "bhubaneswar_command"
   ]
 };
 
@@ -358,8 +359,8 @@ function ImpactPreviewMap({
   scenario: ScenarioOption;
   impact: ScenarioSimulationImpact;
 }) {
-  const affectedRouteIds = new Set(impactedRouteIds[scenario.id] ?? []);
-  const affectedNodeIds = new Set(scenario.affectedNodes);
+  const affectedRouteIds = impactedRouteIds[scenario.id] ?? [];
+  const affectedNodeIds = impactedNodeIds[scenario.id] ?? [];
 
   return (
     <section className="surface-card overflow-hidden rounded-md">
@@ -374,103 +375,13 @@ function ImpactPreviewMap({
         </div>
         <StatusBadge label={impact.expectedStressIncrease} variant="warning" />
       </div>
-      <div className="relative min-h-[380px] overflow-hidden bg-slate-950 xl:min-h-[420px]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_58%,rgba(59,130,246,0.18),transparent_16rem),radial-gradient(circle_at_45%_43%,rgba(34,197,94,0.12),transparent_18rem),linear-gradient(135deg,rgba(2,6,23,0.96),rgba(8,47,73,0.78))]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(56,189,248,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(56,189,248,0.07)_1px,transparent_1px)] bg-[size:36px_36px]" />
-
-        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" aria-label="Odisha simulation map">
-          <path
-            d="M20 64 L24 47 L34 32 L50 20 L70 20 L84 35 L88 52 L79 70 L62 83 L39 85 Z"
-            className="fill-info/10 stroke-info/55"
-            strokeWidth="0.7"
-          />
-          <text x="47" y="61" className="fill-white/25 text-[4px] font-semibold tracking-[0.18em]">
-            ODISHA
-          </text>
-          {routes.map((route) => {
-            const source = pointById.get(route.source);
-            const destination = pointById.get(route.destination);
-            if (!source || !destination) return null;
-            const isAffected = affectedRouteIds.has(route.id);
-
-            return (
-              <line
-                key={route.id}
-                x1={source.x}
-                y1={source.y}
-                x2={destination.x}
-                y2={destination.y}
-                className={isAffected ? "stroke-danger" : route.status === "clear" ? "stroke-success" : "stroke-warning"}
-                strokeWidth={isAffected ? 1.1 : 0.65}
-                strokeDasharray={isAffected ? "3 2" : "2 2"}
-                opacity={isAffected ? 0.95 : 0.75}
-              />
-            );
-          })}
-        </svg>
-
-        <div className="absolute right-[7%] top-[28%] h-56 w-56 rounded-full border border-white/10 bg-[conic-gradient(from_30deg,rgba(148,163,184,0.08),rgba(255,255,255,0.35),rgba(30,64,175,0.20),rgba(148,163,184,0.05))] blur-[1px]" />
-        <div className="absolute right-[9%] top-[34%] h-36 w-36 animate-pulse rounded-full border border-white/20 bg-white/10 blur-sm" />
-        <div className="absolute right-[14%] top-[42%] h-10 w-10 rounded-full bg-slate-100/70 blur-md" />
-
-        <div className="absolute left-5 top-5 flex flex-col gap-2 rounded-md border border-white/10 bg-slate-950/70 p-2 shadow-lg backdrop-blur">
-          <button type="button" className="flex h-8 w-8 items-center justify-center rounded border border-white/10 text-lg text-white/80">+</button>
-          <button type="button" className="flex h-8 w-8 items-center justify-center rounded border border-white/10 text-lg text-white/80">-</button>
-          <button type="button" className="flex h-8 w-8 items-center justify-center rounded border border-white/10 text-white/80">⊙</button>
-        </div>
-
-        {nodes.map((node) => {
-          const point = pointById.get(node.id);
-          if (!point) return null;
-          const isAffected = affectedNodeIds.has(node.id);
-          const Icon = iconForNode(node.type);
-
-          return (
-            <div
-              key={node.id}
-              className="absolute"
-              style={{ left: `${point.x}%`, top: `${point.y}%` }}
-            >
-              {isAffected ? (
-                <span className="absolute left-1/2 top-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full bg-danger/30" />
-              ) : null}
-              <span
-                className={clsx(
-                  "relative flex h-7 w-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 shadow-lg",
-                  isAffected
-                    ? "border-danger bg-danger text-white"
-                    : node.status === "operational"
-                      ? "border-success bg-success text-white"
-                      : "border-warning bg-warning text-slate-950"
-                )}
-              >
-                <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-              </span>
-              {point.label ? (
-                <span className="absolute left-3 top-2 whitespace-nowrap rounded bg-slate-950/75 px-1.5 py-0.5 text-[0.65rem] font-medium text-white shadow-sm">
-                  {point.label}
-                </span>
-              ) : null}
-            </div>
-          );
-        })}
-
-        <div className="absolute right-6 top-20 rounded-md border border-white/10 bg-slate-950/75 p-4 text-xs text-white/85 shadow-lg backdrop-blur">
-          <div className="space-y-3">
-            <LegendDot className="bg-success" label="Operational" />
-            <LegendDot className="bg-warning" label="At Risk" />
-            <LegendDot className="bg-danger" label="Disrupted" />
-            <LegendDot className="bg-muted-foreground" label="Unknown" />
-          </div>
-          <div className="my-3 border-t border-white/10" />
-          <div className="space-y-3">
-            <LegendIcon icon={<Anchor className="h-4 w-4" />} label="Port" />
-            <LegendIcon icon={<Warehouse className="h-4 w-4" />} label="Warehouse" />
-            <LegendIcon icon={<Home className="h-4 w-4" />} label="Hospital" />
-            <LegendIcon icon={<Boxes className="h-4 w-4" />} label="Relief Center" />
-          </div>
-        </div>
-      </div>
+      <AegisMap
+        title={`${scenario.title} Scenario Overlay`}
+        description="Affected nodes and corridors are highlighted for preview only."
+        affectedNodeIds={affectedNodeIds}
+        affectedRouteIds={affectedRouteIds}
+        heightClassName="min-h-[380px] xl:min-h-[420px]"
+      />
     </section>
   );
 }
@@ -620,32 +531,6 @@ function ResultStat({
       <p className="mt-2 text-xs text-muted-foreground">{delta}</p>
     </div>
   );
-}
-
-function LegendDot({ className, label }: { className: string; label: string }) {
-  return (
-    <span className="flex items-center gap-2">
-      <span className={`h-2.5 w-2.5 rounded-full ${className}`} />
-      {label}
-    </span>
-  );
-}
-
-function LegendIcon({ icon, label }: { icon: ReactNode; label: string }) {
-  return (
-    <span className="flex items-center gap-2">
-      <span className="text-primary">{icon}</span>
-      {label}
-    </span>
-  );
-}
-
-function iconForNode(type: string) {
-  if (type === "port") return Anchor;
-  if (type === "warehouse") return Warehouse;
-  if (type === "hospital") return Home;
-  if (type === "relief-center") return Boxes;
-  return Home;
 }
 
 function recoveryWindowForScenario(scenarioId: string) {

@@ -1,18 +1,49 @@
-import { MapPlaceholder, SectionCard, StatusBadge } from "@/components/shared";
+import { AegisMap, type HeatZone } from "@/components/maps";
+import { SectionCard, StatusBadge } from "@/components/shared";
 import { geographicImpact } from "@/data";
+
+const geographicHeatZones: HeatZone[] = [
+  {
+    id: "geo-odisha-coastal",
+    name: "Coastal Odisha",
+    latitude: 20.16,
+    longitude: 86.48,
+    level: "HIGH",
+    radiusKm: 86
+  },
+  {
+    id: "geo-kendrapara",
+    name: "Kendrapara Cluster",
+    latitude: 20.5,
+    longitude: 86.42,
+    level: "CRITICAL",
+    radiusKm: 42
+  },
+  {
+    id: "geo-puri",
+    name: "Puri Relief Zone",
+    latitude: 19.81,
+    longitude: 85.83,
+    level: "MEDIUM",
+    radiusKm: 48
+  }
+];
 
 export function GeographicImpactPanel() {
   return (
     <SectionCard
-      title="Geographic Impact Placeholder"
+      title="Geographic Impact"
       description={geographicImpact.description}
-      action={<StatusBadge label="No live map" variant="info" size="sm" />}
+      action={<StatusBadge label="OpenStreetMap" variant="info" size="sm" />}
     >
       <div className="space-y-4">
-        <MapPlaceholder
+        <AegisMap
           title={geographicImpact.title}
-          description="Affected districts, high-risk zones, and stress clusters are represented as a placeholder until real map layers are added."
-          variant="risk"
+          description="Affected districts, high-risk zones, and stress clusters on the shared digital twin map."
+          heatZones={geographicHeatZones}
+          showImpactLegend
+          heightClassName="min-h-64"
+          compactMarkers
         />
         <div className="grid gap-3 md:grid-cols-3">
           <ListBlock title="Affected Districts" items={geographicImpact.affectedDistricts} />

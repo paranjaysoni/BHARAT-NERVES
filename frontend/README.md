@@ -14,8 +14,11 @@ Project Aegis is a self-healing digital nervous system for trade, logistics, and
 - lucide-react
 - clsx
 - Recharts
+- Leaflet
+- React Leaflet
+- OpenStreetMap
 
-Future issues will add map, animation, and product-specific libraries only when those features are implemented.
+Digital Twin Map is implemented using Leaflet + OpenStreetMap. No paid provider or API key is required.
 
 ## Setup Commands
 
@@ -55,7 +58,7 @@ frontend/
 │   │   ├── landing/             ← Landing page sections
 │   │   ├── layout/
 │   │   ├── dashboard/
-│   │   ├── map/
+│   │   ├── maps/
 │   │   ├── scenario/
 │   │   ├── agents/
 │   │   ├── commander/
@@ -183,6 +186,12 @@ Implemented:
 - Impact dashboard components in `src/components/dashboard`
 - Impact mock data in `src/data/impact.ts`
 - Static Recharts visualizations for impact analytics
+- Reusable Digital Twin Map system with Leaflet + OpenStreetMap
+- Backend static node and route map data displayed from `/api/nodes` and `/api/routes`
+- Control Room real digital twin map
+- Scenario Simulator real scenario preview map
+- Trade Sentinel real trade corridor map
+- Impact Dashboard real map with static mock impact heat zones
 - Resources page at `/resources`
 - Resources-specific composition components in `src/components/resources`
 - Expanded resource mock data in `src/data/resources.ts`
@@ -204,8 +213,6 @@ Implemented:
 
 Not implemented:
 
-- Backend/API integrations
-- Real map integration
 - Real forecasting
 - Real uploads/downloads
 - Cloud storage

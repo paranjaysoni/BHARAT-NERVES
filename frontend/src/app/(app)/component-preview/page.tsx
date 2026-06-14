@@ -11,7 +11,6 @@ import {
   ChartCard,
   DataTable,
   EmptyState,
-  MapPlaceholder,
   MetricCard,
   PageHeader,
   ProgressBar,
@@ -22,6 +21,7 @@ import {
   TimelineItem,
   type DataTableColumn
 } from "@/components/shared";
+import { AegisMap } from "@/components/maps";
 import {
   agents,
   alerts,
@@ -171,10 +171,11 @@ export default function ComponentPreviewPage() {
           </div>
         </ChartCard>
 
-        <MapPlaceholder
+        <AegisMap
           title="Odisha Cyclone Corridor"
-          description="Digital twin placeholder for future map integration. No map library is loaded in this issue."
-          variant="corridor"
+          description="Shared Leaflet digital twin preview backed by Issue #55 APIs."
+          heightClassName="min-h-64"
+          compactMarkers
         />
       </div>
 

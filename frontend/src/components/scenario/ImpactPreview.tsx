@@ -1,4 +1,5 @@
-import { MapPlaceholder, SectionCard, StatusBadge } from "@/components/shared";
+import { AegisMap } from "@/components/maps";
+import { SectionCard, StatusBadge } from "@/components/shared";
 import type { ScenarioSimulationImpact } from "@/data";
 import type { Scenario } from "@/types";
 
@@ -11,14 +12,14 @@ export function ImpactPreview({ scenario, impact }: ImpactPreviewProps) {
   return (
     <SectionCard
       title="Impact Preview"
-      description="Digital Twin placeholder for affected districts, blocked routes, and high-risk nodes."
+      description="Digital twin preview for affected districts, blocked routes, and high-risk nodes."
       action={<StatusBadge label={impact.expectedStressIncrease} variant="warning" />}
     >
       <div className="space-y-4">
-        <MapPlaceholder
+        <AegisMap
           title={`${scenario.title} Preview`}
-          description="No Leaflet map is loaded here. This panel previews how affected routes and nodes may be visualized later."
-          variant="risk"
+          description="OpenStreetMap preview using backend infrastructure and route data."
+          heightClassName="min-h-64"
         />
 
         <div className="grid gap-3 md:grid-cols-3">
