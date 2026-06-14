@@ -131,3 +131,17 @@ Potential future layers:
 
 These should remain additive layers around the shared map engine.
 
+
+---
+
+## Page Consumers
+
+| Page | Component | Overlay source |
+|---|---|---|
+| Control Room | `AegisMap` directly | Static (no overlay) |
+| Scenario Simulator | `AegisMap` directly | `impactedNodeIds` / `impactedRouteIds` dicts; or `digitalTwin` from simulation result |
+| Trade Sentinel | `AegisMap` directly | Static (trade corridor filter) |
+| Impact Dashboard | `AegisMap` directly | Static heat zones |
+| Crisis Commander | `CrisisMapPanel` → `AegisMap` | `digitalTwin.affectedNodeIds` + `blockedRouteIds` from simulation store; baseline India map when idle |
+
+`CrisisMapPanel` (`src/components/commander/CrisisMapPanel.tsx`) is a thin `"use client"` wrapper that reads from `useSimulationStore` and passes overlay IDs to `AegisMap`. The Crisis Commander page itself remains a server component.
