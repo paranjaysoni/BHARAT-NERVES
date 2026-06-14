@@ -83,4 +83,21 @@ curl -X POST http://localhost:4000/api/impact/calculate \
   }'
 ```
 
-See `docs/data-model.md`, `docs/api-contracts.md`, `docs/backend-architecture.md`, `docs/scenario-engine.md`, `docs/route-graph-engine.md`, and `docs/impact-engine.md` for backend details.
+## Unified Simulation Endpoint
+
+- `POST /api/simulations/run`
+
+Example:
+
+```bash
+curl -X POST http://localhost:4000/api/simulations/run \
+  -H "Content-Type: application/json" \
+  -d '{
+    "scenarioId": "odisha_cyclone",
+    "sourceNodeId": "paradip_port",
+    "destinationNodeId": "aiims_bhubaneswar",
+    "costMode": "time"
+  }'
+```
+
+See `docs/data-model.md`, `docs/api-contracts.md`, `docs/backend-architecture.md`, `docs/scenario-engine.md`, `docs/route-graph-engine.md`, `docs/impact-engine.md`, and `docs/unified-simulation-api.md` for backend details.

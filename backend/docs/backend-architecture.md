@@ -12,7 +12,8 @@ The backend is an Express and TypeScript API. Issue #55 adds a static data layer
 6. Scenario Engine services in `src/services/scenario-engine` resolve scenario references into structured simulation results.
 7. Route Graph Engine services in `src/services/route-graph` build the corridor graph and calculate route recovery paths.
 8. Impact Engine services in `src/services/impact-engine` convert scenario and recovery data into impact metrics.
-9. `src/utils/response.ts` formats success and error responses.
+9. Unified Simulation services in `src/services/simulation` orchestrate scenario, route graph, and impact engines into one demo response.
+10. `src/utils/response.ts` formats success and error responses.
 
 ## Registered Static Routers
 
@@ -26,6 +27,7 @@ The backend is an Express and TypeScript API. Issue #55 adds a static data layer
 | `/api/scenarios` | `src/routes/scenarios.routes.ts` |
 | `/api/resources` | `src/routes/resources.routes.ts` |
 | `/api/agents` | `src/routes/agents.routes.ts` |
+| `/api/simulations` | `src/routes/simulation.routes.ts` |
 
 The Scenario Engine router is mounted before the static scenarios router so `POST /api/scenarios/:id/run` and `POST /api/scenarios/international/:id/run` are handled before any generic scenario ID route. `/api/scenarios/international` is registered inside the scenarios router before `/:id` so it is not shadowed by the local scenario ID route.
 
@@ -102,6 +104,32 @@ The engine:
 
 It does not connect the frontend, create a unified simulation API, call AI systems, create Crisis Commander plans, mutate route/node status, add a database, or call external APIs.
 
+## Unified Simulation API
+
+Issue #59 adds the main backend demo endpoint.
+
+Files:
+
+- `src/types/simulation.types.ts`
+- `src/services/simulation/simulation.service.ts`
+- `src/services/simulation/simulation-orchestrator.service.ts`
+- `src/services/simulation/simulation-summary.builder.ts`
+- `src/services/simulation/simulation-target-resolver.ts`
+- `src/controllers/simulation.controller.ts`
+- `src/routes/simulation.routes.ts`
+
+The API:
+
+- Accepts a scenario ID and optional source/destination/cost mode.
+- Runs Scenario Engine.
+- Runs Route Graph recovery using scenario blocked route IDs.
+- Runs Impact Engine using recovery metadata.
+- Builds a digital twin overlay for future map coloring.
+- Builds a frontend-ready dashboard summary.
+- Returns recommended next steps for AI Parliament, Crisis Commander, and Impact Dashboard.
+
+It does not connect the frontend, add state management, build AI Parliament, build Crisis Commander, generate PDFs, add a database, call live APIs, or mutate static JSON.
+
 ## Out of Scope
 
-This layer intentionally does not include database persistence, AI orchestration, unified simulation orchestration, or frontend integration.
+This layer intentionally does not include database persistence, AI orchestration, frontend integration, PDF generation, or live external APIs.

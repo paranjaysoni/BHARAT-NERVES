@@ -11,6 +11,7 @@ import routeGraphRouter from "./routes/route-graph.routes.js";
 import routesRouter from "./routes/routes.routes.js";
 import scenarioEngineRouter from "./routes/scenario-engine.routes.js";
 import scenariosRouter from "./routes/scenarios.routes.js";
+import simulationRouter from "./routes/simulation.routes.js";
 import resourcesRouter from "./routes/resources.routes.js";
 import agentsRouter from "./routes/agents.routes.js";
 
@@ -37,6 +38,7 @@ app.use("/api/route-graph", routeGraphRouter);
 app.use("/api/routes", routesRouter);
 app.use("/api/scenarios", scenarioEngineRouter);
 app.use("/api/scenarios", scenariosRouter);
+app.use("/api/simulations", simulationRouter);
 app.use("/api/resources", resourcesRouter);
 app.use("/api/agents", agentsRouter);
 
