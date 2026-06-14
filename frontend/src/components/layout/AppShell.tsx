@@ -14,11 +14,11 @@ export function AppShell({ children }: AppShellProps) {
   const isAiParliament = pathname === "/ai-parliament";
 
   return (
-    <div className={isAiParliament ? "h-screen overflow-hidden bg-background text-foreground" : "min-h-screen bg-background text-foreground"}>
+    <div className={isAiParliament ? "h-screen overflow-hidden bg-background text-foreground" : "min-h-screen overflow-x-hidden bg-background text-foreground"}>
       <Sidebar />
-      <div className={isAiParliament ? "h-screen overflow-hidden lg:pl-[220px]" : "min-h-screen lg:pl-[220px]"}>
+      <div className={isAiParliament ? "h-screen overflow-hidden lg:pl-[220px]" : "min-h-screen min-w-0 lg:pl-[220px]"}>
         <Topbar />
-        <main className={isAiParliament ? "box-border h-[calc(100vh-76px)] overflow-hidden px-4 py-3 sm:px-5 lg:px-6" : "animate-page-enter min-h-[calc(100vh-52px)] px-4 py-4 sm:px-5 lg:px-6 lg:py-5"}>
+        <main className={isAiParliament ? "box-border h-[calc(100vh-76px)] overflow-hidden px-4 py-3 sm:px-5 lg:px-6" : "animate-page-enter min-h-[calc(100vh-52px)] min-w-0 px-4 py-4 sm:px-5 lg:px-6 lg:py-5"}>
           {children}
         </main>
       </div>

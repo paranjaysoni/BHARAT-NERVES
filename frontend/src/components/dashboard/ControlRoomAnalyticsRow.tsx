@@ -10,7 +10,7 @@ function getMetricValue(metricId: string) {
 
 export function ControlRoomAnalyticsRow() {
   return (
-    <section className="grid gap-4 xl:grid-cols-[1fr_1.35fr_0.95fr_1fr]">
+    <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-[1fr_1.35fr_0.95fr_1fr]">
       <ResilienceTrend />
       <EconomicImpact />
       <WeatherOutlook />

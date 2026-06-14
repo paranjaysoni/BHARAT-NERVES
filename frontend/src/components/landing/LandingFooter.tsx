@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AppLogo } from "@/components/shared";
 
 export function LandingFooter() {
   return (
@@ -6,13 +7,8 @@ export function LandingFooter() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-6 py-10 sm:flex-row">
           {/* Logo */}
-          <Link href="/" className="flex flex-col items-center sm:items-start group">
-            <span className="text-sm font-bold tracking-[0.18em] text-foreground uppercase group-hover:text-primary transition-colors">
-              Project Aegis
-            </span>
-            <span className="text-[0.6rem] tracking-[0.12em] text-blue-500 uppercase font-medium">
-              Bharat Nerves Platform
-            </span>
+          <Link href="/" className="transition-opacity hover:opacity-85">
+            <AppLogo variant="full" size={34} className="text-foreground" />
           </Link>
 
           {/* Center: platform description */}

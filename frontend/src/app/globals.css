@@ -59,6 +59,8 @@ html {
 
 body {
   min-height: 100vh;
+  max-width: 100vw;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at 50% -20%, hsl(var(--primary) / 0.08), transparent 32rem),
     hsl(var(--background));
@@ -215,8 +217,26 @@ body {
     animation: badge-pulse 1.8s ease-out infinite;
   }
 
+  /* Responsive layout utilities */
+  .responsive-page-grid {
+    @apply grid gap-4 sm:grid-cols-2 xl:grid-cols-4;
+  }
+
+  .responsive-card-grid {
+    @apply grid gap-3 sm:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .scroll-safe-table {
+    @apply overflow-x-auto;
+  }
+
+  .scroll-safe-table > * {
+    @apply min-w-max;
+  }
+
+  /* Map container safe sizing */
   .aegis-map {
-    min-height: 320px;
+    min-height: 280px;
     isolation: isolate;
   }
 

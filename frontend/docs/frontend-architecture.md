@@ -446,3 +446,21 @@ The Crisis Commander page previously used a static SVG diagram as its "Crisis Ma
 - When simulation is idle: shows baseline India infrastructure map
 - When simulation is done: overlays affected/blocked nodes and routes from `digitalTwin`
 - The page file (`crisis-commander/page.tsx`) stays a server component; only `CrisisMapPanel` and `CrisisCommanderClient` are client components
+
+---
+
+## Responsive Layout Strategy
+
+All app pages are responsive from 768px to 1440px with no horizontal body scroll, card overlap, or clipped buttons.
+
+### Core rules
+
+- `body` has `max-width: 100vw; overflow-x: hidden`
+- `AppShell` wrapper: `overflow-x-hidden`; inner content area: `min-w-0`
+- Multi-column grids always use `minmax(0, Nfr)` — never `minmax(Npx, ...)` with px minimum
+- All grids have responsive fallbacks: default 1-col → `sm:` 2-col → `lg:` 2-3 col → `xl:` full desktop
+- Tables that overflow use `overflow-x-auto` wrapper with `min-w-[Npx]` child
+- Topbar buttons use `truncate` labels; clock widget hides below `sm:`
+- Map heights are responsive: `h-[280px] sm:h-[360px] lg:h-[480px]` etc.
+
+See [`docs/responsive-ui-guidelines.md`](./responsive-ui-guidelines.md) for full rules and per-page details.

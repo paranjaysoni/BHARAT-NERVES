@@ -90,7 +90,7 @@ export default function SettingsPage() {
         description="Manage your account, preferences, security and system configuration"
       />
 
-      <section className="grid gap-3.5 xl:grid-cols-3">
+      <section className="grid gap-3.5 md:grid-cols-2 xl:grid-cols-3">
         <ProfileSettings />
         <NotificationPreferences />
         <SecuritySettings />
@@ -110,7 +110,7 @@ function ProfileSettings() {
       title="PROFILE SETTINGS"
       description="Manage your personal information and profile preferences"
     >
-      <div className="grid gap-5 md:grid-cols-[128px_1fr] xl:grid-cols-[126px_1fr]">
+      <div className="grid gap-5 sm:grid-cols-[128px_minmax(0,1fr)]">
         <div className="flex items-center justify-center">
           <div className="relative">
             <div className="flex h-28 w-28 items-center justify-center rounded-full border border-border bg-secondary/45 text-4xl font-medium text-muted-foreground shadow-inner shadow-slate-950/20">
@@ -269,7 +269,7 @@ function SystemPreferences() {
 
 function AboutProjectAegis() {
   return (
-    <section className={clsx(panelClass, "grid items-center gap-4 xl:grid-cols-[1fr_auto]")}>
+    <section className={clsx(panelClass, "grid items-center gap-4 md:grid-cols-[1fr_auto]")}>
       <div>
         <h2 className="text-sm font-semibold uppercase leading-5 text-foreground">
           ABOUT PROJECT AEGIS

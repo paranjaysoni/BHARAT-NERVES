@@ -19,8 +19,8 @@ export default function AiParliamentPage() {
       <ParliamentPageClient />
 
       {/* Static demo view — always visible as reference / fallback */}
-      <div className="grid min-h-0 flex-1 gap-3 xl:grid-cols-[minmax(0,1fr)_350px]">
-        <div className="grid min-h-0 grid-rows-[118px_minmax(0,1fr)_250px] gap-3">
+      <div className="grid min-h-0 flex-1 gap-3 overflow-auto xl:overflow-hidden xl:grid-cols-[minmax(0,1fr)_350px]">
+        <div className="grid min-h-0 gap-3 xl:grid-rows-[118px_minmax(0,1fr)_250px]">
           <ParliamentSessionSummary />
           <AgentGrid />
           <div className="grid min-h-0 gap-3 lg:grid-cols-[minmax(0,0.96fr)_minmax(0,1fr)]">
@@ -29,7 +29,7 @@ export default function AiParliamentPage() {
           </div>
         </div>
 
-        <aside className="grid min-h-0 grid-rows-[250px_minmax(0,1fr)_190px] gap-3">
+        <aside className="grid min-h-0 gap-3 xl:grid-rows-[250px_minmax(0,1fr)_190px]">
           <ConsensusPanel />
           <AgentTimeline />
           <KeyMetrics />

@@ -203,13 +203,13 @@ export default function CrisisCommanderPage() {
 
       <KpiStrip />
 
-      <section className="grid gap-3 xl:grid-cols-[minmax(0,1.9fr)_minmax(285px,0.95fr)_minmax(285px,0.95fr)]">
+      <section className="grid gap-3 lg:grid-cols-2 xl:grid-cols-[minmax(0,1.9fr)_minmax(0,0.95fr)_minmax(0,0.95fr)]">
         <CrisisMap />
         <ActiveIncidentsPanel />
         <ResponseActionsPanel />
       </section>
 
-      <section className="grid gap-3 xl:grid-cols-4">
+      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <SituationOverviewPanel />
         <ResourceDeploymentPanel />
         <ImpactSummaryPanel />
@@ -295,8 +295,8 @@ function CrisisMap() {
   return (
     <CommandPanel
       title="CRISIS MAP"
-      className="min-h-[438px]"
-      bodyClassName="h-[385px] overflow-hidden rounded-md"
+      className="min-h-[280px]"
+      bodyClassName="h-[280px] overflow-hidden rounded-md sm:h-[320px] lg:h-[385px]"
     >
       <CrisisMapPanel />
     </CommandPanel>
@@ -417,7 +417,7 @@ function SituationOverviewPanel() {
 function ResourceDeploymentPanel() {
   return (
     <CommandPanel title="RESOURCE DEPLOYMENT">
-      <div className="grid grid-cols-[120px_1fr] items-center gap-4 py-2">
+      <div className="grid grid-cols-[min(112px,40%)_1fr] items-center gap-4 py-2">
         <div className="relative h-[112px] w-[112px]">
           <div className="absolute inset-0 rounded-full bg-[conic-gradient(hsl(var(--info))_0_28%,hsl(var(--success))_28%_47%,hsl(82_70%_60%)_47%_62%,hsl(var(--warning))_62%_80%,hsl(24_95%_55%)_80%_100%)]" />
           <div className="absolute inset-[19px] flex flex-col items-center justify-center rounded-full border border-border bg-card">

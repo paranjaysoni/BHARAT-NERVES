@@ -29,7 +29,7 @@ export function CrisisMapPanel() {
       }
       affectedNodeIds={affectedNodeIds}
       affectedRouteIds={affectedRouteIds}
-      heightClassName="h-[385px]"
+      heightClassName="h-full min-h-[280px]"
       showRoutes
       showLegend
       showImpactLegend={store.phase === "done"}

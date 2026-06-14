@@ -146,7 +146,7 @@ export default function ReportsPage() {
 
       <KpiRow />
 
-      <section className="grid gap-3 xl:grid-cols-[minmax(430px,0.98fr)_minmax(410px,0.9fr)_268px]">
+      <section className="grid gap-3 xl:grid-cols-[minmax(0,0.98fr)_minmax(0,0.9fr)_minmax(0,268px)]">
         <ReportLibrary />
         <ReportViewer />
         <aside className="space-y-3.5">
@@ -209,7 +209,9 @@ function ReportLibrary() {
         </button>
       </div>
 
-      <div className="mt-5 grid grid-cols-[minmax(220px,1.45fr)_88px_104px_66px] border-b border-border/70 pb-2 text-xs text-muted-foreground">
+      <div className="mt-5 overflow-x-auto">
+      <div className="min-w-[460px]">
+      <div className="grid grid-cols-[minmax(0,1.45fr)_88px_104px_66px] border-b border-border/70 pb-2 text-xs text-muted-foreground">
         <span>Report Name</span>
         <span>Category</span>
         <span>Generated On</span>
@@ -221,7 +223,7 @@ function ReportLibrary() {
           <article
             key={title}
             className={clsx(
-              "grid grid-cols-[minmax(220px,1.45fr)_88px_104px_66px] items-center rounded-md px-2 py-2.5 text-xs",
+              "grid grid-cols-[minmax(0,1.45fr)_88px_104px_66px] items-center rounded-md px-2 py-2.5 text-xs",
               index === 0 && "border border-primary bg-primary/10"
             )}
           >
@@ -258,6 +260,8 @@ function ReportLibrary() {
             </span>
           </article>
         ))}
+      </div>
+      </div>
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
@@ -300,7 +304,7 @@ function ReportViewer() {
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-4 divide-x divide-border/70 border-b border-border/70 pb-4">
+      <div className="mt-6 grid grid-cols-2 divide-x divide-border/70 border-b border-border/70 pb-4 sm:grid-cols-4">
         {metadata.map(([label, value, Icon]) => (
           <div key={label} className="flex min-w-0 gap-2 px-3 first:pl-0">
             <Icon className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
@@ -312,7 +316,7 @@ function ReportViewer() {
         ))}
       </div>
 
-      <div className="mt-3 flex gap-7 border-b border-border/70">
+      <div className="mt-3 flex flex-wrap gap-x-7 border-b border-border/70">
         {viewerTabs.map((tab, index) => (
           <button
             key={tab}

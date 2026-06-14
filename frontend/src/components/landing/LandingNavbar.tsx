@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Moon, Sun } from "lucide-react";
 import { THEME_STORAGE_KEY } from "@/components/layout/ThemeToggle";
+import { AppLogo } from "@/components/shared";
 
 const THEME_CHANGE_EVENT = "project-aegis-theme-change";
 
@@ -79,13 +80,8 @@ export function LandingNavbar() {
     >
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex flex-col leading-none group">
-          <span className="text-sm font-bold tracking-[0.18em] text-foreground uppercase group-hover:text-primary transition-colors">
-            Project Aegis
-          </span>
-          <span className="text-[0.6rem] tracking-[0.12em] text-blue-500 uppercase font-medium">
-            Bharat Nerves Platform
-          </span>
+        <Link href="/" className="group transition-opacity hover:opacity-85">
+          <AppLogo variant="full" size={38} className="text-foreground" />
         </Link>
 
         {/* Center nav — hidden on mobile */}
