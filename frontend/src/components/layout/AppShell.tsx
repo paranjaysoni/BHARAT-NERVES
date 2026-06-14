@@ -18,7 +18,7 @@ export function AppShell({ children }: AppShellProps) {
       <Sidebar />
       <div className={isAiParliament ? "h-screen overflow-hidden lg:pl-[220px]" : "min-h-screen lg:pl-[220px]"}>
         <Topbar />
-        <main className={isAiParliament ? "box-border h-[calc(100vh-76px)] overflow-hidden px-4 py-3 sm:px-5 lg:px-6" : "min-h-[calc(100vh-52px)] px-4 py-4 sm:px-5 lg:px-6 lg:py-5"}>
+        <main className={isAiParliament ? "box-border h-[calc(100vh-76px)] overflow-hidden px-4 py-3 sm:px-5 lg:px-6" : "animate-page-enter min-h-[calc(100vh-52px)] px-4 py-4 sm:px-5 lg:px-6 lg:py-5"}>
           {children}
         </main>
       </div>

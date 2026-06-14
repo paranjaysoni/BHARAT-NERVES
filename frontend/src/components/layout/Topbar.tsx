@@ -41,7 +41,7 @@ export function Topbar() {
               aria-label="Notifications"
             >
               <Bell className="h-4 w-4" aria-hidden="true" />
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
+              <span className="animate-badge-pulse absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
                 {alerts.length}
               </span>
             </button>
@@ -86,7 +86,7 @@ export function Topbar() {
               aria-label="Notifications"
             >
               <Bell className="h-4 w-4" aria-hidden="true" />
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
+              <span className="animate-badge-pulse absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
                 {alerts.length}
               </span>
             </button>
@@ -130,7 +130,7 @@ export function Topbar() {
 
             <button className="btn btn-secondary btn-icon relative" aria-label="Notifications">
               <Bell className="h-4 w-4" aria-hidden="true" />
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
+              <span className="animate-badge-pulse absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
                 {alerts.length}
               </span>
             </button>
@@ -171,7 +171,7 @@ export function Topbar() {
               aria-label="Notifications"
             >
               <Bell className="h-4 w-4" aria-hidden="true" />
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
+              <span className="animate-badge-pulse absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
                 {alerts.length}
               </span>
             </button>
@@ -215,7 +215,7 @@ export function Topbar() {
             aria-label="Notifications"
           >
             <Bell className="h-4 w-4" aria-hidden="true" />
-            <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
+            <span className="animate-badge-pulse absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
               {alerts.length}
             </span>
           </button>

@@ -13,11 +13,10 @@ import {
   Globe2,
   MapPinned,
   MoreVertical,
-  Search,
   ShieldCheck
 } from "lucide-react";
 import clsx from "clsx";
-import { PageHeader } from "@/components/shared";
+import { PageHeader, SearchField, Tooltip } from "@/components/shared";
 
 const categories = [
   {
@@ -222,14 +221,10 @@ export default function ResourcesPage() {
 function SearchAndFilters() {
   return (
     <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_104px]">
-      <label className="surface-card flex h-11 items-center gap-3 rounded-md px-4 text-muted-foreground">
-        <Search className="h-4 w-4 shrink-0" />
-        <input
-          className="h-full min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-          placeholder="Search resources, documents, datasets..."
-          aria-label="Search resources"
-        />
-      </label>
+      <SearchField
+        placeholder="Search resources, documents, datasets..."
+        ariaLabel="Search resources"
+      />
       <button className="btn btn-outline h-11 justify-start px-4">
         <Filter className="h-4 w-4" />
         Filters
@@ -359,8 +354,16 @@ function FeaturedResources() {
               <span className="text-muted-foreground">{resource.updated}</span>
               <span className="text-muted-foreground">{resource.size}</span>
               <span className="flex items-center gap-3 text-muted-foreground">
-                <Download className="h-4 w-4" />
-                <MoreVertical className="h-4 w-4" />
+                <Tooltip label="Download resource">
+                  <button className="focus-ring rounded-md p-1 hover:bg-secondary" aria-label={`Download ${resource.name}`}>
+                    <Download className="h-4 w-4" />
+                  </button>
+                </Tooltip>
+                <Tooltip label="More actions">
+                  <button className="focus-ring rounded-md p-1 hover:bg-secondary" aria-label={`More actions for ${resource.name}`}>
+                    <MoreVertical className="h-4 w-4" />
+                  </button>
+                </Tooltip>
               </span>
             </div>
           ))}

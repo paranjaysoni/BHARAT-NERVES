@@ -58,11 +58,12 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={clsx(
-                  "focus-ring group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium transition-[background-color,color,box-shadow] duration-200",
+                  "focus-ring group relative flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium transition-[background-color,color,box-shadow,transform] duration-200 ease-out hover:translate-x-0.5",
                   isActive
-                    ? "bg-primary text-primary-foreground"
+                    ? "bg-primary/15 text-primary shadow-[inset_3px_0_0_hsl(var(--primary))]"
                     : "text-muted-foreground hover:bg-secondary hover:text-secondary-foreground"
                 )}
+                aria-current={isActive ? "page" : undefined}
               >
                 <Icon className="h-4 w-4" aria-hidden="true" />
                 <span>{item.title}</span>

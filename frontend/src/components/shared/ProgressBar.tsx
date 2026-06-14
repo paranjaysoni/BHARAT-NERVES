@@ -41,7 +41,7 @@ export function ProgressBar({
         aria-valuemax={max}
       >
         <div
-          className={clsx("h-full rounded-full transition-[width] duration-200", variantClasses[variant])}
+          className={clsx("animate-progress-fill h-full rounded-full transition-[width] duration-200 ease-out", variantClasses[variant])}
           style={{ width: `${percentage}%` }}
         />
       </div>
