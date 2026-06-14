@@ -34,9 +34,12 @@ export type { AegisNode, AegisNodeStatus, AegisNodeType } from "./node";
 export type {
   AgentRecommendation,
   FinalRecommendation,
+  ImplementationPriority,
+  KeyDiscussionInsight,
   ParliamentAgentStatus,
   ParliamentConflictLevel,
   ParliamentConsensus,
+  ParliamentMetric,
   ParliamentReadiness,
   ParliamentSession,
   ParliamentTimelineItem,

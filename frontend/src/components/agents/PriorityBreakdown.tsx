@@ -5,7 +5,7 @@ export function PriorityBreakdown() {
   return (
     <SectionCard
       title="Stakeholder Priority Breakdown"
-      description="Dummy priority weights for the current deliberation."
+      description="Agent-weighted priority scores for the current deliberation."
     >
       <div className="space-y-4">
         {stakeholderPriorities.map((priority) => (

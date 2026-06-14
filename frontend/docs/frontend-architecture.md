@@ -178,22 +178,38 @@ This page is mock trade intelligence only. It does not include real trade APIs, 
 
 ## AI Parliament Page
 
-Issue #9 added the `/ai-parliament` page.
+Issue #9 added the `/ai-parliament` page. Issue #20 (MVP Refinement) transformed it into the flagship intelligence feature.
 
-The AI Parliament page uses:
+AI Parliament is a Multi-Agent Deliberation & Consensus Engine — 8 expert AI agents debate and negotiate a crisis response plan, producing a governance-ready recommendation for Crisis Commander.
 
-- `PageHeader` for page identity and deliberation readiness.
-- `AgentCard` for participating stakeholder agents.
-- `SectionCard` for session, consensus, recommendation, and note panels.
-- `MetricCard` for the consensus score.
-- `ProgressBar` for consensus and stakeholder priority breakdown.
-- `StatusBadge` for readiness, conflict, and matrix status.
-- `TimelineItem` for the recommendation timeline.
-- `DataTable` for the agent recommendation matrix.
+### Layout (Issue #20 reference design)
 
-Agent-specific composition components live in `src/components/agents/`. Mock parliament data lives in `src/data/parliament.ts`, with supporting types in `src/types/parliament.ts`.
+1. **Session Header** — scenario title, session ID, timer, objectives, tab navigation
+2. **Agent Grid** — 8 live deliberation cards (animated status dots, position, confidence bars, per-agent color accents)
+3. **Consensus Panel** — SVG semicircular gauge, agree/partial/disagree/neutral breakdown
+4. **Decision Timeline** — step-by-step milestones with Live indicator
+5. **Parliament Recommendation** — proposed decision, implementation priorities, Crisis Commander CTA
+6. **Key Discussion Insights** — colored insight cards (agree/debate/info types)
+7. **Key Metrics** — compact 4-metric row (AI Agents, Key Factors, Discussion Rounds, Avg Response Time)
+8. **Agent Recommendation Matrix** — full detail table, below the fold
 
-This page uses mock data only. It does not include real Gemini/OpenAI calls, backend APIs, agent orchestration, decision engines, simulation logic, or live data fetching. Future real AI integration should use strict structured JSON output validated before rendering.
+### Agent-specific components (`src/components/agents/`)
+
+- `ParliamentSessionSummary` — session header with tabs and countdown
+- `AgentGrid` — 8 live deliberation agent cards with animated pulsing dots
+- `ConsensusPanel` — SVG gauge visualization + agreement breakdown
+- `AgentTimeline` — premium decision timeline with Live badge
+- `FinalRecommendationPreview` — parliament recommendation with implementation priority bars
+- `KeyDiscussionInsights` — colored insight cards
+- `KeyMetrics` — compact 4-metric row
+- `PriorityBreakdown` — stakeholder priority weight bars
+- `AgentRecommendationMatrix` — full data table (detail view)
+
+### Data
+
+Mock parliament data lives in `src/data/parliament.ts`, with types in `src/types/parliament.ts`. New data exports added in Issue #20: `keyDiscussionInsights`, `parliamentMetrics`. New type fields: `position` on `AgentRecommendation`; `agreePercent`, `partialPercent`, `disagreePercent`, `neutralPercent`, `topAgreedPriority` on `ParliamentConsensus`; `proposedDecision`, `implementationPriorities` on `FinalRecommendation`; full session metadata (`sessionId`, `startedAt`, `timeRemaining`, `objectives`) on `ParliamentSession`.
+
+This page uses mock data only. No real Gemini/OpenAI calls, backend APIs, agent orchestration, or live data fetching. Future real AI integration should use strict structured JSON output validated before rendering.
 
 ## Crisis Commander Page
 

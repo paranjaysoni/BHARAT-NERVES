@@ -8,12 +8,16 @@ import type {
 } from "@/types";
 
 export const parliamentSession: ParliamentSession = {
-  currentScenario: "Cyclone Landfall - Odisha Corridor",
-  sessionStatus: "Prepared",
+  currentScenario: "Cyclone Landfall in Odisha Coast",
+  sessionStatus: "Live",
   participatingAgents: 8,
   primaryDecisionQuestion:
     "Which routes and resources should be prioritized first?",
-  expectedOutput: "Recovery recommendation for Crisis Commander"
+  expectedOutput: "Recovery recommendation for Crisis Commander",
+  sessionId: "PARL-2024-11-28-001",
+  startedAt: "11:35 AM",
+  timeRemaining: "23m 45s",
+  objectives: "Minimize loss of life, reduce economic impact, ensure supply chain continuity, and optimize resource allocation."
 };
 
 export const agentRecommendations: AgentRecommendation[] = [
@@ -21,7 +25,8 @@ export const agentRecommendations: AgentRecommendation[] = [
     agentId: "agent-infrastructure-guardian",
     recommendation:
       "Restore inland road redundancy and protect Paradip-Cuttack logistics continuity.",
-    confidence: 84,
+    position: "Prioritize coastal evacuation",
+    confidence: 87,
     conflictLevel: "moderate",
     status: "prepared"
   },
@@ -29,6 +34,7 @@ export const agentRecommendations: AgentRecommendation[] = [
     agentId: "agent-environment-sentinel",
     recommendation:
       "Prefer lower-emission inland routes unless critical medical urgency overrides.",
+    position: "Protect wetlands & mangroves",
     confidence: 78,
     conflictLevel: "moderate",
     status: "reviewing"
@@ -37,6 +43,7 @@ export const agentRecommendations: AgentRecommendation[] = [
     agentId: "agent-humanitarian-advocate",
     recommendation:
       "Prioritize hospitals and flood shelters before industrial cargo movement.",
+    position: "Maximize shelter & medical aid",
     confidence: 92,
     conflictLevel: "low",
     status: "aligned"
@@ -45,7 +52,8 @@ export const agentRecommendations: AgentRecommendation[] = [
     agentId: "agent-economic-strategist",
     recommendation:
       "Reduce trade loss by preserving Paradip-to-Bhubaneswar alternate corridor.",
-    confidence: 81,
+    position: "Secure critical trade routes",
+    confidence: 75,
     conflictLevel: "moderate",
     status: "prepared"
   },
@@ -53,7 +61,8 @@ export const agentRecommendations: AgentRecommendation[] = [
     agentId: "agent-logistics-optimizer",
     recommendation:
       "Route high-priority supplies through Bhubaneswar inland staging before coastal dispatch.",
-    confidence: 88,
+    position: "Keep ports & corridors active",
+    confidence: 82,
     conflictLevel: "low",
     status: "aligned"
   },
@@ -61,7 +70,8 @@ export const agentRecommendations: AgentRecommendation[] = [
     agentId: "agent-risk-analyst",
     recommendation:
       "Monitor cascading risk across port congestion, hospital demand, and road saturation.",
-    confidence: 86,
+    position: "High risk in Paradip belt",
+    confidence: 90,
     conflictLevel: "moderate",
     status: "prepared"
   },
@@ -69,7 +79,8 @@ export const agentRecommendations: AgentRecommendation[] = [
     agentId: "agent-tech-innovator",
     recommendation:
       "Deploy predictive route-status dashboards and automated alert triage for operators.",
-    confidence: 74,
+    position: "Deploy drones & IoT sensors",
+    confidence: 70,
     conflictLevel: "low",
     status: "reviewing"
   },
@@ -77,17 +88,23 @@ export const agentRecommendations: AgentRecommendation[] = [
     agentId: "agent-policy-advisor",
     recommendation:
       "Convert route priority into district-ready operating orders with clear escalation rules.",
-    confidence: 83,
+    position: "Enforce disaster protocol",
+    confidence: 80,
     conflictLevel: "low",
     status: "aligned"
   }
 ];
 
 export const parliamentConsensus: ParliamentConsensus = {
-  consensusScore: 82,
+  consensusScore: 72,
   decisionReadiness: "high",
   conflictLevel: "moderate",
-  humanReviewNeeded: true
+  humanReviewNeeded: true,
+  agreePercent: 72,
+  partialPercent: 18,
+  disagreePercent: 6,
+  neutralPercent: 4,
+  topAgreedPriority: "Evacuate high-risk coastal zones and pre-position medical & relief resources."
 };
 
 export const stakeholderPriorities: StakeholderPriority[] = [
@@ -100,50 +117,45 @@ export const stakeholderPriorities: StakeholderPriority[] = [
 
 export const parliamentTimeline: ParliamentTimelineItem[] = [
   {
-    id: "timeline-context-loaded",
-    title: "Scenario context loaded",
-    description: "Cyclone Landfall - Odisha Corridor context prepared for agent review.",
-    timestamp: "Step 01",
+    id: "timeline-session-started",
+    title: "Session Started",
+    description: "Scenario briefed to all agents",
+    timestamp: "11:35 AM",
     status: "success"
   },
   {
-    id: "timeline-infra-blocked",
-    title: "Infrastructure Guardian identifies blocked corridor",
-    description: "Coastal access risk and inland redundancy requirements flagged.",
-    timestamp: "Step 02",
+    id: "timeline-views-submitted",
+    title: "Agents Submitted Initial Views",
+    description: "All agents have shared their positions",
+    timestamp: "11:36 AM",
+    status: "success"
+  },
+  {
+    id: "timeline-round1-complete",
+    title: "Round 1 Deliberation Complete",
+    description: "Majority alignment on evacuation plan",
+    timestamp: "11:39 AM",
+    status: "success"
+  },
+  {
+    id: "timeline-consensus-building",
+    title: "Consensus Building",
+    description: "Working towards final agreement",
+    timestamp: "11:41 AM",
     status: "warning"
   },
   {
-    id: "timeline-humanitarian-priority",
-    title: "Humanitarian Advocate escalates hospital priority",
-    description: "Medical supply movement and shelter support elevated above cargo movement.",
-    timestamp: "Step 03",
-    status: "danger"
-  },
-  {
-    id: "timeline-logistics-route",
-    title: "Logistics Optimizer proposes alternate route",
-    description: "Bhubaneswar inland staging route prepared for high-priority movement.",
-    timestamp: "Step 04",
-    status: "info"
-  },
-  {
-    id: "timeline-economic-loss",
-    title: "Economic Strategist estimates reduced loss",
-    description: "Trade loss reduction improves when low-priority cargo is delayed.",
-    timestamp: "Step 05",
-    status: "info"
-  },
-  {
-    id: "timeline-consensus-ready",
-    title: "Consensus prepared for Crisis Commander",
-    description: "Structured recommendation package is ready for human review.",
-    timestamp: "Step 06",
-    status: "success"
+    id: "timeline-final-decision",
+    title: "Final Decision",
+    description: "Implementation plan generation",
+    timestamp: "Est. 12:06 PM",
+    status: "neutral"
   }
 ];
 
 export const finalRecommendation: FinalRecommendation = {
+  proposedDecision:
+    "Execute phased evacuation of coastal districts, pre-position medical teams in Paradip and Gopalpur, and secure critical trade corridors NH-16 and rail networks.",
   priorityAction:
     "Prioritize medical supply movement from Bhubaneswar Warehouse to Puri and Balasore hospitals using alternate inland route while delaying low-priority industrial cargo.",
   reasoning:
@@ -151,5 +163,41 @@ export const finalRecommendation: FinalRecommendation = {
   expectedBenefit:
     "Protects critical care supply lanes, reduces cascading humanitarian risk, and preserves trade capacity for high-priority movements.",
   nextStep: "Send to Crisis Commander",
-  href: "/crisis-commander"
+  href: "/crisis-commander",
+  implementationPriorities: [
+    { label: "Evacuation & Safety", level: "High", value: 95 },
+    { label: "Medical & Relief", level: "High", value: 88 },
+    { label: "Trade & Logistics", level: "Medium", value: 65 },
+    { label: "Infrastructure Protection", level: "Medium", value: 60 }
+  ]
 };
+
+export const keyDiscussionInsights = [
+  {
+    id: "insight-evacuation",
+    text: "Strong agreement on evacuation priority for Puri, Kendrapara, Jagatsinghpur",
+    type: "agree" as const
+  },
+  {
+    id: "insight-allocation",
+    text: "Debate on resource allocation between infrastructure vs relief operations",
+    type: "debate" as const
+  },
+  {
+    id: "insight-economic",
+    text: "Economic impact concerns around port shutdown vs safety measures",
+    type: "info" as const
+  },
+  {
+    id: "insight-drones",
+    text: "Consensus on deploying drones for real-time monitoring",
+    type: "agree" as const
+  }
+];
+
+export const parliamentMetrics = [
+  { id: "metric-agents", label: "AI Agents", value: "8" },
+  { id: "metric-factors", label: "Key Factors", value: "12" },
+  { id: "metric-rounds", label: "Discussion Rounds", value: "5" },
+  { id: "metric-response", label: "Avg Response Time", value: "3.2s" }
+];

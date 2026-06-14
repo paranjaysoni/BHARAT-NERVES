@@ -107,6 +107,46 @@ export function Topbar() {
     );
   }
 
+  const isAiParliament = pathname === "/ai-parliament";
+
+  if (isAiParliament) {
+    return (
+      <header className="sticky top-0 z-30 h-[76px] border-b border-border bg-background/90 px-4 py-3 shadow-[0_1px_2px_rgb(15_23_42/0.04)] backdrop-blur sm:px-5 lg:px-6">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold uppercase leading-7 tracking-[0.05em] text-foreground">
+              AI Parliament
+            </h1>
+            <p className="mt-0.5 text-sm leading-5 text-muted-foreground">
+              Multi-Agent Deliberation &amp; Consensus Engine
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button className="btn btn-secondary min-w-48 justify-between">
+              India (All Corridors)
+              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            </button>
+
+            <button className="btn btn-secondary btn-icon relative" aria-label="Notifications">
+              <Bell className="h-4 w-4" aria-hidden="true" />
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
+                {alerts.length}
+              </span>
+            </button>
+
+            <div className="surface-card rounded-md px-3 py-1.5 text-right">
+              <p className="text-sm font-semibold leading-4 text-card-foreground">{settings.displayTime}</p>
+              <p className="text-xs leading-4 text-muted-foreground">{settings.displayDate}</p>
+            </div>
+
+            <ThemeToggle />
+          </div>
+        </div>
+      </header>
+    );
+  }
+
   if (isTradeSentinel) {
     return (
       <header className="sticky top-0 z-30 border-b border-border bg-background/90 px-4 py-3 shadow-[0_1px_2px_rgb(15_23_42/0.04)] backdrop-blur sm:px-5 lg:px-6">

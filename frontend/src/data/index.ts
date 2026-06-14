@@ -50,7 +50,9 @@ export { nodes } from "./nodes";
 export {
   agentRecommendations,
   finalRecommendation,
+  keyDiscussionInsights,
   parliamentConsensus,
+  parliamentMetrics,
   parliamentSession,
   parliamentTimeline,
   stakeholderPriorities
