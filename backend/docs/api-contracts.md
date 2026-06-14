@@ -29,6 +29,7 @@ All static data endpoints return JSON through the shared response helpers in `sr
 | Method | Path | Description |
 | --- | --- | --- |
 | `POST` | `/api/ai-parliament/session` | Create a deterministic multi-agent parliament recommendation session. |
+| `POST` | `/api/crisis-commander/plan` | Create an executive crisis response plan from simulation, impact, AI Parliament, and resource context. |
 | `POST` | `/api/impact/calculate` | Calculate deterministic impact metrics for a scenario and optional route recovery result. |
 | `GET` | `/api/nodes` | List infrastructure nodes. |
 | `GET` | `/api/nodes/:id` | Get one infrastructure node by ID. |
@@ -145,6 +146,22 @@ Only `scenarioId` is required. Invalid AI Parliament requests return:
 - `AI_PARLIAMENT_AGENTS_NOT_FOUND`
 - `INVALID_AI_PARLIAMENT_SIMULATION_ID`
 - `AI_PARLIAMENT_ENGINE_ERROR`
+
+## Crisis Commander Plan Request
+
+```json
+{
+  "scenarioId": "odisha_cyclone",
+  "simulationId": "sim_demo",
+  "includeChecklist": true
+}
+```
+
+Only `scenarioId` is required. `includeChecklist` defaults to true. Invalid Crisis Commander requests return:
+
+- `CRISIS_SCENARIO_NOT_FOUND`
+- `INVALID_CHECKLIST_FLAG`
+- `CRISIS_COMMANDER_ERROR`
 
 Successful scenario runs return:
 

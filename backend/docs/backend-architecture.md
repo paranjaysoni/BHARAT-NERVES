@@ -14,13 +14,15 @@ The backend is an Express and TypeScript API. Issue #55 adds a static data layer
 8. Impact Engine services in `src/services/impact-engine` convert scenario and recovery data into impact metrics.
 9. Unified Simulation services in `src/services/simulation` orchestrate scenario, route graph, and impact engines into one demo response.
 10. AI Parliament services in `src/services/ai-parliament` generate deterministic multi-agent recommendations.
-11. `src/utils/response.ts` formats success and error responses.
+11. Crisis Commander services in `src/services/crisis-commander` generate executive crisis response plans.
+12. `src/utils/response.ts` formats success and error responses.
 
 ## Registered Static Routers
 
 | Base Path | Router |
 | --- | --- |
 | `/api/ai-parliament` | `src/routes/ai-parliament.routes.ts` |
+| `/api/crisis-commander` | `src/routes/crisis-commander.routes.ts` |
 | `/api/impact` | `src/routes/impact-engine.routes.ts` |
 | `/api/nodes` | `src/routes/nodes.routes.ts` |
 | `/api/route-graph` | `src/routes/route-graph.routes.ts` |
@@ -156,6 +158,34 @@ The engine:
 - Returns final recommendation, decision timeline, key insights, and recommendation matrix.
 
 It does not connect the frontend, call Gemini/OpenAI, generate a Crisis Commander plan, mutate simulation state, add authentication, or add a database.
+
+## Crisis Commander Engine
+
+Issue #61 adds a deterministic Crisis Commander API.
+
+Files:
+
+- `src/types/crisis-commander.types.ts`
+- `src/services/crisis-commander/crisis-commander.service.ts`
+- `src/services/crisis-commander/sitrep.builder.ts`
+- `src/services/crisis-commander/executive-summary.builder.ts`
+- `src/services/crisis-commander/response-actions.builder.ts`
+- `src/services/crisis-commander/resource-deployment.builder.ts`
+- `src/services/crisis-commander/risk-assessment.builder.ts`
+- `src/services/crisis-commander/expected-outcomes.builder.ts`
+- `src/services/crisis-commander/commander-checklist.builder.ts`
+- `src/controllers/crisis-commander.controller.ts`
+- `src/routes/crisis-commander.routes.ts`
+
+The engine:
+
+- Runs the unified simulation logic for scenario, recovery, impact, and dashboard context.
+- Runs AI Parliament logic for consensus and recommendation context.
+- Uses static resource inventory to create deployment assignments.
+- Returns situation report, executive summary, active incidents, response actions, resource deployment, risk assessment, expected outcomes, checklist, approval state, and final recommendation.
+- Returns standard validation errors for missing scenarios and invalid checklist flags.
+
+It does not connect the frontend, call Gemini/OpenAI, add a database, generate PDFs, send emails, mutate static files, or add auth.
 
 ## Out of Scope
 

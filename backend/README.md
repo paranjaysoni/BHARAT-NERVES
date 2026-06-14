@@ -114,4 +114,19 @@ curl -X POST http://localhost:4000/api/ai-parliament/session \
   }'
 ```
 
-See `docs/data-model.md`, `docs/api-contracts.md`, `docs/backend-architecture.md`, `docs/scenario-engine.md`, `docs/route-graph-engine.md`, `docs/impact-engine.md`, `docs/unified-simulation-api.md`, and `docs/ai-parliament-api.md` for backend details.
+## Crisis Commander Endpoint
+
+- `POST /api/crisis-commander/plan`
+
+Example:
+
+```bash
+curl -X POST http://localhost:4000/api/crisis-commander/plan \
+  -H "Content-Type: application/json" \
+  -d '{
+    "scenarioId": "odisha_cyclone",
+    "includeChecklist": true
+  }'
+```
+
+See `docs/data-model.md`, `docs/api-contracts.md`, `docs/backend-architecture.md`, `docs/scenario-engine.md`, `docs/route-graph-engine.md`, `docs/impact-engine.md`, `docs/unified-simulation-api.md`, `docs/ai-parliament-api.md`, and `docs/crisis-commander-api.md` for backend details.
