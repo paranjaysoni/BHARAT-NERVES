@@ -45,4 +45,23 @@ curl -X POST http://localhost:4000/api/scenarios/odisha_cyclone_corridor/run \
   -d '{"mode":"demo","intensity":"standard"}'
 ```
 
-See `docs/data-model.md`, `docs/api-contracts.md`, `docs/backend-architecture.md`, and `docs/scenario-engine.md` for backend details.
+## Route Graph Endpoints
+
+- `GET /api/route-graph/health`
+- `POST /api/route-graph/shortest-path`
+- `POST /api/route-graph/recover`
+
+Example:
+
+```bash
+curl -X POST http://localhost:4000/api/route-graph/recover \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sourceNodeId": "paradip_port",
+    "destinationNodeId": "aiims_bhubaneswar",
+    "blockedRouteIds": ["route_paradip_bhubaneswar"],
+    "costMode": "time"
+  }'
+```
+
+See `docs/data-model.md`, `docs/api-contracts.md`, `docs/backend-architecture.md`, `docs/scenario-engine.md`, and `docs/route-graph-engine.md` for backend details.

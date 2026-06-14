@@ -6,6 +6,7 @@ import { notFound } from "./middleware/not-found.middleware.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 import healthRouter from "./routes/health.routes.js";
 import nodesRouter from "./routes/nodes.routes.js";
+import routeGraphRouter from "./routes/route-graph.routes.js";
 import routesRouter from "./routes/routes.routes.js";
 import scenarioEngineRouter from "./routes/scenario-engine.routes.js";
 import scenariosRouter from "./routes/scenarios.routes.js";
@@ -30,6 +31,7 @@ app.get("/health", probeHandler);
 // API v1
 app.use("/api/health", healthRouter);
 app.use("/api/nodes", nodesRouter);
+app.use("/api/route-graph", routeGraphRouter);
 app.use("/api/routes", routesRouter);
 app.use("/api/scenarios", scenarioEngineRouter);
 app.use("/api/scenarios", scenariosRouter);
