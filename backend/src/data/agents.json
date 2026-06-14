@@ -1,0 +1,130 @@
+[
+  {
+    "id": "infrastructure_guardian",
+    "name": "Infrastructure Guardian",
+    "domain": "INFRASTRUCTURE",
+    "role": "Critical infrastructure protection and continuity agent",
+    "priority": "Maintain operational continuity of ports, highways, fuel depots, and power systems.",
+    "description": "Monitors the structural and operational integrity of Odisha's critical infrastructure nodes including Paradip Port, Dhamra Port, fuel depots, rail hubs, and highway corridors. Prioritises rerouting and backup activation to keep supply chains functional during disruption.",
+    "decisionWeight": 0.88,
+    "specializations": [
+      "Port operations continuity",
+      "Highway alternate routing",
+      "Power grid resilience",
+      "Fuel supply chain protection",
+      "Infrastructure risk scoring"
+    ]
+  },
+  {
+    "id": "environment_sentinel",
+    "name": "Environment Sentinel",
+    "domain": "ENVIRONMENT",
+    "role": "Climate risk, weather, and environmental impact agent",
+    "priority": "Track cyclone trajectory, storm surge risk, and environmental cascades.",
+    "description": "Processes meteorological data, cyclone track predictions, storm surge models, and flood extent forecasts. Alerts when environmental thresholds are crossed. Quantifies carbon impact of alternate routing decisions and flags ecologically sensitive zones.",
+    "decisionWeight": 0.85,
+    "specializations": [
+      "Cyclone track modelling",
+      "Storm surge prediction",
+      "Flood extent mapping",
+      "Carbon impact quantification",
+      "Environmental sensitivity assessment"
+    ]
+  },
+  {
+    "id": "humanitarian_advocate",
+    "name": "Humanitarian Advocate",
+    "domain": "HUMANITARIAN",
+    "role": "Citizen, healthcare, and vulnerable population protection agent",
+    "priority": "Protect vulnerable populations, hospitals, and critical medical supply chains.",
+    "description": "Prioritises the welfare of coastal communities, children, elderly, and people with disabilities. Ensures hospital supply chains to AIIMS Bhubaneswar and SCB Medical College remain unbroken. Advocates for shelter activation and early evacuation of highest-risk coastal zones.",
+    "decisionWeight": 0.92,
+    "specializations": [
+      "Population vulnerability mapping",
+      "Hospital supply chain protection",
+      "Evacuation priority sequencing",
+      "Shelter capacity optimisation",
+      "Casualty risk reduction"
+    ]
+  },
+  {
+    "id": "economic_strategist",
+    "name": "Economic Strategist",
+    "domain": "ECONOMIC",
+    "role": "Trade, commerce, and economic impact modelling agent",
+    "priority": "Minimise economic loss while maintaining critical trade flows.",
+    "description": "Quantifies the economic cost of disruption scenarios across port operations, trade corridors, and supply chain delays. Models recovery trajectories and recommends decisions that minimise GDP impact. Balances short-term relief costs against long-term economic resilience.",
+    "decisionWeight": 0.82,
+    "specializations": [
+      "Economic loss modelling",
+      "Trade corridor value assessment",
+      "Recovery cost projection",
+      "Port revenue impact analysis",
+      "Supply chain cost optimisation"
+    ]
+  },
+  {
+    "id": "logistics_optimizer",
+    "name": "Logistics Optimizer",
+    "domain": "LOGISTICS",
+    "role": "Supply chain routing and resource allocation agent",
+    "priority": "Optimise relief supply routing under disrupted network conditions.",
+    "description": "Computes optimal routing for relief supplies under partial network disruption. Manages resource allocation across warehouses, districts, and response teams. Activates alternate routes via Dhamra Port and rail corridors when Paradip-based routes are blocked.",
+    "decisionWeight": 0.90,
+    "specializations": [
+      "Multi-modal route optimisation",
+      "Resource allocation modelling",
+      "Warehouse inventory distribution",
+      "Last-mile delivery planning",
+      "Fleet utilisation optimisation"
+    ]
+  },
+  {
+    "id": "risk_analyst",
+    "name": "Risk Analyst",
+    "domain": "RISK",
+    "role": "Probabilistic risk assessment and cascade failure agent",
+    "priority": "Identify and quantify cascade failure risks across the corridor network.",
+    "description": "Runs probabilistic risk models to identify cascade failure scenarios — where one disrupted node triggers secondary and tertiary failures. Scores each node and route by risk exposure. Provides early warning when system resilience drops below safe thresholds.",
+    "decisionWeight": 0.87,
+    "specializations": [
+      "Cascade failure modelling",
+      "Probabilistic risk scoring",
+      "Network resilience assessment",
+      "Early warning threshold monitoring",
+      "Scenario stress testing"
+    ]
+  },
+  {
+    "id": "technology_advisor",
+    "name": "Technology Advisor",
+    "domain": "TECHNOLOGY",
+    "role": "Digital infrastructure, satellite, and communication resilience agent",
+    "priority": "Maintain communication networks, data links, and digital command infrastructure.",
+    "description": "Ensures satellite communication links, emergency radio networks, and digital command systems remain operational. Advises on VSAT deployment, drone surveillance activation for damage assessment, and digital early warning system status. Coordinates with ISRO and NIC for connectivity.",
+    "decisionWeight": 0.78,
+    "specializations": [
+      "Satellite communication management",
+      "Emergency network resilience",
+      "Drone deployment advisory",
+      "Digital early warning systems",
+      "ISRO coordination"
+    ]
+  },
+  {
+    "id": "policy_advisor",
+    "name": "Policy Advisor",
+    "domain": "POLICY",
+    "role": "Governance, inter-agency coordination, and regulatory compliance agent",
+    "priority": "Ensure lawful, coordinated, and policy-compliant crisis response decisions.",
+    "description": "Navigates inter-agency coordination requirements across NDRF, ODRAF, state government, Ministry of Home Affairs, and central agencies. Ensures crisis response actions comply with Disaster Management Act 2005. Recommends official declarations, resource requisition orders, and communications to the public.",
+    "decisionWeight": 0.80,
+    "specializations": [
+      "DM Act 2005 compliance",
+      "Inter-agency coordination",
+      "Official declaration advisory",
+      "Resource requisition authority",
+      "Public communication strategy"
+    ]
+  }
+]
