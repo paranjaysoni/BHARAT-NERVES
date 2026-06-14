@@ -80,6 +80,7 @@ export type {
   FutureRiskIndicator,
   PortOperatingStatus,
   PortStatus,
+  SemanticStatus,
   TradeAlert,
   TradeCorridorHealth,
   TradeFlowTrendPoint,
