@@ -1,3 +1,4 @@
+export type SemanticStatus = "danger" | "info" | "neutral" | "success" | "warning";
 export type TradeRiskLevel = "low" | "medium" | "high" | "critical";
 export type PortOperatingStatus = "normal" | "watch" | "congested" | "disrupted";
 
