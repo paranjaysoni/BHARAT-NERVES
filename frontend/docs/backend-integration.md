@@ -197,3 +197,20 @@ src/app/(app)/crisis-commander/page.tsx                 — added CrisisCommande
 src/app/(app)/control-room/page.tsx                     — added SimulationStatusBanner
 src/app/(app)/impact-dashboard/page.tsx                 — added LiveImpactKpis
 ```
+
+---
+
+## Global Simulation State Flow (Issue #63)
+
+See `docs/global-simulation-state.md` for full details.
+
+**Key additions in Issue #63:**
+
+- `simulation-store.ts` now persists to `localStorage` key `project-aegis-simulation-state`
+- Store hydrates from `localStorage` on module load — refresh preserves simulation
+- `isParliamentLoading` and `isCommanderLoading` flags added to store
+- Parliament and Commander are fired in parallel from `handleRun()` in ScenarioSimulatorDashboard — no per-page auto-triggers
+- `GlobalSimulationIndicator` component added to all Topbar variants — shows active scenario, risk level, last-updated time, and reset button
+- `ParliamentPageClient` and `CrisisCommanderClient` now read directly from stored state; show a manual "Generate" button if data is missing
+- Next-step navigation buttons added to Scenario Simulator results panel (links to Control Room, AI Parliament, Crisis Commander, Impact Dashboard)
+- `resetSimulation()` clears both in-memory state and `localStorage`

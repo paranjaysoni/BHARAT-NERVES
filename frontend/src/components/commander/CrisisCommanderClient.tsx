@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import {
   AlertCircle,
   ArrowRight,
   CheckCircle2,
   CircleDot,
   Loader2,
+  RefreshCw,
   ShieldAlert,
-  ShipWheel,
-  Users
+  Sparkles,
 } from "lucide-react";
 import clsx from "clsx";
 import { useSimulationStore } from "@/hooks/use-simulation-store";
 import { runCrisisCommanderPlan } from "@/lib/api/crisis-commander.api";
-import { setCommanderPlan } from "@/lib/simulation-store";
+import { setCommanderPlan, setCommanderLoading } from "@/lib/simulation-store";
 import type {
   CrisisCommanderPlan,
   CommanderPriority,
@@ -66,37 +66,28 @@ function PanelLink({ label }: { label: string }) {
 
 export function CrisisCommanderClient() {
   const store = useSimulationStore();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const lastTriggeredSimId = useRef<string | null>(null);
 
   const plan = store.commanderPlan;
+  const loading = store.isCommanderLoading;
 
-  useEffect(() => {
-    if (
-      store.phase !== "done" ||
-      !store.result ||
-      store.activeSimulationId === lastTriggeredSimId.current
-    ) return;
-
-    lastTriggeredSimId.current = store.activeSimulationId;
-
+  function handleGenerate() {
+    if (!store.result) return;
     const backendScenarioId = store.result.scenario.scenarioId;
     const simulationId = store.result.simulationId;
 
-    setLoading(true);
+    setCommanderLoading(true);
     setError(null);
 
     runCrisisCommanderPlan({ scenarioId: backendScenarioId, simulationId, includeChecklist: true })
       .then((p) => {
         setCommanderPlan(p);
-        setLoading(false);
       })
       .catch((err: unknown) => {
+        setCommanderLoading(false);
         setError(err instanceof Error ? err.message : "Unable to generate Crisis Commander plan");
-        setLoading(false);
       });
-  }, [store.phase, store.result, store.activeSimulationId]);
+  }
 
   if (store.phase === "idle") {
     return (
@@ -110,14 +101,22 @@ export function CrisisCommanderClient() {
     );
   }
 
-  if (store.phase === "running" || loading) {
+  if (store.phase === "running") {
     return (
       <div className="flex h-52 flex-col items-center justify-center gap-3 rounded-md border border-border bg-card/60">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-sm font-medium text-foreground">
-          {store.phase === "running" ? "Simulation Running…" : "Preparing Commander Plan…"}
-        </p>
+        <p className="text-sm font-medium text-foreground">Simulation Running…</p>
         <p className="text-xs text-muted-foreground">The plan will be ready once the simulation engine completes</p>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="flex h-52 flex-col items-center justify-center gap-3 rounded-md border border-border bg-card/60">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="text-sm font-medium text-foreground">Preparing Commander Plan…</p>
+        <p className="text-xs text-muted-foreground">Generating tactical response framework</p>
       </div>
     );
   }
@@ -126,13 +125,34 @@ export function CrisisCommanderClient() {
     return (
       <div className="flex h-52 flex-col items-center justify-center gap-3 rounded-md border border-danger/20 bg-danger/5 text-center">
         <AlertCircle className="h-8 w-8 text-danger" />
-        <p className="text-sm font-medium text-danger">Unable to generate Crisis Commander plan</p>
+        <p className="text-sm font-medium text-danger">Crisis Commander failed</p>
         <p className="max-w-xs text-xs text-muted-foreground">{error}</p>
         <button
-          onClick={() => { lastTriggeredSimId.current = null; }}
+          onClick={handleGenerate}
           className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary"
         >
+          <RefreshCw className="h-3.5 w-3.5" />
           Retry
+        </button>
+      </div>
+    );
+  }
+
+  // Simulation done but plan not yet loaded
+  if (store.phase === "done" && store.result && !plan) {
+    return (
+      <div className="flex h-52 flex-col items-center justify-center gap-3 rounded-md border border-border bg-card/60 text-center">
+        <ShieldAlert className="h-8 w-8 text-primary" />
+        <p className="text-sm font-medium text-foreground">Simulation complete</p>
+        <p className="max-w-xs text-xs text-muted-foreground">
+          Commander plan was not automatically generated. Click below to create it.
+        </p>
+        <button
+          onClick={handleGenerate}
+          className="mt-1 inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+        >
+          <Sparkles className="h-3.5 w-3.5" />
+          Generate Commander Plan
         </button>
       </div>
     );
