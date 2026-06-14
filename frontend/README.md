@@ -34,19 +34,25 @@ The local development server will run from the `frontend/` directory.
 frontend/
 ├── src/
 │   ├── app/
-│   │   ├── layout.tsx
-│   │   ├── page.tsx
-│   │   ├── control-room/
-│   │   ├── scenario-simulator/
-│   │   ├── trade-sentinel/
-│   │   ├── ai-parliament/
-│   │   ├── crisis-commander/
-│   │   ├── impact-dashboard/
-│   │   ├── resources/
-│   │   ├── reports/
-│   │   ├── settings/
-│   │   └── globals.css
+│   │   ├── layout.tsx           ← Minimal root (html/body only)
+│   │   ├── globals.css
+│   │   ├── (public)/            ← Public landing, no AppShell
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx         ← Landing page at /
+│   │   └── (app)/               ← All dashboard routes, AppShell injected
+│   │       ├── layout.tsx
+│   │       ├── control-room/
+│   │       ├── scenario-simulator/
+│   │       ├── trade-sentinel/
+│   │       ├── ai-parliament/
+│   │       ├── crisis-commander/
+│   │       ├── impact-dashboard/
+│   │       ├── resources/
+│   │       ├── reports/
+│   │       ├── settings/
+│   │       └── loading.tsx
 │   ├── components/
+│   │   ├── landing/             ← Landing page sections
 │   │   ├── layout/
 │   │   ├── dashboard/
 │   │   ├── map/
@@ -105,6 +111,33 @@ The frontend is prepared for both light and dark themes.
 - A future issue can add a ThemeProvider and theme toggle without changing the token model.
 
 Developers should use semantic utilities such as `bg-background`, `text-foreground`, `border-border`, and `text-muted-foreground` instead of hardcoded colors.
+
+## Landing Page
+
+The public-facing landing page at `/` is now live (MVP complete).
+
+### Status: MVP Complete
+
+The landing page uses a **Next.js App Router route group** strategy:
+
+- `(public)/page.tsx` — resolves to `/`, no sidebar, standalone layout
+- `(app)/layout.tsx` — all dashboard routes (`/control-room`, etc.) get the full AppShell
+
+### Landing Sections
+
+1. **LandingNavbar** — sticky, scroll-aware, mobile hamburger
+2. **HeroSection** — headline + CSS dashboard mockup (ProductPreview)
+3. **MetricsStrip** — 550+ nodes / 45+ agents / 120+ sources / 98.7% uptime
+4. **CapabilitiesSection** — 6 platform capability cards
+5. **ScenarioShowcase** — 4 scenario cards (Cyclone, Wildfire, Earthquake, Port)
+6. **TrustedInstitutions** — NDRF, IMD, MoS, AICTE, NIC, ISRO grid
+7. **TestimonialsSection** — 3 testimonial cards
+8. **FinalCTA** — "Access Command Center" → /control-room
+9. **LandingFooter** — logo, copyright, links
+
+All landing components are in `src/components/landing/`. Full documentation at `docs/landing-page.md`.
+
+---
 
 ## Current Status
 
