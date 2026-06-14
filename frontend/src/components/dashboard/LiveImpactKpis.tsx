@@ -3,6 +3,7 @@
 import { ArrowUp, Building2, IndianRupee, Leaf, Target, Users } from "lucide-react";
 import clsx from "clsx";
 import { useSimulationStore } from "@/hooks/use-simulation-store";
+import { safeNum } from "@/lib/api/client";
 
 /**
  * Replaces the static KPI strip on Impact Dashboard when a simulation result
@@ -15,17 +16,22 @@ export function LiveImpactKpis() {
 
   const { impact, dashboard } = store.result;
 
+  const economicLoss = safeNum(impact.economic?.lossAfterRecoveryCr);
+  const carbonTons = safeNum(impact.carbon?.finalCarbonTons ?? dashboard.carbonImpactTons);
+  const populationAffected = safeNum(impact.population?.affected ?? dashboard.populationAffected);
+  const riskLevel = impact.score?.riskLevel ?? dashboard.riskLevel;
+
   const kpis = [
     {
       title: "Economic Impact",
-      value: `₹ ${impact.economicLossCr.toFixed(1)} Cr`,
-      trend: `Risk: ${impact.riskLevel}`,
+      value: `₹ ${economicLoss.toFixed(1)} Cr`,
+      trend: `Risk: ${riskLevel}`,
       icon: IndianRupee,
       tone: "info" as const
     },
     {
       title: "Population Affected",
-      value: impact.populationAffected.toLocaleString(),
+      value: populationAffected.toLocaleString(),
       trend: `${dashboard.atRiskNodes} nodes at risk`,
       icon: Users,
       tone: "purple" as const
@@ -39,8 +45,8 @@ export function LiveImpactKpis() {
     },
     {
       title: "Carbon Impact",
-      value: `${impact.carbonIncreaseTons.toFixed(1)} t`,
-      trend: `+${((impact.carbonIncreaseTons / (impact.carbonIncreaseTons + 1)) * 100).toFixed(0)}% increase`,
+      value: `${carbonTons.toFixed(1)} t`,
+      trend: `+${safeNum(impact.carbon?.carbonIncreasePercent ?? (carbonTons > 0 ? (carbonTons / (carbonTons + 1)) * 100 : 0)).toFixed(0)}% increase`,
       icon: Leaf,
       tone: "success" as const
     },
@@ -95,11 +101,11 @@ export function LiveImpactKpis() {
               <Target className="h-7 w-7" />
             </div>
             <div>
-              <p className="text-3xl font-semibold leading-8 text-foreground">{dashboard.resilienceScore}</p>
+              <p className="text-3xl font-semibold leading-8 text-foreground">{safeNum(impact.resilience?.after ?? dashboard.resilienceScore)}</p>
               <p className={clsx("mt-1 text-xs font-medium",
-                dashboard.riskLevel === "CRITICAL" ? "text-danger" :
-                dashboard.riskLevel === "HIGH" ? "text-warning" : "text-success")}>
-                {dashboard.riskLevel} Impact
+                riskLevel === "CRITICAL" ? "text-danger" :
+                riskLevel === "HIGH" ? "text-warning" : "text-success")}>
+                {riskLevel} Impact
               </p>
             </div>
           </div>

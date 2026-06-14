@@ -7,7 +7,7 @@ export interface SimulationRunRequest {
   costMode?: "TIME" | "DISTANCE" | "CARBON" | "COST";
 }
 
-// ─── Simulation result shapes (mirror backend) ───────────────────────────────
+// ─── Simulation result shapes (mirror actual backend response) ────────────────
 
 export type SimulationOverlayStatus =
   | "OPERATIONAL"
@@ -18,6 +18,85 @@ export type SimulationOverlayStatus =
   | "RECOVERY";
 
 export type ImpactRiskLevel = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+
+// backend: impact.economic.*
+export interface EconomicImpact {
+  estimatedLossCr: number;
+  lossAfterRecoveryCr: number;
+  savingsCr: number;
+  lossReductionPercent: number;
+}
+
+// backend: impact.carbon.*
+export interface CarbonImpact {
+  baselineCarbonTons: number;
+  extraCarbonTons: number;
+  finalCarbonTons: number;
+  carbonIncreasePercent: number;
+}
+
+// backend: impact.population.*
+export interface PopulationImpact {
+  affected: number;
+  protectedAfterRecovery: number;
+  riskLevel: ImpactRiskLevel;
+}
+
+// backend: impact.infrastructure.*
+export interface InfrastructureImpact {
+  affectedNodes: number;
+  affectedRoutes: number;
+  blockedRoutes: number;
+  riskLevel: ImpactRiskLevel;
+}
+
+// backend: impact.resilience.*
+export interface ResilienceImpact {
+  before: number;
+  after: number;
+  improvement: number;
+  status: string;
+}
+
+// backend: impact.delay.*
+export interface DelayImpact {
+  baselineDelayHours: number;
+  extraDelayMinutes: number;
+  finalDelayHours: number;
+  recoveryTimeDays: string;
+}
+
+// backend: impact.score.*
+export interface ImpactScore {
+  impactScore: number;
+  riskLevel: ImpactRiskLevel;
+  confidence: number;
+}
+
+// backend: impact.resources.*
+export interface ResourceStressImpact {
+  medicalStress: string;
+  fuelStress: string;
+  shelterStress: string;
+  logisticsStress: string;
+}
+
+// backend: impact (nested object — actual shape)
+export interface ImpactCalculationResult {
+  scenarioId: string;
+  scenarioName: string;
+  severity: string;
+  delay: DelayImpact;
+  economic: EconomicImpact;
+  carbon: CarbonImpact;
+  population: PopulationImpact;
+  infrastructure: InfrastructureImpact;
+  resources: ResourceStressImpact;
+  resilience: ResilienceImpact;
+  score: ImpactScore;
+  summary: string;
+  generatedAt: string;
+}
 
 export interface SimulationDashboardSummary {
   resilienceScore: number;
@@ -44,32 +123,13 @@ export interface SimulationDigitalTwin {
   };
 }
 
-export interface ImpactCalculationResult {
-  scenarioId: string;
-  economicLossCr: number;
-  economicSavingsCr: number;
-  carbonIncreaseTons: number;
-  carbonSavingsTons: number;
-  populationAffected: number;
-  resilienceScoreBefore: number;
-  resilienceScoreAfter: number;
-  resilienceImprovement: number;
-  riskScore: number;
-  riskLevel: ImpactRiskLevel;
-  recoveryDays: number;
-  resourceStressLevel: string;
-}
-
 export interface RouteRecoveryResult {
-  scenarioId: string;
-  source: string;
-  destination: string;
-  path: string[];
-  totalDistanceKm: number;
-  totalTimeMinutes: number;
-  totalCarbonKg: number;
-  totalCostInr: number;
-  recoveredRouteIds: string[];
+  sourceNodeId: string;
+  destinationNodeId: string;
+  recoveryStatus: string;
+  extraDistanceKm: number;
+  extraDelayMinutes: number;
+  recoveredRoute: { routeIds: string[] };
   hasAlternative: boolean;
   costMode: string;
 }

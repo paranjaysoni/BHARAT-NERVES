@@ -1,6 +1,12 @@
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
+// Safely coerce a backend value to a finite number before calling .toFixed() etc.
+export function safeNum(value: unknown, fallback = 0): number {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+
 export async function apiPost<TBody, TResponse>(
   path: string,
   body: TBody

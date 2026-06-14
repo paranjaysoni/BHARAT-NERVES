@@ -27,6 +27,7 @@ import type { Scenario, ScenarioSeverity } from "@/types";
 import { runSimulation } from "@/lib/api/simulation.api";
 import { runParliamentSession } from "@/lib/api/ai-parliament.api";
 import { runCrisisCommanderPlan } from "@/lib/api/crisis-commander.api";
+import { safeNum } from "@/lib/api/client";
 import {
   setSimulationRunning,
   setSimulationDone,
@@ -310,11 +311,11 @@ function SimulationOverview({
   const affectedRoutes = impactedRouteIds[scenario.id]?.length ?? 0;
 
   const economicLoss = result
-    ? `₹ ${result.impact.economicLossCr.toFixed(1)} Cr`
+    ? `₹ ${safeNum(result.impact.economic?.lossAfterRecoveryCr).toFixed(1)} Cr`
     : impact.estimatedEconomicImpact;
 
   const recoveryTime = result
-    ? `${result.impact.recoveryDays} Days`
+    ? (result.impact.delay?.recoveryTimeDays ?? result.dashboard.recoveryTime)
     : recoveryWindowForScenario(scenario.id);
 
   const affectedNodes = result
@@ -330,7 +331,7 @@ function SimulationOverview({
       <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Simulation Overview</h2>
       <div className="mt-3 grid grid-cols-3 overflow-hidden rounded-md border border-border bg-background/70 xl:grid-cols-6">
         <OverviewItem label="Selected Scenario" value={scenario.title} tone="primary" />
-        <OverviewItem label="Predicted Impact" value={result?.scenario.severity ?? scenario.severity} tone="danger" />
+        <OverviewItem label="Predicted Impact" value={result?.impact.score?.riskLevel ?? result?.scenario.severity ?? scenario.severity} tone="danger" />
         <OverviewItem label="Affected Nodes" value={affectedNodes} />
         <OverviewItem label="Affected Routes" value={affectedRoutesDisplay} />
         <OverviewItem label="Est. Economic Loss" value={economicLoss} />
@@ -378,9 +379,9 @@ function ImpactSummaryPanel({ scenario, impact }: { scenario: ScenarioOption; im
         ["Warehouses Affected", String(Math.max(2, scenario.affectedNodes.length + 2))],
         ["Hospitals at Risk", scenario.id === "scenario-cyclone-landfall" ? "3" : "1"],
         ["Relief Centers Impacted", scenario.id === "scenario-cyclone-landfall" ? "4" : "2"],
-        ["Population Affected", result.dashboard.populationAffected.toLocaleString()],
+        ["Population Affected", safeNum(result.impact.population?.affected ?? result.dashboard.populationAffected).toLocaleString()],
         ["Supply Chain Disruption", result.dashboard.riskLevel === "CRITICAL" || result.dashboard.riskLevel === "HIGH" ? "High" : "Medium"],
-        ["Economic Impact", `₹ ${result.impact.economicLossCr.toFixed(1)} Cr`],
+        ["Economic Impact", `₹ ${safeNum(result.impact.economic?.lossAfterRecoveryCr).toFixed(1)} Cr`],
       ]
     : [
         ["Ports Affected", scenario.id === "scenario-port-shutdown" ? "2" : "1"],
@@ -579,26 +580,26 @@ function ResultsPreviewPanel({
         <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
           <ResultStat
             label="Economic Loss"
-            value={`₹ ${result.impact.economicLossCr.toFixed(1)} Cr`}
-            delta={`${result.impact.riskLevel} risk level`}
+            value={`₹ ${safeNum(result.impact.economic?.lossAfterRecoveryCr).toFixed(1)} Cr`}
+            delta={`${result.impact.score?.riskLevel ?? result.dashboard.riskLevel} risk level`}
             tone="danger"
           />
           <ResultStat
             label="Carbon Impact"
-            value={`${result.impact.carbonIncreaseTons.toFixed(1)} t`}
-            delta={`+${result.dashboard.carbonImpactTons.toFixed(0)} tCO₂`}
+            value={`${safeNum(result.impact.carbon?.finalCarbonTons).toFixed(1)} t`}
+            delta={`+${safeNum(result.dashboard.carbonImpactTons).toFixed(0)} tCO₂`}
             tone="success"
           />
           <ResultStat
             label="Recovery Time"
-            value={`${result.impact.recoveryDays} Days`}
+            value={result.impact.delay?.recoveryTimeDays ?? result.dashboard.recoveryTime}
             delta={result.dashboard.recoveryTime}
             tone="warning"
           />
           <ResultStat
             label="Resilience Score"
-            value={String(result.dashboard.resilienceScore)}
-            delta={`Before: ${result.impact.resilienceScoreBefore}`}
+            value={String(safeNum(result.impact.resilience?.after ?? result.dashboard.resilienceScore))}
+            delta={`Before: ${safeNum(result.impact.resilience?.before)}`}
             tone="danger"
           />
         </div>
