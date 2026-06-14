@@ -11,12 +11,14 @@ The backend is an Express and TypeScript API. Issue #55 adds a static data layer
 5. Services in `src/services/data` read typed JSON datasets from `src/data`.
 6. Scenario Engine services in `src/services/scenario-engine` resolve scenario references into structured simulation results.
 7. Route Graph Engine services in `src/services/route-graph` build the corridor graph and calculate route recovery paths.
-8. `src/utils/response.ts` formats success and error responses.
+8. Impact Engine services in `src/services/impact-engine` convert scenario and recovery data into impact metrics.
+9. `src/utils/response.ts` formats success and error responses.
 
 ## Registered Static Routers
 
 | Base Path | Router |
 | --- | --- |
+| `/api/impact` | `src/routes/impact-engine.routes.ts` |
 | `/api/nodes` | `src/routes/nodes.routes.ts` |
 | `/api/route-graph` | `src/routes/route-graph.routes.ts` |
 | `/api/routes` | `src/routes/routes.routes.ts` |
@@ -74,6 +76,32 @@ The engine:
 
 It does not mutate node/route status, calculate impact, connect frontend maps, call AI systems, or create commander plans.
 
+## Impact Calculation Engine
+
+Issue #58 adds a deterministic Impact Calculation Engine.
+
+Files:
+
+- `src/types/impact-engine.types.ts`
+- `src/services/impact-engine/impact-engine.service.ts`
+- `src/services/impact-engine/economic-impact.service.ts`
+- `src/services/impact-engine/carbon-impact.service.ts`
+- `src/services/impact-engine/population-impact.service.ts`
+- `src/services/impact-engine/resilience-impact.service.ts`
+- `src/services/impact-engine/resource-stress.service.ts`
+- `src/services/impact-engine/impact-summary.builder.ts`
+- `src/controllers/impact-engine.controller.ts`
+- `src/routes/impact-engine.routes.ts`
+
+The engine:
+
+- Resolves a scenario by ID.
+- Accepts optional route recovery metadata.
+- Calculates delay, economic, carbon, population, infrastructure, resource stress, resilience, recovery savings, score, and executive summary fields.
+- Returns standard validation errors for missing scenarios or invalid recovery route data.
+
+It does not connect the frontend, create a unified simulation API, call AI systems, create Crisis Commander plans, mutate route/node status, add a database, or call external APIs.
+
 ## Out of Scope
 
-This layer intentionally does not include an impact engine, database persistence, AI orchestration, or frontend integration.
+This layer intentionally does not include database persistence, AI orchestration, unified simulation orchestration, or frontend integration.

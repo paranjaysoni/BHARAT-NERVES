@@ -64,4 +64,23 @@ curl -X POST http://localhost:4000/api/route-graph/recover \
   }'
 ```
 
-See `docs/data-model.md`, `docs/api-contracts.md`, `docs/backend-architecture.md`, `docs/scenario-engine.md`, and `docs/route-graph-engine.md` for backend details.
+## Impact Calculation Endpoint
+
+- `POST /api/impact/calculate`
+
+Example:
+
+```bash
+curl -X POST http://localhost:4000/api/impact/calculate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "scenarioId": "odisha_cyclone",
+    "recoveryRoute": {
+      "extraDistanceKm": 13,
+      "extraDelayMinutes": 25,
+      "recoveryStatus": "RECOVERED"
+    }
+  }'
+```
+
+See `docs/data-model.md`, `docs/api-contracts.md`, `docs/backend-architecture.md`, `docs/scenario-engine.md`, `docs/route-graph-engine.md`, and `docs/impact-engine.md` for backend details.
