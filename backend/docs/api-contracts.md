@@ -46,6 +46,7 @@ All static data endpoints return JSON through the shared response helpers in `sr
 | `GET` | `/api/resources/:id` | Get one resource by ID. |
 | `GET` | `/api/agents` | List AI Parliament agents. |
 | `GET` | `/api/agents/:id` | Get one AI Parliament agent by ID. |
+| `POST` | `/api/simulations/run` | Run the unified backend simulation orchestration. |
 
 Missing static data IDs return HTTP `404` with `code: "NOT_FOUND"`.
 Missing scenario engine IDs return HTTP `404` with `code: "SCENARIO_NOT_FOUND"`.
@@ -108,6 +109,24 @@ Validation errors return HTTP `400` with one of:
 
 - `IMPACT_SCENARIO_NOT_FOUND`
 - `INVALID_RECOVERY_ROUTE`
+
+## Unified Simulation Request
+
+```json
+{
+  "scenarioId": "odisha_cyclone",
+  "sourceNodeId": "paradip_port",
+  "destinationNodeId": "aiims_bhubaneswar",
+  "costMode": "time"
+}
+```
+
+Only `scenarioId` is required. Invalid simulation requests return:
+
+- `SIMULATION_SCENARIO_NOT_FOUND`
+- `INVALID_SIMULATION_SOURCE`
+- `INVALID_SIMULATION_DESTINATION`
+- `SIMULATION_ENGINE_ERROR`
 
 Successful scenario runs return:
 
