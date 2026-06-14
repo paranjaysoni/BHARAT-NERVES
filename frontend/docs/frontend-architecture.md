@@ -435,3 +435,14 @@ The frontend uses a module-level singleton store in `src/lib/simulation-store.ts
 ### Reset
 
 `resetSimulation()` clears localStorage and notifies all subscribers to return to baseline.
+
+---
+
+## Crisis Commander — Real Map (Issue #xx)
+
+The Crisis Commander page previously used a static SVG diagram as its "Crisis Map." It now uses the shared `AegisMap` (Leaflet + OpenStreetMap) engine via a client wrapper component:
+
+- **`src/components/commander/CrisisMapPanel.tsx`** — `"use client"` component, reads `useSimulationStore`, passes `affectedNodeIds` and `affectedRouteIds` (including blocked routes) to `AegisMap`
+- When simulation is idle: shows baseline India infrastructure map
+- When simulation is done: overlays affected/blocked nodes and routes from `digitalTwin`
+- The page file (`crisis-commander/page.tsx`) stays a server component; only `CrisisMapPanel` and `CrisisCommanderClient` are client components

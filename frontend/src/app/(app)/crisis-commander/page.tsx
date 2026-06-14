@@ -1,4 +1,5 @@
 import { CrisisCommanderClient } from "@/components/commander/CrisisCommanderClient";
+import { CrisisMapPanel } from "@/components/commander/CrisisMapPanel";
 import {
   Anchor,
   ArrowRight,
@@ -6,11 +7,7 @@ import {
   CircleDot,
   CloudLightning,
   Home,
-  Layers,
-  LocateFixed,
   MapPin,
-  Minus,
-  Plus,
   Route,
   ShieldAlert,
   ShipWheel,
@@ -298,157 +295,11 @@ function CrisisMap() {
   return (
     <CommandPanel
       title="CRISIS MAP"
-      action={
-        <button className="btn btn-outline h-8 gap-2 px-2.5 text-xs">
-          All Threats
-          <span className="text-muted-foreground">⌄</span>
-        </button>
-      }
       className="min-h-[438px]"
-      bodyClassName="h-[385px]"
+      bodyClassName="h-[385px] overflow-hidden rounded-md"
     >
-      <div className="relative h-full overflow-hidden rounded-md border border-border bg-[hsl(var(--background))]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_48%_45%,hsl(var(--primary)/0.18),transparent_19rem),radial-gradient(circle_at_70%_62%,hsl(var(--danger)/0.18),transparent_9rem),linear-gradient(135deg,hsl(var(--card)),hsl(var(--background)))]" />
-        <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(hsl(var(--primary)/0.16)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--primary)/0.16)_1px,transparent_1px)] [background-size:28px_28px]" />
-        <svg
-          className="absolute inset-0 h-full w-full"
-          viewBox="0 0 760 420"
-          role="img"
-          aria-label="India crisis command map"
-        >
-          <path
-            d="M210 70 L285 35 L360 58 L430 50 L495 88 L548 142 L568 210 L610 260 L575 315 L515 345 L455 374 L390 388 L340 356 L300 296 L258 260 L230 202 L188 160 Z"
-            fill="hsl(var(--primary) / 0.16)"
-            stroke="hsl(var(--info) / 0.72)"
-            strokeWidth="1.6"
-          />
-          <path
-            d="M230 96 L310 112 L376 96 L452 120 L520 168 M214 155 L305 175 L385 166 L482 205 L565 228 M246 225 L324 242 L420 235 L510 275 M305 296 L388 307 L468 292 M355 74 L338 150 L356 231 L336 350 M455 88 L436 170 L450 250 L425 355"
-            fill="none"
-            stroke="hsl(var(--info) / 0.36)"
-            strokeDasharray="4 5"
-            strokeWidth="1"
-          />
-          <path
-            d="M205 74 L265 42 L334 60 L358 95 L352 150 L312 178 L255 165 L212 130 Z"
-            fill="hsl(var(--danger) / 0.2)"
-            stroke="hsl(var(--danger) / 0.55)"
-          />
-          <path
-            d="M350 245 L430 228 L515 245 L570 288 L548 330 L470 353 L405 337 Z"
-            fill="hsl(var(--danger) / 0.18)"
-            stroke="hsl(var(--danger) / 0.62)"
-          />
-          <path
-            d="M270 202 L342 192 L395 222 L374 278 L300 274 L255 244 Z"
-            fill="hsl(var(--warning) / 0.16)"
-            stroke="hsl(var(--warning) / 0.55)"
-          />
-          {[
-            [505, 280, "Bhubaneswar"],
-            [285, 352, "Bengaluru"],
-            [210, 290, "Mumbai"],
-            [340, 70, "Jammu"],
-            [372, 126, "Delhi"],
-            [455, 175, "Lucknow"],
-            [530, 190, "Patna"],
-            [628, 165, "Guwahati"],
-            [350, 305, "Hyderabad"],
-            [420, 358, "Chennai"],
-            [275, 230, "Ahmedabad"],
-            [410, 230, "Nagpur"]
-          ].map(([x, y, label]) => (
-            <g key={label as string}>
-              <circle cx={x as number} cy={y as number} r="3" fill="hsl(var(--foreground))" />
-              <text
-                x={(x as number) + 8}
-                y={(y as number) + 4}
-                fill="hsl(var(--foreground) / 0.78)"
-                fontSize="12"
-                fontWeight="600"
-              >
-                {label}
-              </text>
-            </g>
-          ))}
-          <ThreatMarker x={505} y={278} tone="danger" icon="cyclone" />
-          <ThreatMarker x={292} y={246} tone="warning" icon="alert" />
-          <ThreatMarker x={305} y={105} tone="danger" icon="alert" />
-        </svg>
-
-        <div className="absolute left-4 top-4 flex flex-col overflow-hidden rounded-md border border-border bg-card/80 backdrop-blur">
-          <MapControl icon={<Plus className="h-4 w-4" />} />
-          <MapControl icon={<Minus className="h-4 w-4" />} />
-          <MapControl icon={<LocateFixed className="h-4 w-4" />} />
-          <MapControl icon={<Layers className="h-4 w-4" />} />
-        </div>
-
-        <div className="absolute bottom-4 left-4 right-4 rounded-md border border-border bg-card/82 px-4 py-3 backdrop-blur">
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-foreground">
-            {[
-              ["Critical", "bg-danger"],
-              ["High", "bg-warning"],
-              ["Medium", "bg-yellow-300"],
-              ["Low", "bg-success"],
-              ["Normal", "bg-info"],
-              ["No Data", "bg-muted-foreground"]
-            ].map(([label, color]) => (
-              <span key={label} className="inline-flex items-center gap-2">
-                <span className={clsx("h-2.5 w-2.5 rounded-sm", color)} />
-                {label}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
+      <CrisisMapPanel />
     </CommandPanel>
-  );
-}
-
-function ThreatMarker({
-  x,
-  y,
-  tone,
-  icon
-}: {
-  x: number;
-  y: number;
-  tone: "danger" | "warning";
-  icon: "alert" | "cyclone";
-}) {
-  const color = tone === "danger" ? "hsl(var(--danger))" : "hsl(var(--warning))";
-
-  return (
-    <g>
-      <circle cx={x} cy={y} r="26" fill={color} opacity="0.12" />
-      <circle cx={x} cy={y} r="18" fill={color} opacity="0.22" />
-      <circle cx={x} cy={y} r="10" fill={color} />
-      {icon === "alert" ? (
-        <path
-          d={`M${x} ${y - 8} L${x + 8} ${y + 7} L${x - 8} ${y + 7} Z`}
-          fill="none"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinejoin="round"
-        />
-      ) : (
-        <path
-          d={`M${x - 5} ${y}a5 5 0 0 1 10 0a5 5 0 0 1-8 4c6 1 11-2 12-7c-3 2-7 1-9-1`}
-          fill="none"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-      )}
-    </g>
-  );
-}
-
-function MapControl({ icon }: { icon: React.ReactNode }) {
-  return (
-    <button className="flex h-9 w-9 items-center justify-center border-b border-border text-muted-foreground last:border-b-0 hover:bg-secondary hover:text-foreground">
-      {icon}
-    </button>
   );
 }
 
