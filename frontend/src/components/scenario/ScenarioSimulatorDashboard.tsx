@@ -1,10 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
-  ArrowRight,
+  AlertCircle,
   Flame,
   Gauge,
+  HeartPulse,
+  Loader2,
   Pause,
   Play,
   RotateCcw,
@@ -18,6 +20,23 @@ import { RiskPill, StatusBadge } from "@/components/shared";
 import { scenarioSimulationImpacts, scenarios } from "@/data";
 import type { ScenarioSimulationImpact } from "@/data";
 import type { Scenario, ScenarioSeverity } from "@/types";
+import { runSimulation } from "@/lib/api/simulation.api";
+import {
+  setSimulationRunning,
+  setSimulationDone,
+  setSimulationError,
+  resetSimulation,
+} from "@/lib/simulation-store";
+import { useSimulationStore } from "@/hooks/use-simulation-store";
+import type { SimulationResult } from "@/types/simulation.types";
+
+// ── Frontend scenario ID → backend scenario ID ───────────────────────────────
+const BACKEND_SCENARIO_ID: Record<string, string> = {
+  "scenario-cyclone-landfall": "odisha_cyclone_corridor",
+  "scenario-port-shutdown": "paradip_port_shutdown",
+  "scenario-highway-blockage": "nh16_highway_blockage",
+  "scenario-warehouse-fire": "warehouse_fire_cuttack",
+};
 
 type ScenarioOption = Scenario & {
   location: string;
@@ -80,10 +99,7 @@ const impactedRouteIds: Record<string, string[]> = {
     "route_shelters_kendrapara",
     "route_jagatsinghpur_paradip"
   ],
-  "scenario-highway-blockage": [
-    "route_cuttack_balasore",
-    "route_ndrf_balasore"
-  ],
+  "scenario-highway-blockage": ["route_cuttack_balasore", "route_ndrf_balasore"],
   "scenario-port-shutdown": [
     "route_paradip_bhubaneswar",
     "route_paradip_cuttack",
@@ -108,22 +124,9 @@ const impactedNodeIds: Record<string, string[]> = {
     "paradip_fuel_depot",
     "coastal_cyclone_shelters"
   ],
-  "scenario-highway-blockage": [
-    "balasore_district_hub",
-    "cuttack_logistics_hub",
-    "cuttack_rail_hub"
-  ],
-  "scenario-port-shutdown": [
-    "paradip_port",
-    "paradip_fuel_depot",
-    "jagatsinghpur_district_hub",
-    "cuttack_logistics_hub"
-  ],
-  "scenario-warehouse-fire": [
-    "cuttack_logistics_hub",
-    "cuttack_warehouse",
-    "bhubaneswar_command"
-  ]
+  "scenario-highway-blockage": ["balasore_district_hub", "cuttack_logistics_hub", "cuttack_rail_hub"],
+  "scenario-port-shutdown": ["paradip_port", "paradip_fuel_depot", "jagatsinghpur_district_hub", "cuttack_logistics_hub"],
+  "scenario-warehouse-fire": ["cuttack_logistics_hub", "cuttack_warehouse", "bhubaneswar_command"]
 };
 
 const iconByScenarioId = {
@@ -143,31 +146,43 @@ const severityToRisk: Record<ScenarioSeverity, "low" | "medium" | "high" | "crit
 
 export function ScenarioSimulatorDashboard() {
   const [selectedScenarioId, setSelectedScenarioId] = useState(scenarios[0]?.id ?? "");
-  const [mode, setMode] = useState<SimulationMode>("idle");
   const [speed, setSpeed] = useState("1x");
+  const store = useSimulationStore();
+  const isRunning = store.phase === "running";
 
   const scenarioOptions = useMemo<ScenarioOption[]>(
-    () =>
-      scenarios
-        .map((scenario) => ({ ...scenario, ...scenarioMeta[scenario.id] }))
-        .concat(customScenario),
+    () => scenarios.map((s) => ({ ...s, ...scenarioMeta[s.id] })).concat(customScenario),
     []
   );
 
   const selectedScenario = useMemo(
-    () =>
-      scenarioOptions.find((scenario) => scenario.id === selectedScenarioId) ??
-      scenarioOptions[0],
+    () => scenarioOptions.find((s) => s.id === selectedScenarioId) ?? scenarioOptions[0]!,
     [scenarioOptions, selectedScenarioId]
   );
 
   const selectedImpact = useMemo(
     () =>
-      scenarioSimulationImpacts.find(
-        (impact) => impact.scenarioId === selectedScenario.id
-      ) ?? scenarioSimulationImpacts[0],
+      scenarioSimulationImpacts.find((i) => i.scenarioId === selectedScenario.id) ??
+      scenarioSimulationImpacts[0]!,
     [selectedScenario.id]
   );
+
+  const handleRun = useCallback(async () => {
+    const backendId = BACKEND_SCENARIO_ID[selectedScenarioId];
+    if (!backendId) return;
+
+    setSimulationRunning(selectedScenarioId);
+    try {
+      const result = await runSimulation({ scenarioId: backendId });
+      setSimulationDone(result);
+    } catch (err) {
+      setSimulationError(err instanceof Error ? err.message : "Simulation failed");
+    }
+  }, [selectedScenarioId]);
+
+  const handleReset = useCallback(() => {
+    resetSimulation();
+  }, []);
 
   return (
     <div className="grid min-h-0 gap-4">
@@ -175,13 +190,13 @@ export function ScenarioSimulatorDashboard() {
         <ScenarioSelectionRow
           scenarios={scenarioOptions}
           selectedScenarioId={selectedScenario.id}
-          onSelectScenario={(scenarioId) => {
-            if (scenarioId === "scenario-custom") return;
-            setSelectedScenarioId(scenarioId);
-            setMode("idle");
+          onSelectScenario={(id) => {
+            if (id === "scenario-custom") return;
+            setSelectedScenarioId(id);
+            resetSimulation();
           }}
         />
-        <SimulationOverview scenario={selectedScenario} impact={selectedImpact} />
+        <SimulationOverview scenario={selectedScenario} impact={selectedImpact} result={store.result} />
       </section>
 
       <section className="grid min-h-0 gap-4 xl:grid-cols-[320px_minmax(0,1fr)]">
@@ -194,18 +209,19 @@ export function ScenarioSimulatorDashboard() {
 
       <section className="grid gap-4 pb-1 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <SimulationControlsPanel
-          mode={mode}
+          isRunning={isRunning}
           speed={speed}
-          onPause={() => setMode("paused")}
-          onReset={() => setMode("idle")}
-          onRun={() => setMode("running")}
+          onReset={handleReset}
+          onRun={handleRun}
           onSpeedChange={setSpeed}
         />
-        <ResultsPreviewPanel impact={selectedImpact} />
+        <ResultsPreviewPanel impact={selectedImpact} result={store.result} error={store.error} isRunning={isRunning} />
       </section>
     </div>
   );
 }
+
+// ── Scenario selection ────────────────────────────────────────────────────────
 
 function ScenarioSelectionRow({
   scenarios: scenarioOptions,
@@ -214,13 +230,11 @@ function ScenarioSelectionRow({
 }: {
   scenarios: ScenarioOption[];
   selectedScenarioId: string;
-  onSelectScenario: (scenarioId: string) => void;
+  onSelectScenario: (id: string) => void;
 }) {
   return (
     <section className="surface-card rounded-md p-4">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">
-        Select Scenario
-      </h2>
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Select Scenario</h2>
       <div className="mt-3 grid gap-2 lg:grid-cols-5">
         {scenarioOptions.map((scenario) => {
           const Icon = iconByScenarioId[scenario.id as keyof typeof iconByScenarioId] ?? Gauge;
@@ -240,15 +254,11 @@ function ScenarioSelectionRow({
               <span className="flex h-9 w-9 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
                 <Icon className="h-4 w-4" aria-hidden="true" />
               </span>
-              <span className="mt-3 block text-sm font-semibold text-foreground">
-                {scenario.title}
-              </span>
+              <span className="mt-3 block text-sm font-semibold text-foreground">{scenario.title}</span>
               <span className="mt-2 line-clamp-1 text-xs leading-5 text-muted-foreground">
                 {isCustom ? "Configure Your Own" : scenario.description}
               </span>
-              <span className="mt-2 block text-xs text-muted-foreground">
-                {scenario.location}
-              </span>
+              <span className="mt-2 block text-xs text-muted-foreground">{scenario.location}</span>
               <span className="mt-auto w-full rounded-md border border-border px-3 py-2 text-center text-xs font-semibold text-primary transition-colors group-hover:bg-secondary/50">
                 {isCustom ? "Configure" : isSelected ? "Selected" : "Simulate"}
               </span>
@@ -260,38 +270,56 @@ function ScenarioSelectionRow({
   );
 }
 
+// ── Overview ──────────────────────────────────────────────────────────────────
+
 function SimulationOverview({
   scenario,
-  impact
+  impact,
+  result
 }: {
   scenario: ScenarioOption;
   impact: ScenarioSimulationImpact;
+  result: SimulationResult | null;
 }) {
   const affectedRoutes = impactedRouteIds[scenario.id]?.length ?? 0;
 
+  const economicLoss = result
+    ? `₹ ${result.impact.economicLossCr.toFixed(1)} Cr`
+    : impact.estimatedEconomicImpact;
+
+  const recoveryTime = result
+    ? `${result.impact.recoveryDays} Days`
+    : recoveryWindowForScenario(scenario.id);
+
+  const affectedNodes = result
+    ? String(result.digitalTwin.affectedNodeIds.length)
+    : String(scenario.affectedNodes.length || 23);
+
+  const affectedRoutesDisplay = result
+    ? String(result.digitalTwin.affectedRouteIds.length)
+    : String(affectedRoutes || 17);
+
   return (
     <section className="surface-card rounded-md p-4">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">
-        Simulation Overview
-      </h2>
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Simulation Overview</h2>
       <div className="mt-3 grid grid-cols-3 overflow-hidden rounded-md border border-border bg-background/70 xl:grid-cols-6">
         <OverviewItem label="Selected Scenario" value={scenario.title} tone="primary" />
-        <OverviewItem label="Predicted Impact" value={scenario.severity} tone="danger" />
-        <OverviewItem label="Affected Nodes" value={String(scenario.affectedNodes.length || 23)} />
-        <OverviewItem label="Affected Routes" value={String(affectedRoutes || 17)} />
-        <OverviewItem label="Est. Economic Loss" value={impact.estimatedEconomicImpact} />
-        <OverviewItem label="Est. Recovery Time" value={recoveryWindowForScenario(scenario.id)} />
+        <OverviewItem label="Predicted Impact" value={result?.scenario.severity ?? scenario.severity} tone="danger" />
+        <OverviewItem label="Affected Nodes" value={affectedNodes} />
+        <OverviewItem label="Affected Routes" value={affectedRoutesDisplay} />
+        <OverviewItem label="Est. Economic Loss" value={economicLoss} />
+        <OverviewItem label="Est. Recovery Time" value={recoveryTime} />
       </div>
     </section>
   );
 }
 
+// ── Scenario details ──────────────────────────────────────────────────────────
+
 function ScenarioDetailsPanel({ scenario }: { scenario: ScenarioOption }) {
   return (
     <section className="surface-card rounded-md p-4">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">
-        Scenario Details
-      </h2>
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Scenario Details</h2>
       <div className="mt-4 space-y-3">
         <DetailRow label="Type" value={scenario.type} />
         <DetailRow label="Severity" value={scenario.severity} risk={severityToRisk[scenario.severity]} />
@@ -312,28 +340,35 @@ function ScenarioDetailsPanel({ scenario }: { scenario: ScenarioOption }) {
   );
 }
 
-function ImpactSummaryPanel({
-  scenario,
-  impact
-}: {
-  scenario: ScenarioOption;
-  impact: ScenarioSimulationImpact;
-}) {
-  const summaryRows = [
-    ["Ports Affected", scenario.id === "scenario-port-shutdown" ? "2" : "1"],
-    ["Warehouses Affected", String(Math.max(2, scenario.affectedNodes.length + 2))],
-    ["Hospitals at Risk", scenario.id === "scenario-cyclone-landfall" ? "3" : "1"],
-    ["Relief Centers Impacted", scenario.id === "scenario-cyclone-landfall" ? "4" : "2"],
-    ["Population Affected", impact.populationRisk],
-    ["Supply Chain Disruption", scenario.severity === "critical" ? "High" : "Medium"],
-    ["Economic Impact", impact.estimatedEconomicImpact]
-  ];
+// ── Impact summary ────────────────────────────────────────────────────────────
+
+function ImpactSummaryPanel({ scenario, impact }: { scenario: ScenarioOption; impact: ScenarioSimulationImpact }) {
+  const store = useSimulationStore();
+  const result = store.result;
+
+  const summaryRows = result
+    ? [
+        ["Ports Affected", scenario.id === "scenario-port-shutdown" ? "2" : "1"],
+        ["Warehouses Affected", String(Math.max(2, scenario.affectedNodes.length + 2))],
+        ["Hospitals at Risk", scenario.id === "scenario-cyclone-landfall" ? "3" : "1"],
+        ["Relief Centers Impacted", scenario.id === "scenario-cyclone-landfall" ? "4" : "2"],
+        ["Population Affected", result.dashboard.populationAffected.toLocaleString()],
+        ["Supply Chain Disruption", result.dashboard.riskLevel === "CRITICAL" || result.dashboard.riskLevel === "HIGH" ? "High" : "Medium"],
+        ["Economic Impact", `₹ ${result.impact.economicLossCr.toFixed(1)} Cr`],
+      ]
+    : [
+        ["Ports Affected", scenario.id === "scenario-port-shutdown" ? "2" : "1"],
+        ["Warehouses Affected", String(Math.max(2, scenario.affectedNodes.length + 2))],
+        ["Hospitals at Risk", scenario.id === "scenario-cyclone-landfall" ? "3" : "1"],
+        ["Relief Centers Impacted", scenario.id === "scenario-cyclone-landfall" ? "4" : "2"],
+        ["Population Affected", impact.populationRisk],
+        ["Supply Chain Disruption", scenario.severity === "critical" ? "High" : "Medium"],
+        ["Economic Impact", impact.estimatedEconomicImpact],
+      ];
 
   return (
     <section className="surface-card rounded-md p-4">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">
-        Impact Summary
-      </h2>
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Impact Summary</h2>
       <div className="mt-4 space-y-2">
         {summaryRows.map(([label, value]) => (
           <div key={label} className="flex items-center justify-between gap-3 text-sm">
@@ -344,23 +379,20 @@ function ImpactSummaryPanel({
           </div>
         ))}
       </div>
-      <button className="btn btn-secondary mt-4 w-full" type="button">
-        View Detailed Impact
-        <ArrowRight className="h-4 w-4" aria-hidden="true" />
-      </button>
     </section>
   );
 }
 
-function ImpactPreviewMap({
-  scenario,
-  impact
-}: {
-  scenario: ScenarioOption;
-  impact: ScenarioSimulationImpact;
-}) {
-  const affectedRouteIds = impactedRouteIds[scenario.id] ?? [];
-  const affectedNodeIds = impactedNodeIds[scenario.id] ?? [];
+// ── Map ───────────────────────────────────────────────────────────────────────
+
+function ImpactPreviewMap({ scenario, impact }: { scenario: ScenarioOption; impact: ScenarioSimulationImpact }) {
+  const store = useSimulationStore();
+  const affectedRouteIds = store.result
+    ? store.result.digitalTwin.affectedRouteIds
+    : (impactedRouteIds[scenario.id] ?? []);
+  const affectedNodeIds = store.result
+    ? store.result.digitalTwin.affectedNodeIds
+    : (impactedNodeIds[scenario.id] ?? []);
 
   return (
     <section className="surface-card overflow-hidden rounded-md">
@@ -370,14 +402,16 @@ function ImpactPreviewMap({
             Impact Preview <span className="text-muted-foreground">({scenario.title})</span>
           </h2>
           <p className="type-caption mt-1">
-            Visual-only digital twin preview for affected routes, nodes, and risk zones.
+            {store.phase === "done"
+              ? "Live digital twin overlay from simulation result."
+              : "Visual-only digital twin preview for affected routes, nodes, and risk zones."}
           </p>
         </div>
         <StatusBadge label={impact.expectedStressIncrease} variant="warning" />
       </div>
       <AegisMap
         title={`${scenario.title} Scenario Overlay`}
-        description="Affected nodes and corridors are highlighted for preview only."
+        description="Affected nodes and corridors are highlighted."
         affectedNodeIds={affectedNodeIds}
         affectedRouteIds={affectedRouteIds}
         heightClassName="min-h-[380px] xl:min-h-[420px]"
@@ -386,26 +420,24 @@ function ImpactPreviewMap({
   );
 }
 
+// ── Simulation controls ───────────────────────────────────────────────────────
+
 function SimulationControlsPanel({
-  mode,
+  isRunning,
   speed,
-  onPause,
   onReset,
   onRun,
   onSpeedChange
 }: {
-  mode: SimulationMode;
+  isRunning: boolean;
   speed: string;
-  onPause: () => void;
   onReset: () => void;
   onRun: () => void;
   onSpeedChange: (speed: string) => void;
 }) {
   return (
     <section className="surface-card rounded-md p-4">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">
-        Simulation Controls
-      </h2>
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Simulation Controls</h2>
       <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_1fr_160px] lg:items-end">
         <div>
           <p className="type-caption mb-2">Simulation Speed</p>
@@ -428,8 +460,13 @@ function SimulationControlsPanel({
         <div>
           <p className="type-caption mb-2">Time Progression</p>
           <div className="flex items-center gap-3 rounded-md border border-border bg-background px-3 py-2">
-            <button type="button" onClick={mode === "running" ? onPause : onRun} className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              {mode === "running" ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+            <button
+              type="button"
+              onClick={isRunning ? undefined : onRun}
+              disabled={isRunning}
+              className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground disabled:opacity-60"
+            >
+              {isRunning ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
             </button>
             <div className="h-1.5 flex-1 rounded-full bg-secondary">
               <div className="h-full w-1/3 rounded-full bg-primary" />
@@ -438,10 +475,22 @@ function SimulationControlsPanel({
           </div>
         </div>
         <div className="grid gap-2">
-          <button type="button" onClick={onRun} className="btn btn-primary">
-            Run Simulation
+          <button
+            type="button"
+            onClick={onRun}
+            disabled={isRunning}
+            className="btn btn-primary disabled:opacity-60"
+          >
+            {isRunning ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Running…
+              </>
+            ) : (
+              "Run Simulation"
+            )}
           </button>
-          <button type="button" onClick={onReset} className="btn btn-secondary">
+          <button type="button" onClick={onReset} disabled={isRunning} className="btn btn-secondary disabled:opacity-50">
             <RotateCcw className="h-4 w-4" />
             Reset
           </button>
@@ -451,7 +500,102 @@ function SimulationControlsPanel({
   );
 }
 
-function ResultsPreviewPanel({ impact }: { impact: ScenarioSimulationImpact }) {
+// ── Results preview ───────────────────────────────────────────────────────────
+
+function ResultsPreviewPanel({
+  impact,
+  result,
+  error,
+  isRunning
+}: {
+  impact: ScenarioSimulationImpact;
+  result: SimulationResult | null;
+  error: string | null;
+  isRunning: boolean;
+}) {
+  if (isRunning) {
+    return (
+      <section className="surface-card rounded-md p-4">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">
+          Results Preview <span className="text-xs font-medium normal-case text-muted-foreground">(Live)</span>
+        </h2>
+        <div className="mt-6 flex flex-col items-center justify-center gap-3 py-6">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Simulation Running…</p>
+          <p className="text-xs text-muted-foreground">Processing scenario across the corridor network</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="surface-card rounded-md p-4">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Results Preview</h2>
+        <div className="mt-6 flex flex-col items-center justify-center gap-3 py-6 text-center">
+          <AlertCircle className="h-8 w-8 text-danger" />
+          <p className="text-sm font-medium text-danger">Simulation Failed</p>
+          <p className="max-w-xs text-xs text-muted-foreground">{error}</p>
+          <p className="text-xs text-muted-foreground">Make sure the backend is running on port 4000, then retry.</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (result) {
+    return (
+      <section className="surface-card rounded-md p-4">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">
+          Results Preview <span className="text-xs font-medium normal-case text-success">✓ Completed</span>
+        </h2>
+        <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <ResultStat
+            label="Economic Loss"
+            value={`₹ ${result.impact.economicLossCr.toFixed(1)} Cr`}
+            delta={`${result.impact.riskLevel} risk level`}
+            tone="danger"
+          />
+          <ResultStat
+            label="Carbon Impact"
+            value={`${result.impact.carbonIncreaseTons.toFixed(1)} t`}
+            delta={`+${result.dashboard.carbonImpactTons.toFixed(0)} tCO₂`}
+            tone="success"
+          />
+          <ResultStat
+            label="Recovery Time"
+            value={`${result.impact.recoveryDays} Days`}
+            delta={result.dashboard.recoveryTime}
+            tone="warning"
+          />
+          <ResultStat
+            label="Resilience Score"
+            value={String(result.dashboard.resilienceScore)}
+            delta={`Before: ${result.impact.resilienceScoreBefore}`}
+            tone="danger"
+          />
+        </div>
+        <div className="mt-4 rounded-md border border-border bg-background/60 p-3">
+          <p className="text-xs font-medium text-muted-foreground">Simulation Summary</p>
+          <p className="mt-1 text-xs leading-5 text-foreground">{result.summary}</p>
+        </div>
+        {result.recommendedNextSteps.length > 0 && (
+          <div className="mt-3">
+            <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">Recommended Next Steps</p>
+            <div className="space-y-1">
+              {result.recommendedNextSteps.slice(0, 3).map((step, i) => (
+                <div key={i} className="flex items-start gap-2 text-xs">
+                  <span className={clsx("mt-0.5 h-2 w-2 shrink-0 rounded-full", step.priority === "CRITICAL" ? "bg-danger" : "bg-warning")} />
+                  <span className="text-foreground">{step.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+    );
+  }
+
+  // Idle / estimated
   return (
     <section className="surface-card rounded-md p-4">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">
@@ -463,19 +607,16 @@ function ResultsPreviewPanel({ impact }: { impact: ScenarioSimulationImpact }) {
         <ResultStat label="Recovery Time" value={recoveryWindowForScenario(impact.scenarioId)} delta="+2 days vs baseline" tone="warning" />
         <ResultStat label="Service Disruption" value={impact.resilienceDrop} delta="Resilience movement" tone="danger" />
       </div>
+      <p className="mt-4 text-center text-xs text-muted-foreground">
+        Click <span className="font-semibold text-primary">Run Simulation</span> to get live results from the backend engine.
+      </p>
     </section>
   );
 }
 
-function DetailRow({
-  label,
-  risk,
-  value
-}: {
-  label: string;
-  risk?: "low" | "medium" | "high" | "critical";
-  value: string;
-}) {
+// ── Shared sub-components ─────────────────────────────────────────────────────
+
+function DetailRow({ label, risk, value }: { label: string; risk?: "low" | "medium" | "high" | "critical"; value: string }) {
   return (
     <div className="flex items-start justify-between gap-3">
       <span className="text-xs text-muted-foreground">{label}</span>
@@ -488,17 +629,8 @@ function DetailRow({
   );
 }
 
-function OverviewItem({
-  label,
-  tone = "foreground",
-  value
-}: {
-  label: string;
-  tone?: "danger" | "foreground" | "primary";
-  value: string;
-}) {
+function OverviewItem({ label, tone = "foreground", value }: { label: string; tone?: "danger" | "foreground" | "primary"; value: string }) {
   const toneClass = tone === "danger" ? "text-danger" : tone === "primary" ? "text-primary" : "text-foreground";
-
   return (
     <div className="border-r border-border p-3 last:border-r-0">
       <p className="type-caption">{label}</p>
@@ -507,23 +639,8 @@ function OverviewItem({
   );
 }
 
-function ResultStat({
-  delta,
-  label,
-  tone,
-  value
-}: {
-  delta: string;
-  label: string;
-  tone: "danger" | "success" | "warning";
-  value: string;
-}) {
-  const toneClass = {
-    danger: "text-danger",
-    success: "text-success",
-    warning: "text-warning"
-  }[tone];
-
+function ResultStat({ delta, label, tone, value }: { delta: string; label: string; tone: "danger" | "success" | "warning"; value: string }) {
+  const toneClass = { danger: "text-danger", success: "text-success", warning: "text-warning" }[tone];
   return (
     <div className="border-r border-border last:border-r-0">
       <p className="text-xs text-muted-foreground">{label}</p>
