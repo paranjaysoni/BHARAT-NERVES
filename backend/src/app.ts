@@ -5,6 +5,7 @@ import { requestLogger } from "./middleware/request-logger.middleware.js";
 import { notFound } from "./middleware/not-found.middleware.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 import healthRouter from "./routes/health.routes.js";
+import impactEngineRouter from "./routes/impact-engine.routes.js";
 import nodesRouter from "./routes/nodes.routes.js";
 import routeGraphRouter from "./routes/route-graph.routes.js";
 import routesRouter from "./routes/routes.routes.js";
@@ -30,6 +31,7 @@ app.get("/health", probeHandler);
 
 // API v1
 app.use("/api/health", healthRouter);
+app.use("/api/impact", impactEngineRouter);
 app.use("/api/nodes", nodesRouter);
 app.use("/api/route-graph", routeGraphRouter);
 app.use("/api/routes", routesRouter);

@@ -28,6 +28,7 @@ All static data endpoints return JSON through the shared response helpers in `sr
 
 | Method | Path | Description |
 | --- | --- | --- |
+| `POST` | `/api/impact/calculate` | Calculate deterministic impact metrics for a scenario and optional route recovery result. |
 | `GET` | `/api/nodes` | List infrastructure nodes. |
 | `GET` | `/api/nodes/:id` | Get one infrastructure node by ID. |
 | `GET` | `/api/route-graph/health` | Return graph connectivity and route availability health. |
@@ -89,6 +90,24 @@ Validation errors return HTTP `400` with one of:
 - `INVALID_DESTINATION_NODE`
 - `INVALID_BLOCKED_ROUTE`
 - `INVALID_COST_MODE`
+
+## Impact Calculation Request
+
+```json
+{
+  "scenarioId": "odisha_cyclone",
+  "recoveryRoute": {
+    "extraDistanceKm": 13,
+    "extraDelayMinutes": 25,
+    "recoveryStatus": "RECOVERED"
+  }
+}
+```
+
+`recoveryRoute` is optional. Invalid impact requests return:
+
+- `IMPACT_SCENARIO_NOT_FOUND`
+- `INVALID_RECOVERY_ROUTE`
 
 Successful scenario runs return:
 
