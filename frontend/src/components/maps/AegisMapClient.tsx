@@ -29,7 +29,7 @@ export interface AegisMapProps {
   stats?: boolean;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 const INDIA_BOUNDS: LatLngBoundsExpression = [
   [6.4, 67.0],
   [37.6, 98.5]
