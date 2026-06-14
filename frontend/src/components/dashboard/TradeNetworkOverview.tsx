@@ -18,7 +18,7 @@ export function TradeNetworkOverview() {
       <AegisMap
         title="India Trade Network"
         description="Backend routes rendered as OpenStreetMap corridors."
-        heightClassName="min-h-[430px]"
+        heightClassName="h-[300px] sm:h-[380px] lg:h-[430px]"
         nodeTypes={["PORT", "WAREHOUSE", "RAIL_HUB", "FUEL_DEPOT", "DISTRICT_HUB", "COMMAND_CENTER"]}
         routeTypes={["ROAD", "RAIL", "PORT_LINK"]}
         compactMarkers

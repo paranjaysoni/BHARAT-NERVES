@@ -12,9 +12,9 @@ export default function ControlRoomPage() {
     <div className="space-y-4 xl:max-h-[calc(100vh-92px)] xl:overflow-hidden">
       <SimulationStatusBanner />
 
-      <section className="grid gap-4 xl:grid-cols-[minmax(0,2.35fr)_minmax(340px,0.92fr)]">
+      <section className="grid gap-4 lg:grid-cols-[minmax(0,2.35fr)_minmax(0,0.92fr)]">
         <DigitalTwinOverview />
-        <aside className="grid gap-4 xl:grid-rows-[auto_minmax(0,1fr)]">
+        <aside className="grid gap-4 lg:grid-rows-[auto_minmax(0,1fr)]">
           <ControlRoomKpis />
           <ActiveAlertsPanel />
         </aside>

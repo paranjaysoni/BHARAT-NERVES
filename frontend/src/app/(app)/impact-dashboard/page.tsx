@@ -165,19 +165,19 @@ export default function ImpactDashboardPage() {
 
       <KpiStrip />
 
-      <section className="grid gap-3 xl:grid-cols-[minmax(0,1.2fr)_minmax(380px,1.05fr)_minmax(300px,0.9fr)]">
+      <section className="grid gap-3 lg:grid-cols-2 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1.05fr)_minmax(0,0.9fr)]">
         <ImpactHeatmap />
         <ImpactOverTime />
         <SectorWiseImpact />
       </section>
 
-      <section className="grid gap-3 xl:grid-cols-[minmax(0,1.08fr)_minmax(360px,1fr)_minmax(300px,0.82fr)]">
+      <section className="grid gap-3 lg:grid-cols-2 xl:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)_minmax(0,0.82fr)]">
         <ImpactByState />
         <ImpactByDimension />
         <KeyInsights />
       </section>
 
-      <section className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_300px]">
+      <section className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(0,300px)]">
         <ImpactForecast />
         <ForecastSummary />
       </section>
@@ -187,7 +187,7 @@ export default function ImpactDashboardPage() {
 
 function KpiStrip() {
   return (
-    <section className="surface-card grid overflow-hidden rounded-md text-card-foreground lg:grid-cols-3 xl:grid-cols-[repeat(5,minmax(0,1fr))_216px]">
+    <section className="surface-card grid overflow-hidden rounded-md text-card-foreground sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[repeat(5,minmax(0,1fr))_minmax(0,216px)]">
       {kpis.map((kpi, index) => {
         const Icon = kpi.icon;
 
@@ -244,7 +244,7 @@ function ImpactHeatmap() {
         description="Mock intensity zones over backend infrastructure data."
         heatZones={impactHeatZones}
         showImpactLegend
-        heightClassName="h-[282px]"
+        heightClassName="h-[240px] sm:h-[282px]"
         compactMarkers
         stats={false}
       />
@@ -337,28 +337,32 @@ function SectorWiseImpact() {
 function ImpactByState() {
   return (
     <Panel title="IMPACT BY STATE" titleSuffix="(Top 5)" className="min-h-[245px]">
-      <div className="grid grid-cols-[1.25fr_0.8fr_0.75fr_1fr] border-b border-border/70 pb-2 text-[0.68rem] text-muted-foreground">
-        <span>State</span>
-        <span className="text-center">Impact Score</span>
-        <span className="text-center">Trend (24h)</span>
-        <span className="text-right">Population Affected</span>
-      </div>
-      <div className="divide-y divide-border/60">
-        {stateRows.map(([state, score, direction, trend, population, tone]) => (
-          <div key={state} className="grid grid-cols-[1.25fr_0.8fr_0.75fr_1fr] items-center py-2 text-xs">
-            <span className="font-medium text-foreground">{state}</span>
-            <span className="text-center">
-              <span className={clsx("inline-flex min-w-10 justify-center rounded-md border px-2 py-0.5 font-semibold", toneClasses[tone])}>
-                {score}
-              </span>
-            </span>
-            <span className={clsx("flex items-center justify-center gap-1 font-medium", direction === "up" ? "text-success" : "text-success")}>
-              {direction === "up" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
-              {trend}
-            </span>
-            <span className="text-right font-medium text-foreground">{population}</span>
+      <div className="overflow-x-auto">
+        <div className="min-w-[340px]">
+          <div className="grid grid-cols-[1.25fr_0.8fr_0.75fr_1fr] border-b border-border/70 pb-2 text-[0.68rem] text-muted-foreground">
+            <span>State</span>
+            <span className="text-center">Impact Score</span>
+            <span className="text-center">Trend (24h)</span>
+            <span className="text-right">Population Affected</span>
           </div>
-        ))}
+          <div className="divide-y divide-border/60">
+            {stateRows.map(([state, score, direction, trend, population, tone]) => (
+              <div key={state} className="grid grid-cols-[1.25fr_0.8fr_0.75fr_1fr] items-center py-2 text-xs">
+                <span className="font-medium text-foreground">{state}</span>
+                <span className="text-center">
+                  <span className={clsx("inline-flex min-w-10 justify-center rounded-md border px-2 py-0.5 font-semibold", toneClasses[tone])}>
+                    {score}
+                  </span>
+                </span>
+                <span className={clsx("flex items-center justify-center gap-1 font-medium", direction === "up" ? "text-success" : "text-success")}>
+                  {direction === "up" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
+                  {trend}
+                </span>
+                <span className="text-right font-medium text-foreground">{population}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
       <PanelLink label="View All States" />
     </Panel>
@@ -423,7 +427,7 @@ function ImpactForecast() {
 
   return (
     <Panel title="IMPACT FORECAST" subtitle="Predicted impact for next 7 days" className="min-h-[152px]">
-      <div className="grid grid-cols-[180px_1fr] gap-4">
+      <div className="grid gap-4 sm:grid-cols-[minmax(0,180px)_1fr]">
         <div className="space-y-4 pt-3 text-xs text-muted-foreground">
           <LegendItem label="Low Impact" color="bg-success" dashed />
           <LegendItem label="Medium Impact" color="bg-warning" dashed />

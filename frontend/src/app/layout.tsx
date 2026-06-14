@@ -5,7 +5,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Project Aegis",
   description:
-    "Self-Healing Digital Nervous System for Trade, Logistics and Disaster Resilience"
+    "Self-Healing Digital Nervous System for Trade, Logistics and Disaster Resilience",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg"
+  }
 };
 
 export default function RootLayout({

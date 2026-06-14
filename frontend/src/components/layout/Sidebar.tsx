@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import {
   Activity,
   BarChart3,
-  Bell,
   Brain,
   Database,
   FileText,
@@ -17,6 +16,7 @@ import {
 import clsx from "clsx";
 import { navigationItems, systemStatus } from "@/data";
 import type { NavigationIconName } from "@/data";
+import { AppLogo } from "@/components/shared";
 
 const iconMap: Record<NavigationIconName, typeof Home> = {
   Activity,
@@ -38,18 +38,10 @@ export function Sidebar() {
       <div className="flex h-full flex-col">
         <Link
           href="/"
-          className="border-border flex items-center gap-2.5 border-b px-4 py-3.5 hover:bg-secondary/50 transition-colors"
+          className="border-border flex items-center gap-2.5 border-b px-4 py-3 hover:bg-secondary/50 transition-colors"
           title="Back to Landing Page"
         >
-          <div className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-md shadow-sm">
-            <Bell className="h-4 w-4" aria-hidden="true" />
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold tracking-wide">PROJECT AEGIS</p>
-            <p className="text-xs text-muted-foreground">
-              Bharat Nerves Platform
-            </p>
-          </div>
+          <AppLogo variant="full" size={36} className="text-foreground" />
         </Link>
 
         <nav className="flex-1 space-y-0.5 px-2.5 py-3" aria-label="Primary">

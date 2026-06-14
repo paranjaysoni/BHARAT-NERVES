@@ -1,3 +1,5 @@
+export { AppLogo } from "./AppLogo";
+export type { AppLogoProps } from "./AppLogo";
 export { AgentCard } from "./AgentCard";
 export type { AgentCardProps } from "./AgentCard";
 export { AlertCard } from "./AlertCard";

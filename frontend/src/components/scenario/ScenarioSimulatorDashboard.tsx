@@ -213,7 +213,7 @@ export function ScenarioSimulatorDashboard() {
 
   return (
     <div className="grid min-h-0 gap-4">
-      <section className="grid gap-4 xl:grid-cols-[minmax(0,1.25fr)_minmax(420px,0.75fr)]">
+      <section className="grid gap-4 xl:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)]">
         <ScenarioSelectionRow
           scenarios={scenarioOptions}
           selectedScenarioId={selectedScenario.id}
@@ -226,7 +226,7 @@ export function ScenarioSimulatorDashboard() {
         <SimulationOverview scenario={selectedScenario} impact={selectedImpact} result={store.result} />
       </section>
 
-      <section className="grid min-h-0 gap-4 xl:grid-cols-[320px_minmax(0,1fr)]">
+      <section className="grid min-h-0 gap-4 xl:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
         <aside className="grid gap-4">
           <ScenarioDetailsPanel scenario={selectedScenario} />
           <ImpactSummaryPanel scenario={selectedScenario} impact={selectedImpact} />
@@ -262,7 +262,7 @@ function ScenarioSelectionRow({
   return (
     <section className="surface-card rounded-md p-4">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Select Scenario</h2>
-      <div className="mt-3 grid gap-2 lg:grid-cols-5">
+      <div className="mt-3 grid gap-2 sm:grid-cols-3 lg:grid-cols-5">
         {scenarioOptions.map((scenario) => {
           const Icon = iconByScenarioId[scenario.id as keyof typeof iconByScenarioId] ?? Gauge;
           const isSelected = selectedScenarioId === scenario.id;
@@ -329,7 +329,7 @@ function SimulationOverview({
   return (
     <section className="surface-card rounded-md p-4">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Simulation Overview</h2>
-      <div className="mt-3 grid grid-cols-3 overflow-hidden rounded-md border border-border bg-background/70 xl:grid-cols-6">
+      <div className="mt-3 grid grid-cols-2 overflow-hidden rounded-md border border-border bg-background/70 sm:grid-cols-3 xl:grid-cols-6">
         <OverviewItem label="Selected Scenario" value={scenario.title} tone="primary" />
         <OverviewItem label="Predicted Impact" value={result?.impact.score?.riskLevel ?? result?.scenario.severity ?? scenario.severity} tone="danger" />
         <OverviewItem label="Affected Nodes" value={affectedNodes} />
@@ -441,7 +441,7 @@ function ImpactPreviewMap({ scenario, impact }: { scenario: ScenarioOption; impa
         description="Affected nodes and corridors are highlighted."
         affectedNodeIds={affectedNodeIds}
         affectedRouteIds={affectedRouteIds}
-        heightClassName="min-h-[380px] xl:min-h-[420px]"
+        heightClassName="h-[300px] sm:h-[360px] xl:h-[420px]"
       />
     </section>
   );
@@ -465,7 +465,7 @@ function SimulationControlsPanel({
   return (
     <section className="surface-card rounded-md p-4">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Simulation Controls</h2>
-      <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_1fr_160px] lg:items-end">
+      <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1fr_160px] xl:items-end">
         <div>
           <p className="type-caption mb-2">Simulation Speed</p>
           <div className="grid grid-cols-4 overflow-hidden rounded-md border border-border">
@@ -577,7 +577,7 @@ function ResultsPreviewPanel({
         <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">
           Results Preview <span className="text-xs font-medium normal-case text-success">✓ Completed</span>
         </h2>
-        <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="mt-4 grid grid-cols-2 gap-4">
           <ResultStat
             label="Economic Loss"
             value={`₹ ${safeNum(result.impact.economic?.lossAfterRecoveryCr).toFixed(1)} Cr`}
@@ -641,7 +641,7 @@ function ResultsPreviewPanel({
       <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">
         Results Preview <span className="text-xs font-medium normal-case text-muted-foreground">(Estimated)</span>
       </h2>
-      <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="mt-4 grid grid-cols-2 gap-4">
         <ResultStat label="Economic Loss" value={impact.estimatedEconomicImpact} delta="-28% vs baseline" tone="danger" />
         <ResultStat label="Carbon Impact" value={impact.estimatedCarbonImpact} delta="+32% vs baseline" tone="success" />
         <ResultStat label="Recovery Time" value={recoveryWindowForScenario(impact.scenarioId)} delta="+2 days vs baseline" tone="warning" />

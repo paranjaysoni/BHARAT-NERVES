@@ -200,7 +200,7 @@ export default function ResourcesPage() {
         description="Access critical data, documents, datasets and knowledge assets"
       />
 
-      <section className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_330px]">
+      <section className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(0,330px)]">
         <div className="space-y-3.5">
           <SearchAndFilters />
           <ResourceCategories />
@@ -236,7 +236,7 @@ function SearchAndFilters() {
 function ResourceCategories() {
   return (
     <Panel title="RESOURCE CATEGORIES">
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {categories.map((category) => {
           const Icon = category.icon;
 
@@ -317,8 +317,9 @@ function FeaturedResources() {
         ))}
       </div>
 
-      <div className="mt-3 overflow-hidden">
-        <div className="grid grid-cols-[minmax(260px,1.6fr)_120px_120px_140px_90px_72px] border-b border-border/70 pb-2 text-[0.68rem] text-muted-foreground">
+      <div className="mt-3 overflow-x-auto">
+        <div className="min-w-[600px]">
+        <div className="grid grid-cols-[minmax(0,1.6fr)_100px_100px_120px_80px_60px] border-b border-border/70 pb-2 text-[0.68rem] text-muted-foreground">
           <span>Name</span>
           <span>Category</span>
           <span>Source</span>
@@ -330,7 +331,7 @@ function FeaturedResources() {
           {featuredResources.map((resource) => (
             <div
               key={resource.name}
-              className="grid grid-cols-[minmax(260px,1.6fr)_120px_120px_140px_90px_72px] items-center py-2.5 text-xs"
+              className="grid grid-cols-[minmax(0,1.6fr)_100px_100px_120px_80px_60px] items-center py-2.5 text-xs"
             >
               <div className="flex min-w-0 items-center gap-3">
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-secondary/60 text-muted-foreground">
@@ -368,6 +369,7 @@ function FeaturedResources() {
             </div>
           ))}
         </div>
+        </div>
       </div>
       <PanelLink label="View All Resources" />
     </Panel>
@@ -377,7 +379,7 @@ function FeaturedResources() {
 function RecentlyAdded() {
   return (
     <Panel title="RECENTLY ADDED RESOURCES">
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {recentResources.map((resource) => (
           <article key={resource.title} className="overflow-hidden rounded-md border border-border bg-background/55">
             <ResourcePreview visual={resource.visual} />
@@ -482,65 +484,234 @@ function PanelLink({ label }: { label: string }) {
 
 function ResourcePreview({ visual }: { visual: (typeof recentResources)[number]["visual"] }) {
   return (
-    <div className="relative h-[104px] overflow-hidden bg-background">
-      <div className="absolute inset-0 bg-[linear-gradient(135deg,hsl(var(--card)),hsl(var(--background)))]" />
+    <div className="relative h-[104px] overflow-hidden">
       {visual === "heatmap" ? <HeatmapPreview /> : null}
       {visual === "cyclone" ? <CyclonePreview /> : null}
       {visual === "network" ? <NetworkPreview /> : null}
       {visual === "port" ? <PortPreview /> : null}
       {visual === "globe" ? <GlobePreview /> : null}
-      <div className="absolute inset-0 bg-gradient-to-t from-card/50 to-transparent" />
     </div>
   );
 }
 
+/* Air Quality Index — bar chart with gradient columns */
 function HeatmapPreview() {
+  const bars = [62, 45, 78, 55, 90, 38, 72, 84, 50, 66, 43, 80];
+  const colors = [
+    "hsl(var(--success))", "hsl(var(--success))", "hsl(var(--warning))",
+    "hsl(var(--success))", "hsl(var(--danger))", "hsl(var(--success))",
+    "hsl(var(--warning))", "hsl(var(--danger))", "hsl(var(--success))",
+    "hsl(var(--warning))", "hsl(var(--success))", "hsl(var(--danger))"
+  ];
+  const w = 220 / bars.length;
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 220 104" aria-hidden="true">
-      <path d="M62 14 L92 8 L126 18 L154 36 L170 66 L138 88 L100 96 L72 76 L48 44 Z" fill="hsl(var(--primary)/0.22)" stroke="hsl(var(--info)/0.55)" />
-      <circle cx="95" cy="62" r="28" fill="hsl(var(--warning))" opacity="0.32" />
-      <circle cx="116" cy="74" r="24" fill="hsl(var(--danger))" opacity="0.42" />
-      <circle cx="62" cy="48" r="18" fill="hsl(var(--success))" opacity="0.28" />
+    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 220 104" aria-hidden="true" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="aqiBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.06" />
+          <stop offset="100%" stopColor="hsl(var(--background))" stopOpacity="0.8" />
+        </linearGradient>
+      </defs>
+      <rect width="220" height="104" fill="url(#aqiBg)" />
+      {/* Horizontal grid lines */}
+      {[20, 52, 84].map(y => (
+        <line key={y} x1="8" x2="212" y1={y} y2={y} stroke="hsl(var(--border))" strokeWidth="0.5" strokeDasharray="3 3" />
+      ))}
+      {/* Bars */}
+      {bars.map((val, i) => {
+        const barH = (val / 100) * 72;
+        return (
+          <rect
+            key={i}
+            x={i * w + 2}
+            y={96 - barH}
+            width={w - 4}
+            height={barH}
+            rx="2"
+            fill={colors[i]}
+            fillOpacity="0.75"
+          />
+        );
+      })}
+      {/* AQI label */}
+      <text x="10" y="15" fill="hsl(var(--muted-foreground))" fontSize="7" fontWeight="600" letterSpacing="0.08em">AIR QUALITY INDEX</text>
     </svg>
   );
 }
 
+/* Cyclone Landfall Tracker — spiral + path + wind bands */
 function CyclonePreview() {
   return (
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_52%_50%,white_0_3px,hsl(var(--foreground)/0.6)_4px_8px,transparent_9px),conic-gradient(from_40deg,hsl(var(--foreground)/0.05),hsl(var(--foreground)/0.42),hsl(var(--foreground)/0.06),hsl(var(--foreground)/0.36),hsl(var(--foreground)/0.04))] opacity-80" />
+    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 220 104" aria-hidden="true">
+      <defs>
+        <radialGradient id="cycloneBg" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="hsl(var(--info))" stopOpacity="0.18" />
+          <stop offset="60%" stopColor="hsl(var(--primary))" stopOpacity="0.07" />
+          <stop offset="100%" stopColor="hsl(var(--background))" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="eyeGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="hsl(var(--background))" stopOpacity="0.9" />
+          <stop offset="100%" stopColor="hsl(var(--danger))" stopOpacity="0.3" />
+        </radialGradient>
+      </defs>
+      <rect width="220" height="104" fill="hsl(var(--background))" fillOpacity="0.85" />
+      {/* Outer wind bands */}
+      <ellipse cx="110" cy="52" rx="96" ry="46" fill="none" stroke="hsl(var(--info))" strokeWidth="0.6" strokeOpacity="0.18" />
+      <ellipse cx="110" cy="52" rx="74" ry="34" fill="none" stroke="hsl(var(--info))" strokeWidth="0.8" strokeOpacity="0.25" />
+      <ellipse cx="110" cy="52" rx="52" ry="24" fill="none" stroke="hsl(var(--warning))" strokeWidth="1" strokeOpacity="0.35" />
+      <ellipse cx="110" cy="52" rx="33" ry="15" fill="none" stroke="hsl(var(--warning))" strokeWidth="1.2" strokeOpacity="0.5" />
+      <ellipse cx="110" cy="52" rx="16" ry="8" fill="none" stroke="hsl(var(--danger))" strokeWidth="1.5" strokeOpacity="0.7" />
+      {/* Central background */}
+      <circle cx="110" cy="52" r="96" fill="url(#cycloneBg)" />
+      {/* Spiral arms */}
+      <path d="M110 52 C118 44 134 34 148 28 C162 22 176 24 188 30" fill="none" stroke="hsl(var(--info))" strokeWidth="1.8" strokeOpacity="0.55" strokeLinecap="round" />
+      <path d="M110 52 C102 60 88 72 76 80 C64 88 50 88 38 82" fill="none" stroke="hsl(var(--info))" strokeWidth="1.8" strokeOpacity="0.55" strokeLinecap="round" />
+      <path d="M110 52 C120 58 136 68 148 76 C160 84 170 88 182 86" fill="none" stroke="hsl(var(--warning))" strokeWidth="1.4" strokeOpacity="0.45" strokeLinecap="round" />
+      <path d="M110 52 C100 46 84 36 72 30 C60 24 48 22 36 28" fill="none" stroke="hsl(var(--warning))" strokeWidth="1.4" strokeOpacity="0.45" strokeLinecap="round" />
+      {/* Eye wall */}
+      <circle cx="110" cy="52" r="7" fill="url(#eyeGrad)" stroke="hsl(var(--danger))" strokeWidth="1.5" strokeOpacity="0.8" />
+      {/* Eye centre dot */}
+      <circle cx="110" cy="52" r="2.5" fill="hsl(var(--danger))" fillOpacity="0.9" />
+      {/* Track path */}
+      <path d="M36 86 C54 78 72 68 90 60 C102 54 108 52 110 52" fill="none" stroke="hsl(var(--danger))" strokeWidth="1.8" strokeDasharray="4 2" strokeOpacity="0.7" />
+      {/* Track dots */}
+      {[[36,86],[54,78],[72,68],[90,60]].map(([x,y],i) => (
+        <circle key={i} cx={x} cy={y} r="2.5" fill="hsl(var(--danger))" fillOpacity="0.5" />
+      ))}
+      {/* Label */}
+      <text x="10" y="14" fill="hsl(var(--muted-foreground))" fontSize="7" fontWeight="600" letterSpacing="0.08em">CYCLONE TRACKER</text>
+    </svg>
   );
 }
 
+/* NH-16 Corridor Analysis — road/route network map */
 function NetworkPreview() {
   return (
     <svg className="absolute inset-0 h-full w-full" viewBox="0 0 220 104" aria-hidden="true">
-      <path d="M0 78 C40 36 88 84 125 42 S190 50 220 20" fill="none" stroke="hsl(var(--warning))" strokeWidth="1.5" />
-      <path d="M0 52 C54 60 88 26 134 64 S194 80 220 46" fill="none" stroke="hsl(var(--danger))" strokeWidth="1.5" />
-      {[36, 70, 112, 148, 184].map((x, index) => (
-        <circle key={x} cx={x} cy={[58, 42, 68, 38, 60][index]} r="4" fill="hsl(var(--warning))" />
+      <defs>
+        <linearGradient id="netBg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="hsl(var(--card))" stopOpacity="1" />
+          <stop offset="100%" stopColor="hsl(var(--background))" stopOpacity="1" />
+        </linearGradient>
+      </defs>
+      <rect width="220" height="104" fill="url(#netBg)" />
+      {/* Grid lines — map feel */}
+      {[26, 52, 78].map(y => (
+        <line key={y} x1="0" x2="220" y1={y} y2={y} stroke="hsl(var(--border))" strokeWidth="0.4" />
       ))}
+      {[44, 88, 132, 176].map(x => (
+        <line key={x} x1={x} x2={x} y1="0" y2="104" stroke="hsl(var(--border))" strokeWidth="0.4" />
+      ))}
+      {/* Secondary roads */}
+      <path d="M0 78 L44 70 L88 80 L132 68" fill="none" stroke="hsl(var(--border-strong))" strokeWidth="1.2" strokeLinecap="round" />
+      <path d="M44 26 L44 70" fill="none" stroke="hsl(var(--border-strong))" strokeWidth="1" strokeLinecap="round" />
+      <path d="M132 26 L132 68" fill="none" stroke="hsl(var(--border-strong))" strokeWidth="1" strokeLinecap="round" />
+      {/* NH-16 main highway — highlighted */}
+      <path d="M0 52 C32 48 64 44 88 46 C112 48 130 50 160 44 L220 38" fill="none" stroke="hsl(var(--warning))" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Blockage zone */}
+      <rect x="134" y="36" width="26" height="14" rx="3" fill="hsl(var(--danger))" fillOpacity="0.18" stroke="hsl(var(--danger))" strokeWidth="1" strokeDasharray="3 2" />
+      <text x="137" y="46" fill="hsl(var(--danger))" fontSize="5.5" fontWeight="700">BLOCK</text>
+      {/* Node dots */}
+      {[[0,52],[44,46],[88,46],[160,44],[220,38]].map(([x,y],i) => (
+        <circle key={i} cx={x} cy={y} r="3.5" fill="hsl(var(--warning))" stroke="hsl(var(--card))" strokeWidth="1.2" />
+      ))}
+      {/* City labels */}
+      <text x="34" y="43" fill="hsl(var(--muted-foreground))" fontSize="5.5" fontWeight="600">Bhubaneswar</text>
+      <text x="78" y="43" fill="hsl(var(--muted-foreground))" fontSize="5.5" fontWeight="600">Cuttack</text>
+      <text x="148" y="41" fill="hsl(var(--muted-foreground))" fontSize="5.5" fontWeight="600">Balasore</text>
+      {/* Label */}
+      <text x="10" y="14" fill="hsl(var(--muted-foreground))" fontSize="7" fontWeight="600" letterSpacing="0.08em">NH-16 CORRIDOR</text>
     </svg>
   );
 }
 
+/* Port Capacity Utilization — vertical bar chart with berth indicators */
 function PortPreview() {
+  const berths = [
+    { label: "B1", pct: 92, tone: "hsl(var(--danger))" },
+    { label: "B2", pct: 78, tone: "hsl(var(--warning))" },
+    { label: "B3", pct: 55, tone: "hsl(var(--success))" },
+    { label: "B4", pct: 88, tone: "hsl(var(--danger))" },
+    { label: "B5", pct: 45, tone: "hsl(var(--success))" },
+    { label: "B6", pct: 70, tone: "hsl(var(--warning))" },
+    { label: "B7", pct: 95, tone: "hsl(var(--danger))" },
+  ];
+  const bw = 220 / berths.length;
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 220 104" aria-hidden="true">
-      <path d="M0 74 L82 48 L150 58 L220 34 L220 104 L0 104 Z" fill="hsl(var(--info)/0.22)" />
-      <path d="M62 0 L98 104 M112 0 L146 104 M158 0 L200 104" stroke="hsl(var(--foreground)/0.22)" />
-      <rect x="112" y="48" width="52" height="10" fill="hsl(var(--warning)/0.72)" />
+    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 220 104" aria-hidden="true" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="portBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="hsl(var(--info))" stopOpacity="0.06" />
+          <stop offset="100%" stopColor="hsl(var(--background))" stopOpacity="0.9" />
+        </linearGradient>
+      </defs>
+      <rect width="220" height="104" fill="url(#portBg)" />
+      {/* Water horizon */}
+      <path d="M0 94 C30 90 60 96 90 92 C120 88 150 94 180 90 L220 88 L220 104 L0 104 Z" fill="hsl(var(--info))" fillOpacity="0.12" />
+      {/* 80% capacity line */}
+      <line x1="8" x2="212" y1="30" y2="30" stroke="hsl(var(--warning))" strokeWidth="0.8" strokeDasharray="4 3" strokeOpacity="0.7" />
+      <text x="175" y="27" fill="hsl(var(--warning))" fontSize="5.5" fontWeight="600">80% CAP</text>
+      {/* Bars */}
+      {berths.map((b, i) => {
+        const barH = (b.pct / 100) * 65;
+        return (
+          <g key={b.label}>
+            <rect x={i * bw + 3} y={88 - barH} width={bw - 6} height={barH} rx="2" fill={b.tone} fillOpacity="0.7" />
+            <text x={i * bw + bw / 2} y="100" textAnchor="middle" fill="hsl(var(--muted-foreground))" fontSize="5.5" fontWeight="600">{b.label}</text>
+          </g>
+        );
+      })}
+      {/* Label */}
+      <text x="10" y="14" fill="hsl(var(--muted-foreground))" fontSize="7" fontWeight="600" letterSpacing="0.08em">PORT CAPACITY</text>
     </svg>
   );
 }
 
+/* Global Economic Outlook — world map outline + GDP trend line */
 function GlobePreview() {
   return (
     <svg className="absolute inset-0 h-full w-full" viewBox="0 0 220 104" aria-hidden="true">
-      <circle cx="112" cy="52" r="45" fill="hsl(var(--primary)/0.16)" stroke="hsl(var(--info)/0.5)" />
-      <path d="M68 52 H156 M112 8 C88 26 88 78 112 96 M112 8 C136 26 136 78 112 96" fill="none" stroke="hsl(var(--info)/0.35)" />
-      {[82, 104, 128, 144, 96].map((x, index) => (
-        <circle key={x} cx={x} cy={[44, 62, 36, 70, 28][index]} r="2.5" fill="hsl(var(--warning))" />
+      <defs>
+        <linearGradient id="globeBg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.08" />
+          <stop offset="100%" stopColor="hsl(var(--background))" stopOpacity="0.95" />
+        </linearGradient>
+        <linearGradient id="trendLine" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="hsl(var(--success))" />
+          <stop offset="100%" stopColor="hsl(var(--info))" />
+        </linearGradient>
+      </defs>
+      <rect width="220" height="104" fill="url(#globeBg)" />
+      {/* Latitude lines */}
+      {[26, 52, 78].map(y => (
+        <line key={y} x1="0" x2="220" y1={y} y2={y} stroke="hsl(var(--border))" strokeWidth="0.4" strokeOpacity="0.6" />
       ))}
+      {/* Longitude lines */}
+      {[44, 88, 132, 176].map(x => (
+        <ellipse key={x} cx="110" cy="52" rx={Math.abs(x - 110)} ry="46" fill="none" stroke="hsl(var(--border))" strokeWidth="0.4" strokeOpacity="0.5" />
+      ))}
+      {/* Simplified continent blobs */}
+      {/* Americas */}
+      <path d="M18 22 C22 18 32 18 36 24 C40 30 38 40 36 48 C34 56 30 62 26 68 C22 74 18 76 16 72 C12 64 12 52 14 40 Z" fill="hsl(var(--primary))" fillOpacity="0.18" stroke="hsl(var(--primary))" strokeWidth="0.6" strokeOpacity="0.4" />
+      {/* Europe/Africa */}
+      <path d="M76 18 C84 16 96 18 100 26 C104 34 100 44 96 50 C100 52 102 62 98 72 C94 82 84 86 78 80 C72 74 70 64 72 54 C68 50 66 40 68 30 Z" fill="hsl(var(--success))" fillOpacity="0.15" stroke="hsl(var(--success))" strokeWidth="0.6" strokeOpacity="0.4" />
+      {/* Asia */}
+      <path d="M112 16 C124 14 148 18 158 28 C168 36 166 46 158 52 C150 58 136 58 124 54 C116 62 112 72 108 80 C102 72 104 60 110 52 C104 44 104 32 112 22 Z" fill="hsl(var(--info))" fillOpacity="0.15" stroke="hsl(var(--info))" strokeWidth="0.6" strokeOpacity="0.4" />
+      {/* India highlight */}
+      <path d="M134 46 C138 44 142 48 140 56 C138 62 132 64 130 58 C128 52 130 48 134 46 Z" fill="hsl(var(--warning))" fillOpacity="0.7" stroke="hsl(var(--warning))" strokeWidth="0.8" />
+      {/* GDP trend line — bottom strip */}
+      <rect x="0" y="82" width="220" height="22" fill="hsl(var(--card))" fillOpacity="0.7" />
+      <polyline points="8,100 30,94 54,96 78,90 102,86 126,88 150,83 174,85 198,80 212,78" fill="none" stroke="url(#trendLine)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="212" cy="78" r="2.5" fill="hsl(var(--success))" />
+      {/* Key economy dots */}
+      {[[22,46,"US"],[88,38,"EU"],[134,50,"IN"],[154,34,"CN"]].map(([x,y,label]) => (
+        <g key={label as string}>
+          <circle cx={x as number} cy={y as number} r="3" fill="hsl(var(--warning))" fillOpacity="0.8" />
+          <text x={(x as number) + 4} y={(y as number) - 3} fill="hsl(var(--warning))" fontSize="5" fontWeight="700">{label}</text>
+        </g>
+      ))}
+      {/* Label */}
+      <text x="10" y="14" fill="hsl(var(--muted-foreground))" fontSize="7" fontWeight="600" letterSpacing="0.08em">GLOBAL OUTLOOK</text>
     </svg>
   );
 }

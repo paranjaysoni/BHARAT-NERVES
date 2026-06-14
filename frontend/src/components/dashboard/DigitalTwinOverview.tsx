@@ -21,7 +21,7 @@ export function DigitalTwinOverview() {
       <AegisMap
         title="National Infrastructure Network"
         description="OpenStreetMap digital twin with backend nodes and corridor routes."
-        heightClassName="min-h-[520px]"
+        heightClassName="h-[320px] sm:h-[420px] lg:h-[480px] xl:h-[520px]"
       />
     </section>
   );
