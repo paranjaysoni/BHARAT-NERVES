@@ -1,3 +1,4 @@
+import { CrisisCommanderClient } from "@/components/commander/CrisisCommanderClient";
 import {
   Anchor,
   ArrowRight,
@@ -199,6 +200,9 @@ export default function CrisisCommanderPage() {
         title={crisisCommanderPage.title}
         description="Executive Decision Support & Real-time Crisis Management"
       />
+
+      {/* Live backend-driven plan — appears after simulation runs */}
+      <CrisisCommanderClient />
 
       <KpiStrip />
 

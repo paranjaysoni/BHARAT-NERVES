@@ -16,6 +16,7 @@ import clsx from "clsx";
 import { AegisMap, type HeatZone } from "@/components/maps";
 import { PageHeader } from "@/components/shared";
 import { impactDashboardPage } from "@/data";
+import { LiveImpactKpis } from "@/components/dashboard/LiveImpactKpis";
 
 const kpis = [
   {
@@ -158,6 +159,9 @@ export default function ImpactDashboardPage() {
         title={impactDashboardPage.title}
         description="Track, analyze and visualize real-time impact across all dimensions"
       />
+
+      {/* Live KPIs from simulation result — replaces static strip when active */}
+      <LiveImpactKpis />
 
       <KpiStrip />
 

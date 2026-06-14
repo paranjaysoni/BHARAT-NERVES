@@ -4,11 +4,14 @@ import {
   ControlRoomKpis,
   DigitalTwinOverview
 } from "@/components/dashboard";
+import { SimulationStatusBanner } from "@/components/dashboard/SimulationStatusBanner";
 import { systemStatus } from "@/data";
 
 export default function ControlRoomPage() {
   return (
     <div className="space-y-4 xl:max-h-[calc(100vh-92px)] xl:overflow-hidden">
+      <SimulationStatusBanner />
+
       <section className="grid gap-4 xl:grid-cols-[minmax(0,2.35fr)_minmax(340px,0.92fr)]">
         <DigitalTwinOverview />
         <aside className="grid gap-4 xl:grid-rows-[auto_minmax(0,1fr)]">
