@@ -143,6 +143,39 @@ All mock data in `src/data/parliament.ts`:
 - `parliamentMetrics` — 4 key metrics (agents, factors, rounds, response time)
 - `stakeholderPriorities` — priority weight breakdown
 
+## Removed Sections
+
+The refined AI Parliament route intentionally removed earlier prototype elements that made the page feel like a generic dashboard:
+
+- Dominant recommendation matrix table on the primary route
+- Loose stacked cards below the fold
+- Generic page header inside the content area
+- Oversized sidebar widgets
+- Repetitive explanation blocks
+- Any long scrolling deliberation report
+
+The matrix component remains available for future detail surfaces, but it is not rendered in the reference-matched command view.
+
+## Added Sections
+
+The current implementation adds the reference-matched intelligence workspace:
+
+- Topbar-integrated `AI PARLIAMENT` title treatment
+- Parliament session tabs
+- Compact session summary
+- Eight-agent live deliberation grid
+- Consensus score gauge
+- Decision timeline
+- Parliament recommendation panel
+- Key discussion insights
+- Key metrics panel
+
+## Responsive Behavior
+
+The page is optimized for 1440x900, 1512x982, and MacBook-class screens. The current composition is intentionally dense and viewport-constrained so the session summary, agent grid, consensus panel, timeline, recommendation, insights, and metrics remain visible as a single command-center experience.
+
+On smaller screens the grid can stack through CSS layout behavior, but the design target is the executive desktop command view.
+
 ## Visual Design Principles
 
 - **Animated live dots**: pulsing green (aligned), pulsing yellow (reviewing), static blue (prepared)
