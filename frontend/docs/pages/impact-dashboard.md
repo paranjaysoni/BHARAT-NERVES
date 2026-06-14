@@ -1,90 +1,145 @@
 # Impact Dashboard
 
-The Impact Dashboard is the analytics page for Project Aegis / Bharat Nerves Platform.
+## Purpose
 
-## Page Purpose
+The Impact Dashboard is the executive analytics command layer for Bharat Nerves. It visualizes national disruption impact across economic, population, infrastructure, trade, environmental, geographic, sector, and forecast dimensions.
 
-The page shows the measurable impact of a disruption and the expected benefit of Project Aegis recovery actions. It is designed to make the platform feel measurable, serious, and decision-grade.
+The current implementation is a static MVP UI refinement that matches the approved reference composition. It does not call APIs or calculate live impact.
 
-It answers:
+## Layout Hierarchy
 
-- How much damage is expected?
-- How many people are affected?
-- Which sectors are impacted?
-- How much impact can recovery actions avoid?
-- What is the before-vs-after recovery picture?
+The page is implemented in `frontend/src/app/impact-dashboard/page.tsx` and follows this structure:
 
-## Role Inside Project Aegis
+1. Page header: `IMPACT DASHBOARD` with the subtitle `Track, analyze and visualize real-time impact across all dimensions`.
+2. Top KPI strip: five metric cards plus an export / impact score card.
+3. Row 2: `IMPACT HEATMAP`, `IMPACT OVER TIME`, and `SECTOR WISE IMPACT`.
+4. Row 3: `IMPACT BY STATE (Top 5)`, `IMPACT BY DIMENSION`, and `KEY INSIGHTS`.
+5. Row 4: `IMPACT FORECAST` and `Forecast Summary`.
 
-Impact Dashboard is the measurement layer. It translates crisis scenarios, trade disruption, population risk, carbon exposure, and recovery actions into an analytics view for executive decisions and later reporting.
+No legacy report sections are rendered.
 
-## Metrics Shown
+## Component Hierarchy
 
-- Economic Impact
-- Population Affected
-- Infrastructure Damage
-- Trade Disruption
-- Carbon Impact
-- Recovery Savings
-- Resilience before and after recovery
-- District-level impact
-- Recovery intervention benefits
+The page is composed from local page-level components:
 
-## Layout Structure
+- `KpiStrip`
+- `ImpactHeatmap`
+- `ImpactOverTime`
+- `SectorWiseImpact`
+- `ImpactByState`
+- `ImpactByDimension`
+- `KeyInsights`
+- `ImpactForecast`
+- `ForecastSummary`
+- `Panel`
+- `PanelLink`
+- `Sparkline`
+- `HeatBlob`
+- `LegendItem`
 
-- Top section: `PageHeader` with `Impact Model Ready` status.
-- KPI row: six impact metrics.
-- Main left section: impact over time chart, recovery comparison chart, sector breakdown chart, and geographic placeholder.
-- Right section: impact summary, risk distribution, resilience recovery score, and key insights.
-- Bottom section: district impact table, recovery benefit table, and forecast notes.
-
-## Components Used
+Shared shell components remain unchanged:
 
 - `PageHeader`
-- `MetricCard`
-- `ChartCard`
-- Recharts chart primitives
-- `MapPlaceholder`
-- `ProgressBar`
-- `RiskPill`
-- `StatusBadge`
-- `DataTable`
-- `SectionCard`
+- App sidebar
+- App top navigation
+- Bharat Nerves theme tokens from `globals.css`
 
-## Data Sources Used
+## Removed Sections
 
-The page consumes centralized mock data from `src/data/impact.ts`:
+The refinement intentionally removed the older MVP/report sections:
 
-- `impactKpis`
-- `impactOverTime`
-- `recoveryComparison`
-- `sectorImpactBreakdown`
-- `geographicImpact`
-- `impactSummary`
-- `impactRiskDistribution`
-- `impactInsights`
-- `districtImpacts`
-- `recoveryBenefits`
-- `forecastNotes`
+- Impact Summary card
+- Risk Distribution card
+- Recovery Score card
+- Before vs After Recovery chart
+- Geographic Impact placeholder
+- State/District Impact table
+- Recovery Benefit table
+- Forecast Notes
+- Large data tables
+- Placeholder map panels
+- Duplicate analytics widgets
 
-## Current Limitations
+## Added Sections
 
-- No backend APIs.
-- No real calculations.
-- No real forecasting.
-- No real AI.
-- No live data fetching.
-- No simulation execution.
-- No real map integration.
+The final dashboard adds reference-matched executive panels:
 
-## Future Real Calculation Plan
+- Impact KPI strip with tiny sparklines
+- Static India impact heatmap
+- Seven-day impact line chart
+- Sector-wise donut chart
+- Top five state impact table
+- Dimension score progress bars
+- Compact key insights cards
+- Multi-line seven-day impact forecast
+- Forecast summary card with action button
 
-Future versions should connect the page to a real impact engine that receives scenario outputs, route status, population exposure, trade data, and carbon assumptions.
+## Charts And Visualizations
 
-Recommended path:
+- KPI sparklines are inline SVG paths.
+- Impact heatmap is a static SVG India-style map with heat blobs, state-boundary strokes, and a five-level legend.
+- Impact over time is an inline SVG line chart with date labels and a highlighted current score.
+- Sector wise impact uses a CSS conic-gradient donut with percentage labels.
+- Impact by dimension uses horizontal progress bars.
+- Impact forecast uses an inline SVG multi-line chart for high, medium, and low impact projections.
 
-1. Define backend impact calculation contracts.
-2. Connect scenario and commander outputs to the impact model.
-3. Replace static chart datasets with API responses.
-4. Add confidence intervals and assumptions metadata.
-5. Support report export from validated impact results.
+## Mock Data Structures
+
+Mock data is currently declared in `frontend/src/app/impact-dashboard/page.tsx` to keep the reference-specific MVP composition self-contained:
+
+- `kpis`
+- `sectorRows`
+- `stateRows`
+- `dimensionRows`
+- `insights`
+
+These are static presentation datasets only. Existing centralized data in `frontend/src/data/impact.ts` remains available for future productized wiring but is not used by the refined reference page.
+
+## Navigation
+
+The route remains:
+
+- `/impact-dashboard`
+
+The existing Bharat Nerves sidebar and top navigation remain unchanged.
+
+## Future Integration Notes
+
+Future implementation can replace the page-local mock arrays with real impact model outputs:
+
+- Scenario and Crisis Commander outputs
+- State and district exposure models
+- Infrastructure damage models
+- Trade disruption and port logistics data
+- Environmental impact assumptions
+- Forecast model results with confidence intervals
+- Export report generation
+
+The first integration step should define a typed view model that matches the current page sections, then hydrate these panels from API responses without changing the layout hierarchy.
+
+## Design Decisions
+
+- The page favors high-density executive analytics over long-form reporting.
+- Visual hierarchy is led by the heatmap and impact score.
+- Tables are limited to the compact top-five state summary.
+- Color usage stays within Bharat Nerves dark navy tokens plus existing semantic accents.
+- All panels use existing `surface-card`, border, typography, and spacing conventions.
+
+## Responsive Behavior
+
+The layout is optimized for MacBook-class screens:
+
+- 1440x900
+- 1512x982
+
+Large screens use three-panel analytics rows and a two-panel forecast row. Smaller screens naturally collapse through CSS grid behavior while preserving section order.
+
+## Known MVP Limitations
+
+- Static mock data only.
+- No backend API calls.
+- No GIS engine.
+- No real export implementation.
+- No live forecast model.
+- No user-configurable time range beyond the visual selector.
+- No drill-down behavior behind action buttons.
