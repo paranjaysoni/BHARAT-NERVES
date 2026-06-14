@@ -3,6 +3,7 @@
 import { Bell, ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { GlobalSimulationIndicator } from "@/components/layout/GlobalSimulationIndicator";
 import { alerts, currentUser, selectedCorridor, settings } from "@/data";
 
 export function Topbar() {
@@ -31,6 +32,8 @@ export function Topbar() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-2 xl:justify-end">
+            <GlobalSimulationIndicator />
+
             <button className="btn btn-secondary min-w-48 justify-between">
               India (All Corridors)
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
@@ -76,6 +79,8 @@ export function Topbar() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            <GlobalSimulationIndicator />
+
             <button className="btn btn-secondary min-w-48 justify-between">
               India (All Corridors)
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
@@ -123,6 +128,8 @@ export function Topbar() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            <GlobalSimulationIndicator />
+
             <button className="btn btn-secondary min-w-48 justify-between">
               India (All Corridors)
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
@@ -161,6 +168,8 @@ export function Topbar() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            <GlobalSimulationIndicator />
+
             <button className="btn btn-secondary min-w-48 justify-between">
               India (All Corridors)
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
@@ -205,6 +214,8 @@ export function Topbar() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          <GlobalSimulationIndicator />
+
           <button className="btn btn-secondary">
             {selectedCorridor.name}
             <ChevronDown className="h-4 w-4 text-muted-foreground" />

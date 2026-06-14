@@ -406,3 +406,32 @@ Issue #16 Complete: global design system refinement applied across theme tokens,
 
 - Issue #17 Revision Complete: Control Room MVP redesign applied with reference-aligned command header, dominant digital twin map, right-side system overview and active alerts, bottom analytics row, quick actions, and footer status strip.
 - Issue #18 Complete: Scenario Simulator MVP refinement applied with reference-aligned scenario selection, simulation overview, scenario details, impact summary, dominant impact preview map, simulation controls, and results preview.
+
+---
+
+## Global Simulation State (Issue #63)
+
+The frontend uses a module-level singleton store in `src/lib/simulation-store.ts` to share simulation results across all pages without Zustand, Redux, or React Context.
+
+**Store:** `src/lib/simulation-store.ts`
+**Hook:** `src/hooks/use-simulation-store.ts`
+**Persistence:** `localStorage` key `project-aegis-simulation-state`
+
+### Flow
+
+1. `ScenarioSimulatorDashboard` calls `setSimulationRunning()` → `runSimulation()` → `setSimulationDone(result)`
+2. Parliament and Commander APIs fire immediately after, in parallel
+3. All pages subscribe via `useSimulationStore()` and re-render when state changes
+4. On page refresh, the store hydrates from localStorage before first render
+
+### Global indicator
+
+`GlobalSimulationIndicator` renders in every Topbar variant showing:
+- Active scenario name
+- Risk level (color-coded)
+- Last updated time
+- Reset button
+
+### Reset
+
+`resetSimulation()` clears localStorage and notifies all subscribers to return to baseline.

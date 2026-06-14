@@ -3,28 +3,38 @@
 import { useCallback, useMemo, useState } from "react";
 import {
   AlertCircle,
+  ArrowRight,
+  Brain,
   Flame,
   Gauge,
-  HeartPulse,
+  LayoutDashboard,
   Loader2,
-  Pause,
   Play,
   RotateCcw,
   Ship,
+  ShieldAlert,
+  TrendingUp,
   TrafficCone,
   Waves
 } from "lucide-react";
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
 import { AegisMap } from "@/components/maps";
 import { RiskPill, StatusBadge } from "@/components/shared";
 import { scenarioSimulationImpacts, scenarios } from "@/data";
 import type { ScenarioSimulationImpact } from "@/data";
 import type { Scenario, ScenarioSeverity } from "@/types";
 import { runSimulation } from "@/lib/api/simulation.api";
+import { runParliamentSession } from "@/lib/api/ai-parliament.api";
+import { runCrisisCommanderPlan } from "@/lib/api/crisis-commander.api";
 import {
   setSimulationRunning,
   setSimulationDone,
   setSimulationError,
+  setParliamentSession,
+  setCommanderPlan,
+  setParliamentLoading,
+  setCommanderLoading,
   resetSimulation,
 } from "@/lib/simulation-store";
 import { useSimulationStore } from "@/hooks/use-simulation-store";
@@ -175,6 +185,22 @@ export function ScenarioSimulatorDashboard() {
     try {
       const result = await runSimulation({ scenarioId: backendId });
       setSimulationDone(result);
+
+      // Auto-trigger parliament and commander in parallel after simulation completes
+      const simId = result.simulationId;
+      const scenId = result.scenario.scenarioId;
+
+      setParliamentLoading(true);
+      setCommanderLoading(true);
+
+      Promise.all([
+        runParliamentSession({ scenarioId: scenId, simulationId: simId, includeFullMatrix: true })
+          .then((s) => setParliamentSession(s))
+          .catch(() => setParliamentLoading(false)),
+        runCrisisCommanderPlan({ scenarioId: scenId, simulationId: simId, includeChecklist: true })
+          .then((p) => setCommanderPlan(p))
+          .catch(() => setCommanderLoading(false)),
+      ]);
     } catch (err) {
       setSimulationError(err instanceof Error ? err.message : "Simulation failed");
     }
@@ -513,6 +539,8 @@ function ResultsPreviewPanel({
   error: string | null;
   isRunning: boolean;
 }) {
+  const router = useRouter();
+
   if (isRunning) {
     return (
       <section className="surface-card rounded-md p-4">
@@ -591,6 +619,17 @@ function ResultsPreviewPanel({
             </div>
           </div>
         )}
+
+        {/* Next-step navigation */}
+        <div className="mt-4 border-t border-border pt-3">
+          <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">Explore Results</p>
+          <div className="grid grid-cols-2 gap-2">
+            <NextStepButton icon={LayoutDashboard} label="Control Room" onClick={() => router.push("/control-room")} />
+            <NextStepButton icon={Brain} label="AI Parliament" onClick={() => router.push("/ai-parliament")} />
+            <NextStepButton icon={ShieldAlert} label="Crisis Commander" onClick={() => router.push("/crisis-commander")} />
+            <NextStepButton icon={TrendingUp} label="Impact Dashboard" onClick={() => router.push("/impact-dashboard")} />
+          </div>
+        </div>
       </section>
     );
   }
@@ -611,6 +650,30 @@ function ResultsPreviewPanel({
         Click <span className="font-semibold text-primary">Run Simulation</span> to get live results from the backend engine.
       </p>
     </section>
+  );
+}
+
+function NextStepButton({
+  icon: Icon,
+  label,
+  onClick
+}: {
+  icon: React.ElementType;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex items-center justify-between gap-2 rounded-md border border-border bg-background/60 px-3 py-2 text-xs font-medium text-foreground hover:border-primary/30 hover:bg-primary/8 hover:text-primary"
+    >
+      <span className="flex items-center gap-1.5">
+        <Icon className="h-3.5 w-3.5" />
+        {label}
+      </span>
+      <ArrowRight className="h-3 w-3 opacity-60" />
+    </button>
   );
 }
 

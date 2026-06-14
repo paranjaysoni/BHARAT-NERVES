@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { AlertCircle, Brain, Loader2, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import { AlertCircle, Brain, Loader2, RefreshCw, Sparkles } from "lucide-react";
 import clsx from "clsx";
 import { useSimulationStore } from "@/hooks/use-simulation-store";
 import { runParliamentSession } from "@/lib/api/ai-parliament.api";
-import { setParliamentSession } from "@/lib/simulation-store";
+import { setParliamentSession, setParliamentLoading } from "@/lib/simulation-store";
 import type { AIParliamentSession, ParliamentConflictLevel } from "@/types/ai-parliament.types";
 
 // ── Domain accent colours matching AgentGrid ──────────────────────────────────
@@ -31,38 +31,29 @@ function conflictBadge(level: ParliamentConflictLevel) {
 
 export function ParliamentPageClient() {
   const store = useSimulationStore();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const lastTriggeredSimId = useRef<string | null>(null);
 
   const session = store.parliament;
+  const loading = store.isParliamentLoading;
 
-  // Auto-call parliament when a new simulation finishes
-  useEffect(() => {
-    if (
-      store.phase !== "done" ||
-      !store.result ||
-      store.activeSimulationId === lastTriggeredSimId.current
-    ) return;
-
-    lastTriggeredSimId.current = store.activeSimulationId;
-
+  // Manual trigger — used when simulation result exists but parliament not yet loaded
+  function handleGenerate() {
+    if (!store.result) return;
     const backendScenarioId = store.result.scenario.scenarioId;
     const simulationId = store.result.simulationId;
 
-    setLoading(true);
+    setParliamentLoading(true);
     setError(null);
 
     runParliamentSession({ scenarioId: backendScenarioId, simulationId, includeFullMatrix: true })
       .then((s) => {
         setParliamentSession(s);
-        setLoading(false);
       })
       .catch((err: unknown) => {
+        setParliamentLoading(false);
         setError(err instanceof Error ? err.message : "Unable to load AI Parliament");
-        setLoading(false);
       });
-  }, [store.phase, store.result, store.activeSimulationId]);
+  }
 
   if (store.phase === "idle") {
     return (
@@ -77,14 +68,22 @@ export function ParliamentPageClient() {
     );
   }
 
-  if (store.phase === "running" || loading) {
+  if (store.phase === "running") {
     return (
       <div className="flex h-60 flex-col items-center justify-center gap-3 rounded-md border border-border bg-card/60">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-sm font-medium text-foreground">
-          {store.phase === "running" ? "Simulation Running…" : "Loading Parliament…"}
-        </p>
+        <p className="text-sm font-medium text-foreground">Simulation Running…</p>
         <p className="text-xs text-muted-foreground">AI Parliament will convene once the simulation completes</p>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="flex h-60 flex-col items-center justify-center gap-3 rounded-md border border-border bg-card/60">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="text-sm font-medium text-foreground">Loading Parliament…</p>
+        <p className="text-xs text-muted-foreground">Convening 8 AI agents for deliberation</p>
       </div>
     );
   }
@@ -93,17 +92,34 @@ export function ParliamentPageClient() {
     return (
       <div className="flex h-60 flex-col items-center justify-center gap-3 rounded-md border border-danger/20 bg-danger/5 text-center">
         <AlertCircle className="h-8 w-8 text-danger" />
-        <p className="text-sm font-medium text-danger">Unable to load AI Parliament</p>
+        <p className="text-sm font-medium text-danger">AI Parliament failed</p>
         <p className="max-w-xs text-xs text-muted-foreground">{error}</p>
         <button
-          onClick={() => {
-            if (!store.result) return;
-            lastTriggeredSimId.current = null;
-          }}
+          onClick={handleGenerate}
           className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary"
         >
           <RefreshCw className="h-3.5 w-3.5" />
           Retry
+        </button>
+      </div>
+    );
+  }
+
+  // Simulation done, but parliament not yet loaded
+  if (store.phase === "done" && store.result && !session) {
+    return (
+      <div className="flex h-60 flex-col items-center justify-center gap-3 rounded-md border border-border bg-card/60 text-center">
+        <Brain className="h-8 w-8 text-primary" />
+        <p className="text-sm font-medium text-foreground">Simulation complete</p>
+        <p className="max-w-xs text-xs text-muted-foreground">
+          Parliament session was not automatically loaded. Click below to convene.
+        </p>
+        <button
+          onClick={handleGenerate}
+          className="mt-1 inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+        >
+          <Sparkles className="h-3.5 w-3.5" />
+          Generate Parliament Session
         </button>
       </div>
     );

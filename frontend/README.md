@@ -221,6 +221,19 @@ Not implemented:
 - NetworkX routing
 - Business calculations
 
+## Global Simulation State
+
+Global simulation state is implemented (Issue #63).
+
+- Simulation results persist across page refreshes via `localStorage` (key: `project-aegis-simulation-state`)
+- Active scenario indicator appears in every page's topbar
+- All five intelligence pages (Scenario Simulator, Control Room, Impact Dashboard, AI Parliament, Crisis Commander) read from a shared module-level store
+- Parliament and Commander plans auto-load after simulation completes; manual "Generate" buttons available as fallback
+- Reset clears localStorage and returns all pages to baseline
+- Store: `src/lib/simulation-store.ts` | Docs: `docs/global-simulation-state.md`
+
+---
+
 ## Next Phase
 
 Phase 2 — Intelligence Layer & Real Product Logic
