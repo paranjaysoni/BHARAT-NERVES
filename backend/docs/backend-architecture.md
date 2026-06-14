@@ -13,12 +13,14 @@ The backend is an Express and TypeScript API. Issue #55 adds a static data layer
 7. Route Graph Engine services in `src/services/route-graph` build the corridor graph and calculate route recovery paths.
 8. Impact Engine services in `src/services/impact-engine` convert scenario and recovery data into impact metrics.
 9. Unified Simulation services in `src/services/simulation` orchestrate scenario, route graph, and impact engines into one demo response.
-10. `src/utils/response.ts` formats success and error responses.
+10. AI Parliament services in `src/services/ai-parliament` generate deterministic multi-agent recommendations.
+11. `src/utils/response.ts` formats success and error responses.
 
 ## Registered Static Routers
 
 | Base Path | Router |
 | --- | --- |
+| `/api/ai-parliament` | `src/routes/ai-parliament.routes.ts` |
 | `/api/impact` | `src/routes/impact-engine.routes.ts` |
 | `/api/nodes` | `src/routes/nodes.routes.ts` |
 | `/api/route-graph` | `src/routes/route-graph.routes.ts` |
@@ -130,6 +132,31 @@ The API:
 
 It does not connect the frontend, add state management, build AI Parliament, build Crisis Commander, generate PDFs, add a database, call live APIs, or mutate static JSON.
 
+## AI Parliament Engine
+
+Issue #60 adds a deterministic AI Parliament Mock Intelligence API.
+
+Files:
+
+- `src/types/ai-parliament.types.ts`
+- `src/services/ai-parliament/ai-parliament.service.ts`
+- `src/services/ai-parliament/agent-deliberation.service.ts`
+- `src/services/ai-parliament/consensus-engine.service.ts`
+- `src/services/ai-parliament/recommendation-builder.service.ts`
+- `src/services/ai-parliament/parliament-timeline.builder.ts`
+- `src/controllers/ai-parliament.controller.ts`
+- `src/routes/ai-parliament.routes.ts`
+
+The engine:
+
+- Uses the 8 static agents from `agents.json`.
+- Runs the unified simulation logic for scenario context.
+- Produces agent-specific positions, recommendations, confidence scores, and risk concerns.
+- Calculates consensus score and conflict level.
+- Returns final recommendation, decision timeline, key insights, and recommendation matrix.
+
+It does not connect the frontend, call Gemini/OpenAI, generate a Crisis Commander plan, mutate simulation state, add authentication, or add a database.
+
 ## Out of Scope
 
-This layer intentionally does not include database persistence, AI orchestration, frontend integration, PDF generation, or live external APIs.
+This layer intentionally does not include database persistence, external AI orchestration, frontend integration, PDF generation, or live external APIs.

@@ -4,6 +4,7 @@ import { env } from "./config/env.js";
 import { requestLogger } from "./middleware/request-logger.middleware.js";
 import { notFound } from "./middleware/not-found.middleware.js";
 import { errorHandler } from "./middleware/error.middleware.js";
+import aiParliamentRouter from "./routes/ai-parliament.routes.js";
 import healthRouter from "./routes/health.routes.js";
 import impactEngineRouter from "./routes/impact-engine.routes.js";
 import nodesRouter from "./routes/nodes.routes.js";
@@ -31,6 +32,7 @@ function probeHandler(_req: Request, res: Response, _next: NextFunction): unknow
 app.get("/health", probeHandler);
 
 // API v1
+app.use("/api/ai-parliament", aiParliamentRouter);
 app.use("/api/health", healthRouter);
 app.use("/api/impact", impactEngineRouter);
 app.use("/api/nodes", nodesRouter);

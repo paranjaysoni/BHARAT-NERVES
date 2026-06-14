@@ -28,6 +28,7 @@ All static data endpoints return JSON through the shared response helpers in `sr
 
 | Method | Path | Description |
 | --- | --- | --- |
+| `POST` | `/api/ai-parliament/session` | Create a deterministic multi-agent parliament recommendation session. |
 | `POST` | `/api/impact/calculate` | Calculate deterministic impact metrics for a scenario and optional route recovery result. |
 | `GET` | `/api/nodes` | List infrastructure nodes. |
 | `GET` | `/api/nodes/:id` | Get one infrastructure node by ID. |
@@ -127,6 +128,23 @@ Only `scenarioId` is required. Invalid simulation requests return:
 - `INVALID_SIMULATION_SOURCE`
 - `INVALID_SIMULATION_DESTINATION`
 - `SIMULATION_ENGINE_ERROR`
+
+## AI Parliament Session Request
+
+```json
+{
+  "scenarioId": "odisha_cyclone",
+  "simulationId": "sim_demo",
+  "includeFullMatrix": true
+}
+```
+
+Only `scenarioId` is required. Invalid AI Parliament requests return:
+
+- `AI_PARLIAMENT_SCENARIO_NOT_FOUND`
+- `AI_PARLIAMENT_AGENTS_NOT_FOUND`
+- `INVALID_AI_PARLIAMENT_SIMULATION_ID`
+- `AI_PARLIAMENT_ENGINE_ERROR`
 
 Successful scenario runs return:
 

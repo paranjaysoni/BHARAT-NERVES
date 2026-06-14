@@ -100,4 +100,18 @@ curl -X POST http://localhost:4000/api/simulations/run \
   }'
 ```
 
-See `docs/data-model.md`, `docs/api-contracts.md`, `docs/backend-architecture.md`, `docs/scenario-engine.md`, `docs/route-graph-engine.md`, `docs/impact-engine.md`, and `docs/unified-simulation-api.md` for backend details.
+## AI Parliament Endpoint
+
+- `POST /api/ai-parliament/session`
+
+Example:
+
+```bash
+curl -X POST http://localhost:4000/api/ai-parliament/session \
+  -H "Content-Type: application/json" \
+  -d '{
+    "scenarioId": "odisha_cyclone"
+  }'
+```
+
+See `docs/data-model.md`, `docs/api-contracts.md`, `docs/backend-architecture.md`, `docs/scenario-engine.md`, `docs/route-graph-engine.md`, `docs/impact-engine.md`, `docs/unified-simulation-api.md`, and `docs/ai-parliament-api.md` for backend details.
