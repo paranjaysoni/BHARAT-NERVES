@@ -32,4 +32,17 @@ npm run typecheck
 - `GET /api/agents`
 - `GET /api/agents/:id`
 
-See `docs/data-model.md`, `docs/api-contracts.md`, and `docs/backend-architecture.md` for the Issue #55 static data layer details.
+## Scenario Execution Endpoints
+
+- `POST /api/scenarios/:id/run`
+- `POST /api/scenarios/international/:id/run`
+
+Example:
+
+```bash
+curl -X POST http://localhost:4000/api/scenarios/odisha_cyclone_corridor/run \
+  -H "Content-Type: application/json" \
+  -d '{"mode":"demo","intensity":"standard"}'
+```
+
+See `docs/data-model.md`, `docs/api-contracts.md`, `docs/backend-architecture.md`, and `docs/scenario-engine.md` for backend details.
