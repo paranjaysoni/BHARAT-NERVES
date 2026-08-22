@@ -1,8 +1,7 @@
-FROM node:22-alpine AS base
-
+FROM node:22-slim AS base
+RUN apt-get update -y && apt-get install -y openssl
 # Install dependencies only when needed
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies
@@ -29,9 +28,11 @@ ENV NODE_ENV=production
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/package-lock.json ./package-lock.json
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
 
 # Install only production dependencies
 RUN npm ci --omit=dev
+RUN npx prisma generate
 
 EXPOSE 4000
 

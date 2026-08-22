@@ -21,12 +21,12 @@ services:
   backend:
     build:
       context: ./backend
-dockerfile: Dockerfile
-container_name: aegis_backend
-ports:
-  - "4000:4000"
-env_file:
-  - ./backend/.env
+      dockerfile: Dockerfile
+    container_name: aegis_backend
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./backend/.env
     depends_on:
       postgres:
         condition: service_healthy

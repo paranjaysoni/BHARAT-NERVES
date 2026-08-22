@@ -52,7 +52,6 @@ type ScenarioOption = Scenario & {
   location: string;
   type: string;
   weather: string;
-  confidence: number;
   backendRouteIds: string[];
 };
 
@@ -128,10 +127,9 @@ const severityToRisk: Record<ScenarioSeverity, "low" | "medium" | "high" | "crit
 };
 
 export function ScenarioSimulatorDashboard() {
-  const [selectedScenarioId, setSelectedScenarioId] = useState("");
   const store = useSimulationStore();
   const [selectedScenarioId, setSelectedScenarioId] = useState(
-    store.activeScenarioId || scenarios[0]?.id || ""
+    store.activeScenarioId || ""
   );
 
   // Sync if we navigate back and there's an active scenario
@@ -194,8 +192,7 @@ export function ScenarioSimulatorDashboard() {
     [selectedScenario]
   );
 
-  // Playback state
-  const [isPlaying, setIsPlaying] = useState(false);
+  // Playback state (isPlaying derived from store)
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [playbackProgress, setPlaybackProgress] = useState(0);
 
@@ -205,7 +202,7 @@ export function ScenarioSimulatorDashboard() {
       interval = setInterval(() => {
         setPlaybackProgress((prev) => {
           if (prev >= 100) {
-            setIsPlaying(false);
+            pauseSimulation();
             return 100;
           }
           return prev + (1 * playbackSpeed);
@@ -218,7 +215,7 @@ export function ScenarioSimulatorDashboard() {
   useEffect(() => {
     if (store.phase !== "done") {
       // eslint-disable-next-line
-      setIsPlaying(false);
+      pauseSimulation();
       // eslint-disable-next-line
       setPlaybackProgress(0);
       // eslint-disable-next-line
@@ -302,7 +299,7 @@ export function ScenarioSimulatorDashboard() {
         <ScenarioSelectionRow
           scenarios={scenarioOptions}
           selectedScenarioId={selectedScenario.id}
-          isRunning={isRunning}
+          isRunning={isRunningBackend}
           onSelectScenario={(id) => {
             if (id === "scenario-custom") return;
             setSelectedScenarioId(id);
@@ -322,16 +319,19 @@ export function ScenarioSimulatorDashboard() {
 
       <section className="grid gap-4 pb-1 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <SimulationControlsPanel
-          isRunning={isRunning}
+          isRunning={isRunningBackend}
           speed={playbackSpeed}
           isPlaying={isPlaying}
           playbackProgress={playbackProgress}
           hasResult={store.phase === "done"}
-          onPlayPause={() => setIsPlaying(p => !p)}
+          onPlayPause={() => {
+            if (isPlaying) pauseSimulation();
+            else playSimulation();
+          }}
           onChangeSpeed={(s) => setPlaybackSpeed(s)}
           onScrub={(p) => {
             setPlaybackProgress(p);
-            if (p >= 100) setIsPlaying(false);
+            if (p >= 100) pauseSimulation();
           }}
           onReset={handleReset}
           onRun={handleRun}
@@ -580,7 +580,6 @@ function SimulationControlsPanel({
   isRunning,
   isPlaying,
   speed,
-  isPlaying,
   playbackProgress,
   hasResult,
   onPlayPause,
@@ -666,7 +665,7 @@ function SimulationControlsPanel({
               </>
             ) : isPlaying ? (
               "Pause Simulation"
-            ) : progress > 0 && progress < 100 ? (
+            ) : playbackProgress > 0 && playbackProgress < 100 ? (
               "Resume Simulation"
             ) : (
               "Run Simulation"

@@ -18,7 +18,6 @@ import resourcesRouter from "./routes/resources.routes.js";
 import agentsRouter from "./routes/agents.routes.js";
 import { configRouter } from "./routes/config.routes.js";
 
-import { configRouter } from "./routes/config.routes.js";
 
 const app = express();
 
