@@ -23,6 +23,8 @@ import { calculatePopulationImpact } from "./population-impact.service.js";
 import { calculateResilienceImpact } from "./resilience-impact.service.js";
 import { calculateResourceStress } from "./resource-stress.service.js";
 
+import { getConfig } from "../config/config.service.js";
+
 const scenarioAliases: Record<string, string> = {
   odisha_cyclone: "odisha_cyclone_corridor",
 };
@@ -34,8 +36,10 @@ const validRecoveryStatuses = new Set<RecoveryStatus>([
   "INVALID_NODES",
 ]);
 
-export function calculateImpact(request: ImpactCalculationRequest): ImpactCalculationResult {
-  const scenario = findScenario(request.scenarioId);
+export async function calculateImpact(request: ImpactCalculationRequest): Promise<ImpactCalculationResult> {
+  const scenario = await findScenario(request.scenarioId);
+  const config = await getConfig();
+
   if (!scenario) {
     throw new ImpactValidationError(
       "IMPACT_SCENARIO_NOT_FOUND",
@@ -95,7 +99,7 @@ export function calculateImpact(request: ImpactCalculationRequest): ImpactCalcul
     resources,
     resilience,
   };
-  const score = buildImpactScore(baseResult);
+  const score = buildImpactScore(baseResult, config);
   const summary = buildExecutiveImpactSummary({
     economic,
     infrastructure,
@@ -111,9 +115,11 @@ export function calculateImpact(request: ImpactCalculationRequest): ImpactCalcul
   };
 }
 
-function findScenario(id: string): Scenario | InternationalScenario | null {
+async function findScenario(id: string): Promise<Scenario | InternationalScenario | null> {
   const resolvedId = scenarioAliases[id] ?? id;
-  return getScenarioById(resolvedId) ?? getInternationalScenarioById(resolvedId);
+  const local = await getScenarioById(resolvedId);
+  if (local) return local;
+  return await getInternationalScenarioById(resolvedId);
 }
 
 function validateRecoveryRoute(recoveryRoute?: ImpactRecoveryRouteInput): void {

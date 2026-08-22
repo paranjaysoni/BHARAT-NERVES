@@ -7,13 +7,13 @@ import {
 } from "../services/data/scenarios.service.js";
 import { sendSuccess, sendError } from "../utils/response.js";
 
-export function listScenarios(_req: Request, res: Response): void {
-  const scenarios = getAllScenarios();
+export async function listScenarios(_req: Request, res: Response): Promise<void> {
+  const scenarios = await getAllScenarios();
   sendSuccess(res, scenarios, `${scenarios.length} local scenarios`);
 }
 
-export function getScenario(req: Request<{ id: string }>, res: Response): void {
-  const scenario = getScenarioById(req.params.id);
+export async function getScenario(req: Request<{ id: string }>, res: Response): Promise<void> {
+  const scenario = await getScenarioById(req.params.id);
   if (!scenario) {
     sendError(res, "NOT_FOUND", `Scenario not found: ${req.params.id}`, 404);
     return;
@@ -21,13 +21,13 @@ export function getScenario(req: Request<{ id: string }>, res: Response): void {
   sendSuccess(res, scenario);
 }
 
-export function listInternationalScenarios(_req: Request, res: Response): void {
-  const scenarios = getAllInternationalScenarios();
+export async function listInternationalScenarios(_req: Request, res: Response): Promise<void> {
+  const scenarios = await getAllInternationalScenarios();
   sendSuccess(res, scenarios, `${scenarios.length} international scenarios`);
 }
 
-export function getInternationalScenario(req: Request<{ id: string }>, res: Response): void {
-  const scenario = getInternationalScenarioById(req.params.id);
+export async function getInternationalScenario(req: Request<{ id: string }>, res: Response): Promise<void> {
+  const scenario = await getInternationalScenarioById(req.params.id);
   if (!scenario) {
     sendError(res, "NOT_FOUND", `International scenario not found: ${req.params.id}`, 404);
     return;

@@ -25,10 +25,11 @@ export async function createCrisisCommanderPlan(
   validateRequest(request);
 
   try {
-    const simulation = runUnifiedSimulation({ scenarioId: request.scenarioId });
+    const simulation = request.simulationResult || await runUnifiedSimulation({ scenarioId: request.scenarioId });
     const parliament = await createAIParliamentSession({
       scenarioId: request.scenarioId,
       simulationId: request.simulationId,
+      simulationResult: simulation,
       includeFullMatrix: false,
     });
     const includeChecklist = request.includeChecklist ?? true;

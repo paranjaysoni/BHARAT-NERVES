@@ -1,17 +1,18 @@
 import { runUnifiedSimulation } from "./services/simulation/simulation.service.js";
 import { createAIParliamentSession } from "./services/ai-parliament/ai-parliament.service.js";
 import { createCrisisCommanderPlan } from "./services/crisis-commander/crisis-commander.service.js";
-import { env } from "./config/env.js";
+import { getConfig } from "./services/config/config.service.js";
 import assert from "assert";
 
-console.log(`[TEST] Starting End-to-End Backend Verification...`);
-console.log(`[TEST] Env Risk Thresholds: CRITICAL=${env.RISK_THRESHOLD_CRITICAL}, HIGH=${env.RISK_THRESHOLD_HIGH}`);
-
 async function runTests() {
+  const config = await getConfig();
+  console.log(`[TEST] Starting End-to-End Backend Verification...`);
+  console.log(`[TEST] Env Risk Thresholds: CRITICAL=${config.critical}, HIGH=${config.high}`);
+
   try {
     // Test A - Simulation
     console.log(`\n[1/4] Running unified simulation for odisha_cyclone...`);
-    const simulation = runUnifiedSimulation({ scenarioId: "odisha_cyclone" });
+    const simulation = await runUnifiedSimulation({ scenarioId: "odisha_cyclone" });
     console.log(`  - Severity: ${simulation.scenario.severity}`);
     console.log(`  - Risk Score: ${simulation.impact.score.impactScore}`);
     console.log(`  - Risk Level: ${simulation.impact.score.riskLevel}`);
@@ -26,6 +27,7 @@ async function runTests() {
     const parliament = await createAIParliamentSession({
       scenarioId: "odisha_cyclone",
       simulationId: simulation.simulationId,
+      simulationResult: simulation,
       includeFullMatrix: false
     });
     
@@ -38,6 +40,7 @@ async function runTests() {
     const commander = await createCrisisCommanderPlan({
       scenarioId: "odisha_cyclone",
       simulationId: simulation.simulationId,
+      simulationResult: simulation,
       includeChecklist: true
     });
     

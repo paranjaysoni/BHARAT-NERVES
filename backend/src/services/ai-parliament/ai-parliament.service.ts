@@ -31,7 +31,7 @@ export async function createAIParliamentSession(
   }
 
   try {
-    const simulation = runUnifiedSimulation({ scenarioId: request.scenarioId });
+    const simulation = request.simulationResult || await runUnifiedSimulation({ scenarioId: request.scenarioId });
     const deliberations = buildAgentDeliberations(agents, simulation);
     const consensus = calculateConsensus(deliberations, simulation.scenario.severity);
     const generatedAt = new Date();

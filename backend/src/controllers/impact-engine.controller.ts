@@ -6,12 +6,12 @@ import {
 import type { ImpactCalculationRequest } from "../types/impact-engine.types.js";
 import { sendError, sendSuccess } from "../utils/response.js";
 
-export function calculateImpactController(
+export async function calculateImpactController(
   req: Request<unknown, unknown, ImpactCalculationRequest>,
   res: Response
-): void {
+): Promise<void> {
   try {
-    const result = calculateImpact(req.body);
+    const result = await calculateImpact(req.body);
     sendSuccess(res, result, "Impact calculated");
   } catch (error) {
     if (isImpactValidationError(error)) {

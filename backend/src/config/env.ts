@@ -19,8 +19,6 @@ export const env = {
   FRONTEND_ORIGIN: parseOrigins(
     optional("FRONTEND_ORIGIN", "http://localhost:3000")
   ),
-  RISK_THRESHOLD_CRITICAL: parseInt(optional("RISK_THRESHOLD_CRITICAL", "85"), 10),
-  RISK_THRESHOLD_HIGH: parseInt(optional("RISK_THRESHOLD_HIGH", "60"), 10),
 } as const;
 
 export type Env = typeof env;

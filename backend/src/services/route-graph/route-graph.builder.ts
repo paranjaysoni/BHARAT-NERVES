@@ -5,9 +5,11 @@ import type { RouteGraph, RouteGraphEdge } from "../../types/route-graph.types.j
 
 const unavailableStatuses = new Set<RouteStatus | "DISRUPTED">(["BLOCKED", "DISRUPTED"]);
 
-export function buildRouteGraph(blockedRouteIds: string[] = []): RouteGraph {
-  const nodes = new Map(getAllNodes().map((node) => [node.id, node]));
-  const routes = new Map(getAllRoutes().map((route) => [route.id, route]));
+export async function buildRouteGraph(blockedRouteIds: string[] = []): Promise<RouteGraph> {
+  const allNodes = await getAllNodes();
+  const allRoutes = await getAllRoutes();
+  const nodes = new Map(allNodes.map((node) => [node.id, node]));
+  const routes = new Map(allRoutes.map((route) => [route.id, route]));
   const adjacency = new Map<string, RouteGraphEdge[]>(
     [...nodes.keys()].map((nodeId) => [nodeId, []])
   );

@@ -17,10 +17,10 @@ import { recoverRoute } from "./route-recovery.service.js";
 const validCostModes = new Set<RouteCostMode>(["distance", "time", "risk"]);
 const unavailableStatuses = new Set<RouteStatus | "DISRUPTED">(["BLOCKED", "DISRUPTED"]);
 
-export function getRouteGraphHealth(): RouteGraphHealth {
-  const nodes = getAllNodes();
-  const routes = getAllRoutes();
-  const graph = buildRouteGraph();
+export async function getRouteGraphHealth(): Promise<RouteGraphHealth> {
+  const nodes = await getAllNodes();
+  const routes = await getAllRoutes();
+  const graph = await buildRouteGraph();
   const blockedRoutes = routes.filter((route) => unavailableStatuses.has(route.status)).length;
   const connectedComponents = countConnectedComponents(graph.adjacency);
 
@@ -34,11 +34,11 @@ export function getRouteGraphHealth(): RouteGraphHealth {
   };
 }
 
-export function getShortestPath(request: ShortestPathRequest): ShortestPathResult {
+export async function getShortestPath(request: ShortestPathRequest): Promise<ShortestPathResult> {
   const costMode = normalizeCostMode(request.costMode);
-  validateNodes(request.sourceNodeId, request.destinationNodeId);
+  await validateNodes(request.sourceNodeId, request.destinationNodeId);
 
-  const graph = buildRouteGraph();
+  const graph = await buildRouteGraph();
   return findShortestPath(
     graph,
     request.sourceNodeId,
@@ -47,14 +47,14 @@ export function getShortestPath(request: ShortestPathRequest): ShortestPathResul
   );
 }
 
-export function getRecoveredRoute(request: RouteRecoveryRequest): RouteRecoveryResult {
+export async function getRecoveredRoute(request: RouteRecoveryRequest): Promise<RouteRecoveryResult> {
   const costMode = normalizeCostMode(request.costMode);
   const blockedRouteIds = request.blockedRouteIds ?? [];
-  validateNodes(request.sourceNodeId, request.destinationNodeId);
-  validateBlockedRoutes(blockedRouteIds);
+  await validateNodes(request.sourceNodeId, request.destinationNodeId);
+  await validateBlockedRoutes(blockedRouteIds);
 
-  const graph = buildRouteGraph();
-  const recoveryGraph = buildRouteGraph(blockedRouteIds);
+  const graph = await buildRouteGraph();
+  const recoveryGraph = await buildRouteGraph(blockedRouteIds);
 
   return recoverRoute({
     blockedRouteIds,
@@ -74,8 +74,9 @@ function normalizeCostMode(costMode: RouteCostMode | undefined): RouteCostMode {
   return normalized;
 }
 
-function validateNodes(sourceNodeId: string, destinationNodeId: string): void {
-  const nodeIds = new Set(getAllNodes().map((node) => node.id));
+async function validateNodes(sourceNodeId: string, destinationNodeId: string): Promise<void> {
+  const allNodes = await getAllNodes();
+  const nodeIds = new Set(allNodes.map((node) => node.id));
 
   if (!nodeIds.has(sourceNodeId)) {
     throw new RouteGraphValidationError("INVALID_SOURCE_NODE", "Source node does not exist");
@@ -88,8 +89,9 @@ function validateNodes(sourceNodeId: string, destinationNodeId: string): void {
   }
 }
 
-function validateBlockedRoutes(blockedRouteIds: string[]): void {
-  const routeIds = new Set(getAllRoutes().map((route) => route.id));
+async function validateBlockedRoutes(blockedRouteIds: string[]): Promise<void> {
+  const allRoutes = await getAllRoutes();
+  const routeIds = new Set(allRoutes.map((route) => route.id));
   const invalidRouteId = blockedRouteIds.find((routeId) => !routeIds.has(routeId));
 
   if (invalidRouteId) {

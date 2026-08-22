@@ -36,7 +36,6 @@ import {
   setParliamentSession,
   setCommanderPlan,
   setParliamentLoading,
-  setSimulationLoading,
   setCommanderLoading,
   resetSimulation,
   playSimulation,
@@ -219,10 +218,10 @@ export function ScenarioSimulatorDashboard() {
       setCommanderLoading(true);
 
       Promise.all([
-        runParliamentSession({ scenarioId: scenId, simulationId: simId, includeFullMatrix: true })
+        runParliamentSession({ scenarioId: scenId, simulationId: simId, simulationResult: result, includeFullMatrix: true })
           .then((s) => setParliamentSession(s))
           .catch(() => setParliamentLoading(false)),
-        runCrisisCommanderPlan({ scenarioId: scenId, simulationId: simId, includeChecklist: true })
+        runCrisisCommanderPlan({ scenarioId: scenId, simulationId: simId, simulationResult: result, includeChecklist: true })
           .then((p) => setCommanderPlan(p))
           .catch(() => setCommanderLoading(false)),
       ]);

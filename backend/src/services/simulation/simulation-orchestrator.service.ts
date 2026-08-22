@@ -22,19 +22,19 @@ const scenarioAliases: Record<string, string> = {
   odisha_cyclone: "odisha_cyclone_corridor",
 };
 
-export function runSimulation(request: SimulationRunRequest): SimulationResult {
+export async function runSimulation(request: SimulationRunRequest): Promise<SimulationResult> {
   const scenarioId = scenarioAliases[request.scenarioId] ?? request.scenarioId;
-  const scenario = runScenarioForSimulation(scenarioId);
-  const target = resolveSimulationTarget(request);
+  const scenario = await runScenarioForSimulation(scenarioId);
+  const target = await resolveSimulationTarget(request);
   const costMode: RouteCostMode = request.costMode ?? "time";
   const blockedRouteIds = scenario.blockedRoutes.map((route) => route.id);
-  const routeRecovery = getRecoveredRoute({
+  const routeRecovery = await getRecoveredRoute({
     sourceNodeId: target.sourceNodeId,
     destinationNodeId: target.destinationNodeId,
     blockedRouteIds,
     costMode,
   });
-  const impact = calculateImpact({
+  const impact = await calculateImpact({
     scenarioId,
     recoveryRoute: {
       extraDistanceKm: routeRecovery.extraDistanceKm,
@@ -57,10 +57,10 @@ export function runSimulation(request: SimulationRunRequest): SimulationResult {
   };
 }
 
-function runScenarioForSimulation(scenarioId: string): ScenarioResult {
+async function runScenarioForSimulation(scenarioId: string): Promise<ScenarioResult> {
   try {
-    if (getScenarioById(scenarioId)) return runLocalScenario(scenarioId);
-    return runInternationalScenario(scenarioId);
+    if (await getScenarioById(scenarioId)) return await runLocalScenario(scenarioId);
+    return await runInternationalScenario(scenarioId);
   } catch (error) {
     if (error instanceof ScenarioNotFoundError) {
       throw new SimulationValidationError(

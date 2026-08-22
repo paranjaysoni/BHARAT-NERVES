@@ -1,22 +1,19 @@
-import type { CorridorRoute } from "../../types/route.types.js";
+import { PrismaClient } from "@prisma/client";
+import type { CorridorRoute, RouteStatus } from "../../types/route.types.js";
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const routesData = require("../../data/routes.json") as CorridorRoute[];
+const prisma = new PrismaClient();
 
-export function getAllRoutes(): CorridorRoute[] {
-  return routesData;
+export async function getAllRoutes(): Promise<CorridorRoute[]> {
+  const routes = await prisma.route.findMany();
+  return routes as unknown as CorridorRoute[];
 }
 
-export function getRouteById(id: string): CorridorRoute | null {
-  return routesData.find((r) => r.id === id) ?? null;
+export async function getRouteById(id: string): Promise<CorridorRoute | null> {
+  const route = await prisma.route.findUnique({ where: { id } });
+  return route as unknown as CorridorRoute | null;
 }
 
-export function getRoutesByStatus(status: CorridorRoute["status"]): CorridorRoute[] {
-  return routesData.filter((r) => r.status === status);
-}
-
-export function getRoutesByNode(nodeId: string): CorridorRoute[] {
-  return routesData.filter(
-    (r) => r.sourceNodeId === nodeId || r.destinationNodeId === nodeId
-  );
+export async function getRoutesByStatus(status: RouteStatus): Promise<CorridorRoute[]> {
+  const routes = await prisma.route.findMany({ where: { status } });
+  return routes as unknown as CorridorRoute[];
 }
