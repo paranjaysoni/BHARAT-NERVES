@@ -20,6 +20,7 @@ import { PageHeader } from "@/components/shared";
 import { impactDashboardPage } from "@/data";
 import { LiveImpactKpis } from "@/components/dashboard/LiveImpactKpis";
 import { useSimulationStore } from "@/hooks/use-simulation-store";
+import { Loader2 } from "lucide-react";
 
 const kpis = [
   {
@@ -158,6 +159,8 @@ const impactHeatZones: HeatZone[] = [
 export default function ImpactDashboardPage() {
   const store = useSimulationStore();
   const hasLiveResult = store.phase === "done" && store.result;
+  const isRunning = store.phase === "running";
+  const error = store.error;
 
   return (
     <div className="space-y-3.5">
@@ -166,12 +169,29 @@ export default function ImpactDashboardPage() {
         description="Track, analyze and visualize real-time impact across all dimensions"
       />
 
+      {isRunning && (
+        <section className="surface-card rounded-md p-6 text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
+          <p className="mt-3 text-sm font-medium text-foreground">Simulation in progress...</p>
+          <p className="text-xs text-muted-foreground">Calculating network impacts and cascading failures</p>
+        </section>
+      )}
+
+      {error && store.phase === "error" && (
+        <section className="surface-card rounded-md p-6 text-center border-danger/30 bg-danger/5">
+          <ShieldAlert className="mx-auto h-8 w-8 text-danger" />
+          <p className="mt-3 text-sm font-medium text-danger">Simulation Failed</p>
+          <p className="text-xs text-muted-foreground">{error}</p>
+        </section>
+      )}
+
       {/* Live KPIs from simulation result — replaces static strip when active */}
       <LiveImpactKpis />
 
-      {!hasLiveResult && <KpiStrip />}
+      {!hasLiveResult && !isRunning && store.phase !== "error" && <KpiStrip />}
 
-      <section className="grid gap-3 lg:grid-cols-2 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1.05fr)_minmax(0,0.9fr)]">
+      <div className={clsx("space-y-3.5 transition-opacity duration-300", (isRunning || store.phase === "error") && "opacity-50 pointer-events-none")}>
+        <section className="grid gap-3 lg:grid-cols-2 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1.05fr)_minmax(0,0.9fr)]">
         <ImpactHeatmap />
         <ImpactOverTime />
         <SectorWiseImpact />
@@ -187,6 +207,7 @@ export default function ImpactDashboardPage() {
         <ImpactForecast />
         <ForecastSummary />
       </section>
+      </div>
     </div>
   );
 }
