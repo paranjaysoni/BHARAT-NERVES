@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import {
   AlertCircle,
   ArrowRight,
@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   Loader2,
   Play,
+  Pause,
   RotateCcw,
   Ship,
   ShieldAlert,
@@ -21,9 +22,10 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { AegisMap } from "@/components/maps";
 import { RiskPill, StatusBadge } from "@/components/shared";
-import { scenarioSimulationImpacts, scenarios } from "@/data";
+import { scenarioSimulationImpacts } from "@/data";
 import type { ScenarioSimulationImpact } from "@/data";
 import type { Scenario, ScenarioSeverity } from "@/types";
+import { getScenarios } from "@/lib/api/scenarios.api";
 import { runSimulation } from "@/lib/api/simulation.api";
 import { runParliamentSession } from "@/lib/api/ai-parliament.api";
 import { runCrisisCommanderPlan } from "@/lib/api/crisis-commander.api";
@@ -41,48 +43,12 @@ import {
 import { useSimulationStore } from "@/hooks/use-simulation-store";
 import type { SimulationResult } from "@/types/simulation.types";
 
-// ── Frontend scenario ID → backend scenario ID ───────────────────────────────
-const BACKEND_SCENARIO_ID: Record<string, string> = {
-  "scenario-cyclone-landfall": "odisha_cyclone_corridor",
-  "scenario-port-shutdown": "paradip_port_shutdown",
-  "scenario-highway-blockage": "nh16_highway_blockage",
-  "scenario-warehouse-fire": "warehouse_fire_cuttack",
-};
-
 type ScenarioOption = Scenario & {
   location: string;
   type: string;
   weather: string;
   confidence: number;
-};
-
-export type SimulationMode = "idle" | "running" | "paused";
-
-const scenarioMeta: Record<string, Omit<ScenarioOption, keyof Scenario>> = {
-  "scenario-cyclone-landfall": {
-    confidence: 85,
-    location: "Near Puri, Odisha",
-    type: "Cyclone",
-    weather: "120-150 km/h winds · 200-300 mm rain"
-  },
-  "scenario-port-shutdown": {
-    confidence: 78,
-    location: "Paradip Port",
-    type: "Port disruption",
-    weather: "Surge risk · berth safety hold"
-  },
-  "scenario-highway-blockage": {
-    confidence: 72,
-    location: "NH-16 coastal segment",
-    type: "Route disruption",
-    weather: "Flooded roadway · debris accumulation"
-  },
-  "scenario-warehouse-fire": {
-    confidence: 81,
-    location: "Cuttack District",
-    type: "Infrastructure incident",
-    weather: "Dry storage risk · smoke response"
-  }
+  backendRouteIds: string[];
 };
 
 const customScenario = {
@@ -95,7 +61,8 @@ const customScenario = {
   severity: "low",
   title: "Custom Scenario",
   type: "Custom",
-  weather: "Operator-defined"
+  weather: "Operator-defined",
+  backendRouteIds: [],
 } satisfies ScenarioOption;
 
 const impactedRouteIds: Record<string, string[]> = {
@@ -140,13 +107,13 @@ const impactedNodeIds: Record<string, string[]> = {
   "scenario-warehouse-fire": ["cuttack_logistics_hub", "cuttack_warehouse", "bhubaneswar_command"]
 };
 
-const iconByScenarioId = {
+const iconByScenarioId: Record<string, React.ElementType> = {
   "scenario-custom": Gauge,
-  "scenario-cyclone-landfall": Waves,
-  "scenario-highway-blockage": TrafficCone,
-  "scenario-port-shutdown": Ship,
-  "scenario-warehouse-fire": Flame
-} as const;
+  "odisha_cyclone_corridor": Waves,
+  "paradip_port_shutdown": Ship,
+  "nh16_highway_blockage": TrafficCone,
+  "warehouse_fire_cuttack": Flame
+};
 
 const severityToRisk: Record<ScenarioSeverity, "low" | "medium" | "high" | "critical"> = {
   critical: "critical",
@@ -156,34 +123,98 @@ const severityToRisk: Record<ScenarioSeverity, "low" | "medium" | "high" | "crit
 };
 
 export function ScenarioSimulatorDashboard() {
-  const [selectedScenarioId, setSelectedScenarioId] = useState(scenarios[0]?.id ?? "");
+  const [selectedScenarioId, setSelectedScenarioId] = useState("");
   const store = useSimulationStore();
   const isRunning = store.phase === "running";
 
+  const [backendScenarios, setBackendScenarios] = useState<ScenarioOption[]>([]);
+  const [scenariosLoading, setScenariosLoading] = useState(true);
+  const [scenariosError, setScenariosError] = useState<string | null>(null);
+
+  useEffect(() => {
+    getScenarios()
+      .then((data) => {
+        const mapped = data.map((b) => ({
+          id: b.id,
+          title: b.name,
+          description: b.description,
+          severity: b.severity.toLowerCase() as ScenarioSeverity,
+          affectedNodes: b.affectedNodeIds,
+          impactSummary: `${b.expectedImpacts?.populationAffected ?? 0} affected`,
+          location: `${b.region}, ${b.country}`,
+          type: b.category,
+          weather: "Simulated",
+          confidence: 85,
+          backendRouteIds: b.affectedRouteIds,
+        }));
+        setBackendScenarios(mapped);
+        if (mapped.length > 0) {
+          setSelectedScenarioId(mapped[0].id);
+        }
+        setScenariosLoading(false);
+      })
+      .catch((err) => {
+        setScenariosError(err.message);
+        setScenariosLoading(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const scenarioOptions = useMemo<ScenarioOption[]>(
-    () => scenarios.map((s) => ({ ...s, ...scenarioMeta[s.id] })).concat(customScenario),
-    []
+    () => backendScenarios.concat(customScenario),
+    [backendScenarios]
   );
 
   const selectedScenario = useMemo(
-    () => scenarioOptions.find((s) => s.id === selectedScenarioId) ?? scenarioOptions[0]!,
+    () => scenarioOptions.find((s) => s.id === selectedScenarioId) ?? scenarioOptions[0],
     [scenarioOptions, selectedScenarioId]
   );
 
   const selectedImpact = useMemo(
     () =>
-      scenarioSimulationImpacts.find((i) => i.scenarioId === selectedScenario.id) ??
+      selectedScenario && scenarioSimulationImpacts.find((i) => i.scenarioId === selectedScenario.id) ||
       scenarioSimulationImpacts[0]!,
-    [selectedScenario.id]
+    [selectedScenario]
   );
 
+  // Playback state
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
+  const [playbackProgress, setPlaybackProgress] = useState(0);
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    if (isPlaying && store.phase === "done") {
+      interval = setInterval(() => {
+        setPlaybackProgress((prev) => {
+          if (prev >= 100) {
+            setIsPlaying(false);
+            return 100;
+          }
+          return prev + (1 * playbackSpeed);
+        });
+      }, 100);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying, store.phase, playbackSpeed]);
+
+  useEffect(() => {
+    if (store.phase !== "done") {
+      // eslint-disable-next-line
+      setIsPlaying(false);
+      // eslint-disable-next-line
+      setPlaybackProgress(0);
+      // eslint-disable-next-line
+      setPlaybackSpeed(1);
+    }
+  }, [store.phase]);
+
   const handleRun = useCallback(async () => {
-    const backendId = BACKEND_SCENARIO_ID[selectedScenarioId];
-    if (!backendId) return;
+    if (!selectedScenarioId) return;
 
     setSimulationRunning(selectedScenarioId);
     try {
-      const result = await runSimulation({ scenarioId: backendId });
+      const result = await runSimulation({ scenarioId: selectedScenarioId });
       setSimulationDone(result);
 
       // Auto-trigger parliament and commander in parallel after simulation completes
@@ -209,6 +240,28 @@ export function ScenarioSimulatorDashboard() {
   const handleReset = useCallback(() => {
     resetSimulation();
   }, []);
+
+  if (scenariosLoading) {
+    return (
+      <div className="flex h-96 flex-col items-center justify-center gap-3 rounded-md border border-border bg-card/60">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="text-sm font-medium text-foreground">Loading Scenarios…</p>
+        <p className="text-xs text-muted-foreground">Connecting to the simulation engine</p>
+      </div>
+    );
+  }
+
+  if (scenariosError || !selectedScenario) {
+    return (
+      <div className="flex h-96 flex-col items-center justify-center gap-3 rounded-md border border-danger/20 bg-danger/5 text-center">
+        <AlertCircle className="h-8 w-8 text-danger" />
+        <p className="text-sm font-medium text-danger">Failed to Load Scenarios</p>
+        <p className="max-w-xs text-xs text-muted-foreground">
+          {scenariosError ?? "No scenarios available."}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="grid min-h-0 gap-4">
@@ -237,7 +290,16 @@ export function ScenarioSimulatorDashboard() {
       <section className="grid gap-4 pb-1 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <SimulationControlsPanel
           isRunning={isRunning}
-          speed="1x"
+          speed={playbackSpeed}
+          isPlaying={isPlaying}
+          playbackProgress={playbackProgress}
+          hasResult={store.phase === "done"}
+          onPlayPause={() => setIsPlaying(p => !p)}
+          onChangeSpeed={(s) => setPlaybackSpeed(s)}
+          onScrub={(p) => {
+            setPlaybackProgress(p);
+            if (p >= 100) setIsPlaying(false);
+          }}
           onReset={handleReset}
           onRun={handleRun}
         />
@@ -313,7 +375,7 @@ function SimulationOverview({
   impact: ScenarioSimulationImpact;
   result: SimulationResult | null;
 }) {
-  const affectedRoutes = impactedRouteIds[scenario.id]?.length ?? 0;
+  const affectedRoutes = scenario.backendRouteIds?.length || impactedRouteIds[scenario.id]?.length || 0;
 
   const economicLoss = result
     ? `₹ ${safeNum(result.impact.economic?.lossAfterRecoveryCr).toFixed(1)} Cr`
@@ -421,10 +483,10 @@ function ImpactPreviewMap({ scenario, impact }: { scenario: ScenarioOption; impa
   const store = useSimulationStore();
   const affectedRouteIds = store.result
     ? store.result.digitalTwin.affectedRouteIds
-    : (impactedRouteIds[scenario.id] ?? []);
+    : (scenario.backendRouteIds || impactedRouteIds[scenario.id] || []);
   const affectedNodeIds = store.result
     ? store.result.digitalTwin.affectedNodeIds
-    : (impactedNodeIds[scenario.id] ?? []);
+    : (scenario.affectedNodes || impactedNodeIds[scenario.id] || []);
 
   return (
     <section className="surface-card overflow-hidden rounded-md">
@@ -457,11 +519,23 @@ function ImpactPreviewMap({ scenario, impact }: { scenario: ScenarioOption; impa
 function SimulationControlsPanel({
   isRunning,
   speed,
+  isPlaying,
+  playbackProgress,
+  hasResult,
+  onPlayPause,
+  onChangeSpeed,
+  onScrub,
   onReset,
   onRun
 }: {
   isRunning: boolean;
-  speed: string;
+  speed: number;
+  isPlaying: boolean;
+  playbackProgress: number;
+  hasResult: boolean;
+  onPlayPause: () => void;
+  onChangeSpeed: (s: number) => void;
+  onScrub: (p: number) => void;
   onReset: () => void;
   onRun: () => void;
 }) {
@@ -469,38 +543,52 @@ function SimulationControlsPanel({
     <section className="surface-card rounded-md p-4">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Simulation Controls</h2>
       <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1fr_160px] xl:items-end">
-        <div title="Playback speed integration pending">
-          <p className="type-caption mb-2">Simulation Speed <span className="text-[10px] normal-case text-muted-foreground">(MVP)</span></p>
-          <div className="grid grid-cols-4 overflow-hidden rounded-md border border-border opacity-70">
-            {["1x", "2x", "5x", "10x"].map((item) => (
+        <div>
+          <p className="type-caption mb-2">Simulation Speed</p>
+          <div className="grid grid-cols-3 overflow-hidden rounded-md border border-border">
+            {[1, 2, 5].map((item) => (
               <button
                 key={item}
                 type="button"
-                disabled
+                disabled={!hasResult}
+                onClick={() => onChangeSpeed(item)}
                 className={clsx(
-                  "px-3 py-2 text-sm font-medium cursor-not-allowed",
+                  "px-3 py-2 text-sm font-medium",
+                  !hasResult && "opacity-50 cursor-not-allowed",
                   speed === item ? "bg-primary text-primary-foreground" : "bg-background text-muted-foreground hover:bg-secondary"
                 )}
               >
-                {item}
+                {item}x
               </button>
             ))}
           </div>
         </div>
-        <div title="Timeline integration pending">
-          <p className="type-caption mb-2">Time Progression <span className="text-[10px] normal-case text-muted-foreground">(Static)</span></p>
+        <div>
+          <p className="type-caption mb-2">Time Progression</p>
           <div className="flex items-center gap-3 rounded-md border border-border bg-background/50 px-3 py-2">
             <button
               type="button"
-              disabled
-              className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/50 text-primary-foreground/50 cursor-not-allowed"
+              onClick={onPlayPause}
+              disabled={!hasResult}
+              className={clsx(
+                "flex h-8 w-8 items-center justify-center rounded-md",
+                hasResult ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-primary/50 text-primary-foreground/50 cursor-not-allowed"
+              )}
             >
-              <Play className="h-4 w-4" />
+              {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
             </button>
-            <div className="h-1.5 flex-1 rounded-full bg-secondary">
-              <div className="h-full w-1/3 rounded-full bg-primary" />
-            </div>
-            <span className="text-xs text-muted-foreground">29 Nov 2024, 06:00 AM</span>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={playbackProgress}
+              disabled={!hasResult}
+              onChange={(e) => onScrub(Number(e.target.value))}
+              className="flex-1 h-1.5 cursor-pointer accent-primary"
+            />
+            <span className="text-xs text-muted-foreground">
+              {playbackProgress > 0 ? `+${Math.floor(playbackProgress * 0.72)}h` : "00:00"}
+            </span>
           </div>
         </div>
         <div className="grid gap-2">
