@@ -55,11 +55,10 @@ const BACKEND_SCENARIO_ID: Record<string, string> = {
 };
 
 type ScenarioOption = Scenario & {
+  confidence: number;
   location: string;
   type: string;
   weather: string;
-  confidence: number;
-  stormPath?: { lat: number; lng: number; label: string }[];
 };
 
 export type SimulationMode = "idle" | "running" | "paused";
@@ -69,14 +68,7 @@ const scenarioMeta: Record<string, Omit<ScenarioOption, keyof Scenario>> = {
     confidence: 85,
     location: "Near Puri, Odisha",
     type: "Cyclone",
-    weather: "120-150 km/h winds · 200-300 mm rain",
-    stormPath: [
-      { lat: 16.5, lng: 88.5, label: "Cyclone Formation" },
-      { lat: 18.0, lng: 87.8, label: "Approaching Coast" },
-      { lat: 19.5, lng: 87.0, label: "Intensifying" },
-      { lat: 20.3, lng: 86.6, label: "Landfall near Paradip" },
-      { lat: 20.8, lng: 86.0, label: "Inland Dissipation" }
-    ]
+    weather: "120-150 km/h winds · 200-300 mm rain"
   },
   "scenario-port-shutdown": {
     confidence: 78,
