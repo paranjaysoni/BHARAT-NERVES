@@ -5,6 +5,8 @@ import type {
   InfrastructureImpact,
 } from "../../types/impact-engine.types.js";
 import type { Scenario } from "../../types/scenario.types.js";
+import { env } from "../../config/env.js";
+
 import type { RiskConfigInput } from "../config/config.service.js";
 
 export function buildExecutiveImpactSummary({
@@ -80,4 +82,3 @@ function getScoreRiskLevel(score: number, config: RiskConfigInput): ImpactRiskLe
   if (score >= config.medium) return "MEDIUM";
   return "LOW";
 }
-

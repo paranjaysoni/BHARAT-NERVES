@@ -95,6 +95,7 @@ async function main() {
           expectedResilienceAfter: s.expectedImpacts.resilienceAfter,
           expectedRecoveryDays: s.expectedImpacts.recoveryDays,
           tags: s.tags || [],
+          stormPath: s.stormPath || null,
         },
       });
     }
@@ -128,6 +129,7 @@ async function main() {
           expectedResilienceAfter: s.expectedImpacts.resilienceAfter,
           expectedRecoveryDays: s.expectedImpacts.recoveryDays,
           tags: s.tags || [],
+          stormPath: s.stormPath || null,
           globalRelevance: s.globalRelevance,
           tradeImpactUsd: s.tradeImpactUsd,
           geopoliticalContext: s.geopoliticalContext,

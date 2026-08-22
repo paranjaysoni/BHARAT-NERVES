@@ -39,11 +39,16 @@ import {
   setParliamentLoading,
   setCommanderLoading,
   resetSimulation,
+  playSimulation,
+  pauseSimulation,
+  restartSimulationPlayback,
+  setSimulationSpeed,
 } from "@/lib/simulation-store";
 import { useSimulationStore } from "@/hooks/use-simulation-store";
 import type { SimulationResult } from "@/types/simulation.types";
 
 type ScenarioOption = Scenario & {
+  confidence: number;
   location: string;
   type: string;
   weather: string;
@@ -125,7 +130,19 @@ const severityToRisk: Record<ScenarioSeverity, "low" | "medium" | "high" | "crit
 export function ScenarioSimulatorDashboard() {
   const [selectedScenarioId, setSelectedScenarioId] = useState("");
   const store = useSimulationStore();
-  const isRunning = store.phase === "running";
+  const [selectedScenarioId, setSelectedScenarioId] = useState(
+    store.activeScenarioId || scenarios[0]?.id || ""
+  );
+
+  // Sync if we navigate back and there's an active scenario
+  useEffect(() => {
+    if (store.activeScenarioId && store.activeScenarioId !== selectedScenarioId) {
+      setSelectedScenarioId(store.activeScenarioId);
+    }
+  }, [store.activeScenarioId, selectedScenarioId]);
+
+  const isRunningBackend = store.phase === "running";
+  const isPlaying = store.playbackState === "playing";
 
   const [backendScenarios, setBackendScenarios] = useState<ScenarioOption[]>([]);
   const [scenariosLoading, setScenariosLoading] = useState(true);
@@ -225,10 +242,10 @@ export function ScenarioSimulatorDashboard() {
       setCommanderLoading(true);
 
       Promise.all([
-        runParliamentSession({ scenarioId: scenId, simulationId: simId, includeFullMatrix: true })
+        runParliamentSession({ scenarioId: scenId, simulationId: simId, simulationResult: result, includeFullMatrix: true })
           .then((s) => setParliamentSession(s))
           .catch(() => setParliamentLoading(false)),
-        runCrisisCommanderPlan({ scenarioId: scenId, simulationId: simId, includeChecklist: true })
+        runCrisisCommanderPlan({ scenarioId: scenId, simulationId: simId, simulationResult: result, includeChecklist: true })
           .then((p) => setCommanderPlan(p))
           .catch(() => setCommanderLoading(false)),
       ]);
@@ -262,6 +279,22 @@ export function ScenarioSimulatorDashboard() {
       </div>
     );
   }
+  const handlePlayPause = useCallback(() => {
+    if (store.phase === "done" && store.playbackState !== "completed") {
+      if (isPlaying) pauseSimulation();
+      else playSimulation();
+    } else if (store.phase !== "running") {
+      handleRun();
+    }
+  }, [store.phase, store.playbackState, isPlaying, handleRun]);
+
+  const handleRestartPlayback = useCallback(() => {
+    if (store.phase === "done") {
+      restartSimulationPlayback();
+    } else {
+      resetSimulation();
+    }
+  }, [store.phase]);
 
   return (
     <div className="grid min-h-0 gap-4">
@@ -276,15 +309,15 @@ export function ScenarioSimulatorDashboard() {
             resetSimulation();
           }}
         />
-        <SimulationOverview scenario={selectedScenario} impact={selectedImpact} result={store.result} />
+        <SimulationOverview scenario={selectedScenario} impact={selectedImpact} result={store.result} progress={store.playbackProgress} />
       </section>
 
       <section className="grid min-h-0 gap-4 xl:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
         <aside className="grid gap-4">
           <ScenarioDetailsPanel scenario={selectedScenario} />
-          <ImpactSummaryPanel scenario={selectedScenario} impact={selectedImpact} />
+          <ImpactSummaryPanel scenario={selectedScenario} impact={selectedImpact} progress={store.playbackProgress} />
         </aside>
-        <ImpactPreviewMap scenario={selectedScenario} impact={selectedImpact} />
+        <ImpactPreviewMap scenario={selectedScenario} impact={selectedImpact} progress={store.playbackProgress} />
       </section>
 
       <section className="grid gap-4 pb-1 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
@@ -303,7 +336,7 @@ export function ScenarioSimulatorDashboard() {
           onReset={handleReset}
           onRun={handleRun}
         />
-        <ResultsPreviewPanel impact={selectedImpact} result={store.result} error={store.error} isRunning={isRunning} />
+        <ResultsPreviewPanel impact={selectedImpact} result={store.result} error={store.error} isRunning={isRunningBackend} playbackState={store.playbackState} />
       </section>
     </div>
   );
@@ -369,16 +402,20 @@ function ScenarioSelectionRow({
 function SimulationOverview({
   scenario,
   impact,
-  result
+  result,
+  progress
 }: {
   scenario: ScenarioOption;
   impact: ScenarioSimulationImpact;
   result: SimulationResult | null;
+  progress: number;
 }) {
+
   const affectedRoutes = scenario.backendRouteIds?.length || impactedRouteIds[scenario.id]?.length || 0;
+  const p = progress / 100;
 
   const economicLoss = result
-    ? `₹ ${safeNum(result.impact.economic?.lossAfterRecoveryCr).toFixed(1)} Cr`
+    ? `₹ ${(safeNum(result.impact.economic?.lossAfterRecoveryCr) * p).toFixed(1)} Cr`
     : impact.estimatedEconomicImpact;
 
   const recoveryTime = result
@@ -386,19 +423,24 @@ function SimulationOverview({
     : recoveryWindowForScenario(scenario.id);
 
   const affectedNodes = result
-    ? String(result.digitalTwin.affectedNodeIds.length)
+    ? String(Math.floor(result.digitalTwin.affectedNodeIds.length * p))
     : String(scenario.affectedNodes.length || 23);
 
   const affectedRoutesDisplay = result
-    ? String(result.digitalTwin.affectedRouteIds.length)
+    ? String(Math.floor(result.digitalTwin.affectedRouteIds.length * p))
     : String(affectedRoutes || 17);
+
+  // Switch risk level at 70% progress
+  const currentRiskLevel = result
+    ? (progress > 70 ? result.impact.score?.riskLevel : "MEDIUM")
+    : scenario.severity;
 
   return (
     <section className="surface-card rounded-md p-4">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Simulation Overview</h2>
       <div className="mt-3 grid grid-cols-2 overflow-hidden rounded-md border border-border bg-background/70 sm:grid-cols-3 xl:grid-cols-6">
         <OverviewItem label="Selected Scenario" value={scenario.title} tone="primary" />
-        <OverviewItem label="Predicted Impact" value={result?.impact.score?.riskLevel ?? result?.scenario.severity ?? scenario.severity} tone="danger" />
+        <OverviewItem label="Predicted Impact" value={currentRiskLevel ?? "MEDIUM"} tone="danger" />
         <OverviewItem label="Affected Nodes" value={affectedNodes} />
         <OverviewItem label="Affected Routes" value={affectedRoutesDisplay} />
         <OverviewItem label="Est. Economic Loss" value={economicLoss} />
@@ -436,19 +478,20 @@ function ScenarioDetailsPanel({ scenario }: { scenario: ScenarioOption }) {
 
 // ── Impact summary ────────────────────────────────────────────────────────────
 
-function ImpactSummaryPanel({ scenario, impact }: { scenario: ScenarioOption; impact: ScenarioSimulationImpact }) {
+function ImpactSummaryPanel({ scenario, impact, progress }: { scenario: ScenarioOption; impact: ScenarioSimulationImpact; progress: number }) {
   const store = useSimulationStore();
   const result = store.result;
+  const p = progress / 100;
 
   const summaryRows = result
     ? [
-        ["Ports Affected", scenario.id === "scenario-port-shutdown" ? "2" : "1"],
-        ["Warehouses Affected", String(Math.max(2, scenario.affectedNodes.length + 2))],
-        ["Hospitals at Risk", scenario.id === "scenario-cyclone-landfall" ? "3" : "1"],
-        ["Relief Centers Impacted", scenario.id === "scenario-cyclone-landfall" ? "4" : "2"],
-        ["Population Affected", safeNum(result.impact.population?.affected ?? result.dashboard.populationAffected).toLocaleString()],
-        ["Supply Chain Disruption", result.dashboard.riskLevel === "CRITICAL" || result.dashboard.riskLevel === "HIGH" ? "High" : "Medium"],
-        ["Economic Impact", `₹ ${safeNum(result.impact.economic?.lossAfterRecoveryCr).toFixed(1)} Cr`],
+        ["Ports Affected", scenario.id === "scenario-port-shutdown" ? "2" : (progress > 20 ? "1" : "0")],
+        ["Warehouses Affected", String(Math.floor(Math.max(2, scenario.affectedNodes.length + 2) * p))],
+        ["Hospitals at Risk", scenario.id === "scenario-cyclone-landfall" ? (progress > 50 ? "3" : "1") : "1"],
+        ["Relief Centers Impacted", scenario.id === "scenario-cyclone-landfall" ? (progress > 60 ? "4" : "1") : "2"],
+        ["Population Affected", Math.floor(safeNum(result.impact.population?.affected ?? result.dashboard.populationAffected) * p).toLocaleString()],
+        ["Supply Chain Disruption", progress > 70 && (result.dashboard.riskLevel === "CRITICAL" || result.dashboard.riskLevel === "HIGH") ? "High" : "Medium"],
+        ["Economic Impact", `₹ ${(safeNum(result.impact.economic?.lossAfterRecoveryCr) * p).toFixed(1)} Cr`],
       ]
     : [
         ["Ports Affected", scenario.id === "scenario-port-shutdown" ? "2" : "1"],
@@ -479,14 +522,27 @@ function ImpactSummaryPanel({ scenario, impact }: { scenario: ScenarioOption; im
 
 // ── Map ───────────────────────────────────────────────────────────────────────
 
-function ImpactPreviewMap({ scenario, impact }: { scenario: ScenarioOption; impact: ScenarioSimulationImpact }) {
+function ImpactPreviewMap({ scenario, impact, progress }: { scenario: ScenarioOption; impact: ScenarioSimulationImpact; progress: number }) {
   const store = useSimulationStore();
-  const affectedRouteIds = store.result
+  
+  // Progressively reveal nodes and routes during playback
+  const p = progress / 100;
+  
+  const allAffectedRouteIds = store.result
     ? store.result.digitalTwin.affectedRouteIds
-    : (scenario.backendRouteIds || impactedRouteIds[scenario.id] || []);
-  const affectedNodeIds = store.result
+: (scenario.backendRouteIds || impactedRouteIds[scenario.id] || []);
+  const allAffectedNodeIds = store.result
     ? store.result.digitalTwin.affectedNodeIds
     : (scenario.affectedNodes || impactedNodeIds[scenario.id] || []);
+
+  // Show subsets based on progress
+  const affectedRouteIds = store.result && progress < 100 
+    ? allAffectedRouteIds.slice(0, Math.max(1, Math.floor(allAffectedRouteIds.length * p)))
+    : allAffectedRouteIds;
+    
+  const affectedNodeIds = store.result && progress < 100
+    ? allAffectedNodeIds.slice(0, Math.max(1, Math.floor(allAffectedNodeIds.length * p)))
+    : allAffectedNodeIds;
 
   return (
     <section className="surface-card overflow-hidden rounded-md">
@@ -497,7 +553,9 @@ function ImpactPreviewMap({ scenario, impact }: { scenario: ScenarioOption; impa
           </h2>
           <p className="type-caption mt-1">
             {store.phase === "done"
-              ? "Live digital twin overlay from simulation result."
+              ? progress === 100 
+                ? "Live digital twin overlay from simulation result (Completed)."
+                : `Live digital twin overlay progressing... (${progress}%)`
               : "Visual-only digital twin preview for affected routes, nodes, and risk zones."}
           </p>
         </div>
@@ -508,6 +566,8 @@ function ImpactPreviewMap({ scenario, impact }: { scenario: ScenarioOption; impa
         description="Affected nodes and corridors are highlighted."
         affectedNodeIds={affectedNodeIds}
         affectedRouteIds={affectedRouteIds}
+        stormPath={store.result?.scenario.stormPath}
+        playbackProgress={progress}
         heightClassName="h-[300px] sm:h-[360px] xl:h-[420px]"
       />
     </section>
@@ -518,6 +578,7 @@ function ImpactPreviewMap({ scenario, impact }: { scenario: ScenarioOption; impa
 
 function SimulationControlsPanel({
   isRunning,
+  isPlaying,
   speed,
   isPlaying,
   playbackProgress,
@@ -594,7 +655,7 @@ function SimulationControlsPanel({
         <div className="grid gap-2">
           <button
             type="button"
-            onClick={onRun}
+            onClick={onPlayPause}
             disabled={isRunning}
             className="btn btn-primary disabled:opacity-60"
           >
@@ -603,6 +664,10 @@ function SimulationControlsPanel({
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Running…
               </>
+            ) : isPlaying ? (
+              "Pause Simulation"
+            ) : progress > 0 && progress < 100 ? (
+              "Resume Simulation"
             ) : (
               "Run Simulation"
             )}
@@ -623,16 +688,18 @@ function ResultsPreviewPanel({
   impact,
   result,
   error,
-  isRunning
+  isRunning,
+  playbackState
 }: {
   impact: ScenarioSimulationImpact;
   result: SimulationResult | null;
   error: string | null;
   isRunning: boolean;
+  playbackState?: string;
 }) {
   const router = useRouter();
 
-  if (isRunning) {
+  if (isRunning || (playbackState && playbackState !== "completed" && playbackState !== "idle")) {
     return (
       <section className="surface-card rounded-md p-4">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">
@@ -661,7 +728,7 @@ function ResultsPreviewPanel({
     );
   }
 
-  if (result) {
+  if (result && playbackState === "completed") {
     return (
       <section className="surface-card rounded-md p-4">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">

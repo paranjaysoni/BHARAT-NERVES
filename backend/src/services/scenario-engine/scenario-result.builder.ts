@@ -68,6 +68,7 @@ export function buildScenarioResult(context: ScenarioExecutionContext): Scenario
     }),
     recommendedAction: recommendation.action,
     recommendedNextPage: recommendation.page,
+    stormPath: scenario.stormPath,
     generatedAt: new Date().toISOString(),
   };
 }

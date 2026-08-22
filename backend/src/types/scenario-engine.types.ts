@@ -45,6 +45,7 @@ export interface ScenarioResult {
   operationalSummary: string;
   recommendedAction: string;
   recommendedNextPage: string;
+  stormPath?: { lat: number; lng: number }[];
   generatedAt: string;
 }
 
