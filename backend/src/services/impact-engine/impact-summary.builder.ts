@@ -5,6 +5,7 @@ import type {
   InfrastructureImpact,
 } from "../../types/impact-engine.types.js";
 import type { Scenario } from "../../types/scenario.types.js";
+import { env } from "../../config/env.js";
 
 export function buildExecutiveImpactSummary({
   economic,
@@ -71,8 +72,8 @@ function normalize(value: number, max: number): number {
 }
 
 function getScoreRiskLevel(score: number): ImpactRiskLevel {
-  if (score >= 85) return "CRITICAL";
-  if (score >= 60) return "HIGH";
+  if (score >= env.RISK_THRESHOLD_CRITICAL) return "CRITICAL";
+  if (score >= env.RISK_THRESHOLD_HIGH) return "HIGH";
   if (score >= 35) return "MEDIUM";
   return "LOW";
 }

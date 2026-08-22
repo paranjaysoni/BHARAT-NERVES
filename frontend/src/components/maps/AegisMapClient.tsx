@@ -2,8 +2,9 @@
 
 import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import type { LatLngBoundsExpression } from "leaflet";
+import { divIcon } from "leaflet";
+import { Marker, MapContainer, TileLayer, useMap } from "react-leaflet";
 import { HeatmapLayer } from "./HeatmapLayer";
 import { MapControls } from "./MapControls";
 import { MapLegend } from "./MapLegend";
@@ -27,6 +28,8 @@ export interface AegisMapProps {
   showImpactLegend?: boolean;
   compactMarkers?: boolean;
   stats?: boolean;
+  stormPath?: { lat: number; lng: number }[];
+  playbackProgress?: number;
 }
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
@@ -50,7 +53,9 @@ export function AegisMap({
   showLegend = true,
   showImpactLegend = false,
   compactMarkers = false,
-  stats = true
+  stats = true,
+  stormPath,
+  playbackProgress
 }: AegisMapProps) {
   const [nodes, setNodes] = useState<MapNode[]>([]);
   const [routes, setRoutes] = useState<MapRoute[]>([]);
@@ -121,6 +126,39 @@ export function AegisMap({
     [nodesById, routeTypeSet, routes]
   );
 
+  const cyclonePosition = useMemo(() => {
+    if (!stormPath || stormPath.length === 0 || playbackProgress === undefined) return null;
+    const progress = Math.max(0, Math.min(100, playbackProgress)) / 100;
+    
+    // If progress is 0, return first point. If 1, return last.
+    if (progress === 0) return stormPath[0];
+    if (progress === 1) return stormPath[stormPath.length - 1];
+
+    const numSegments = stormPath.length - 1;
+    const totalProgress = progress * numSegments;
+    const index = Math.floor(totalProgress);
+    const segmentProgress = totalProgress - index;
+
+    const p1 = stormPath[index];
+    const p2 = stormPath[index + 1];
+
+    if (!p1 || !p2) return null;
+
+    return {
+      lat: p1.lat + (p2.lat - p1.lat) * segmentProgress,
+      lng: p1.lng + (p2.lng - p1.lng) * segmentProgress,
+    };
+  }, [stormPath, playbackProgress]);
+
+  const cycloneIcon = useMemo(() => {
+    return divIcon({
+      className: "bg-transparent border-none shadow-none",
+      html: `<div class="flex items-center justify-center text-4xl leading-none animate-spin" style="animation-duration: 2s;">🌀</div>`,
+      iconSize: [40, 40],
+      iconAnchor: [20, 20]
+    });
+  }, []);
+
   return (
     <div className={clsx("relative overflow-hidden rounded-md border border-border bg-slate-950", className)}>
       {title || description ? (
@@ -169,6 +207,9 @@ export function AegisMap({
               compact={compactMarkers}
             />
           ))}
+          {cyclonePosition && (
+            <Marker position={[cyclonePosition.lat, cyclonePosition.lng]} icon={cycloneIcon} />
+          )}
           <MapControls fitBounds={INDIA_BOUNDS} />
         </MapContainer>
 

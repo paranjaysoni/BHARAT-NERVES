@@ -14,10 +14,11 @@ import {
   buildKeyInsights,
   buildRecommendationMatrix,
 } from "./recommendation-builder.service.js";
+import { generateWithGeminiFallback } from "../llm-provider.service.js";
 
-export function createAIParliamentSession(
+export async function createAIParliamentSession(
   request: AIParliamentSessionRequest
-): AIParliamentSession {
+): Promise<AIParliamentSession> {
   validateRequest(request);
 
   const agents = getAllAgents();
@@ -34,6 +35,16 @@ export function createAIParliamentSession(
     const deliberations = buildAgentDeliberations(agents, simulation);
     const consensus = calculateConsensus(deliberations, simulation.scenario.severity);
     const generatedAt = new Date();
+    const deterministicRecommendation = buildFinalRecommendation(simulation);
+    
+    // LLM boundary
+    const prompt = `You are the AI Parliament for Project Aegis. Synthesize a brief executive recommendation.
+    Scenario: ${simulation.scenario.scenarioName} (${simulation.scenario.severity} severity)
+    Insights: ${buildKeyInsights(simulation).join("; ")}
+    Fallback recommendation: ${deterministicRecommendation}
+    Output ONLY the final recommendation text directly.`;
+    
+    const finalRecommendation = await generateWithGeminiFallback(prompt, deterministicRecommendation);
 
     return {
       sessionId: `parl_${Date.now()}`,
@@ -45,7 +56,7 @@ export function createAIParliamentSession(
       participants: deliberations.length,
       consensus,
       agents: deliberations,
-      recommendation: buildFinalRecommendation(simulation),
+      recommendation: finalRecommendation,
       timeline: buildParliamentTimeline(generatedAt),
       insights: buildKeyInsights(simulation),
       matrix: request.includeFullMatrix === false ? [] : buildRecommendationMatrix(deliberations),

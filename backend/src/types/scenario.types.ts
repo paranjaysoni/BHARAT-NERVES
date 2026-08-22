@@ -34,6 +34,7 @@ export interface Scenario {
   blockedRouteIds: string[];
   expectedImpacts: ScenarioImpacts;
   tags: string[];
+  stormPath?: { lat: number; lng: number }[];
 }
 
 export interface InternationalScenario extends Scenario {

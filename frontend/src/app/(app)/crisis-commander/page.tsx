@@ -1,3 +1,5 @@
+"use client";
+
 import { CrisisCommanderClient } from "@/components/commander/CrisisCommanderClient";
 import { CrisisMapPanel } from "@/components/commander/CrisisMapPanel";
 import {
@@ -20,6 +22,7 @@ import {
 import clsx from "clsx";
 import { PageHeader } from "@/components/shared";
 import { crisisCommanderPage } from "@/data";
+import { useSimulationStore } from "@/hooks/use-simulation-store";
 
 const kpis = [
   {
@@ -191,6 +194,9 @@ const toneClasses = {
 } as const;
 
 export default function CrisisCommanderPage() {
+  const store = useSimulationStore();
+  const showStaticFallback = store.phase === "idle";
+
   return (
     <div className="space-y-3.5">
       <PageHeader
@@ -201,20 +207,24 @@ export default function CrisisCommanderPage() {
       {/* Live backend-driven plan — appears after simulation runs */}
       <CrisisCommanderClient />
 
-      <KpiStrip />
+      {showStaticFallback && (
+        <>
+          <KpiStrip />
 
-      <section className="grid gap-3 lg:grid-cols-2 xl:grid-cols-[minmax(0,1.9fr)_minmax(0,0.95fr)_minmax(0,0.95fr)]">
-        <CrisisMap />
-        <ActiveIncidentsPanel />
-        <ResponseActionsPanel />
-      </section>
+          <section className="grid gap-3 lg:grid-cols-2 xl:grid-cols-[minmax(0,1.9fr)_minmax(0,0.95fr)_minmax(0,0.95fr)]">
+            <CrisisMap />
+            <ActiveIncidentsPanel />
+            <ResponseActionsPanel />
+          </section>
 
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <SituationOverviewPanel />
-        <ResourceDeploymentPanel />
-        <ImpactSummaryPanel />
-        <CommunicationsLogPanel />
-      </section>
+          <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <SituationOverviewPanel />
+            <ResourceDeploymentPanel />
+            <ImpactSummaryPanel />
+            <CommunicationsLogPanel />
+          </section>
+        </>
+      )}
     </div>
   );
 }
