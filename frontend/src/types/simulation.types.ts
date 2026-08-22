@@ -143,6 +143,7 @@ export interface ScenarioResultSummary {
   affectedNodeIds: string[];
   affectedRouteIds: string[];
   blockedRouteIds: string[];
+  stormPath?: { lat: number; lng: number }[];
 }
 
 export interface RecommendedNextStep {

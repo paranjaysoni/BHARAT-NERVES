@@ -1,16 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getStore, subscribeToStore, type SimulationStore } from "@/lib/simulation-store";
+import { getStore, subscribeToStore, INITIAL_STATE, type SimulationStore } from "@/lib/simulation-store";
 
 export function useSimulationStore(): SimulationStore {
-  // Initialize from the module-level store (already hydrated from localStorage on client)
-  const [state, setState] = useState<SimulationStore>(getStore);
+  // Always initialize with server-safe initial state for first render
+  const [state, setState] = useState<SimulationStore>(INITIAL_STATE);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    setState(getStore()); // Catch up to persisted state
     const unsub = subscribeToStore(() => setState(getStore()));
     return unsub;
   }, []);
 
-  return state;
+  // Return initial state during SSR and hydration to prevent mismatch
+  return mounted ? state : INITIAL_STATE;
 }

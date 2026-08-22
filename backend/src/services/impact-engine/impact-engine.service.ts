@@ -24,6 +24,8 @@ import { calculatePopulationImpact } from "./population-impact.service.js";
 import { calculateResilienceImpact } from "./resilience-impact.service.js";
 import { calculateResourceStress } from "./resource-stress.service.js";
 
+import { getConfig } from "../config/config.service.js";
+
 const scenarioAliases: Record<string, string> = {
   odisha_cyclone: "odisha_cyclone_corridor",
 };

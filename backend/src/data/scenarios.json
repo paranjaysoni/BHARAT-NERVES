@@ -41,7 +41,14 @@
       "resilienceAfter": 76,
       "recoveryDays": 14
     },
-    "tags": ["cyclone", "landfall", "coastal", "port-disruption", "fani-profile"]
+    "tags": ["cyclone", "landfall", "coastal", "port-disruption", "fani-profile"],
+    "stormPath": [
+      { "lat": 16.5, "lng": 89.5 },
+      { "lat": 17.8, "lng": 88.2 },
+      { "lat": 19.1, "lng": 87.1 },
+      { "lat": 20.2654, "lng": 86.6763 },
+      { "lat": 21.0, "lng": 86.0 }
+    ]
   },
   {
     "id": "paradip_port_shutdown",

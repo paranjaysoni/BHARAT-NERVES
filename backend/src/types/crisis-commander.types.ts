@@ -10,6 +10,7 @@ export type CommanderResponseStatus = "READY_FOR_EXECUTION";
 export interface CrisisCommanderPlanRequest {
   scenarioId: string;
   simulationId?: string;
+  simulationResult?: any;
   includeChecklist?: boolean;
 }
 

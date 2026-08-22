@@ -17,6 +17,7 @@ import { buildResourceDeployment } from "./resource-deployment.builder.js";
 import { buildResponseActions } from "./response-actions.builder.js";
 import { buildRiskAssessment } from "./risk-assessment.builder.js";
 import { buildActiveIncidents, buildSituationReport } from "./sitrep.builder.js";
+import { generateWithGeminiFallback } from "../llm-provider.service.js";
 
 export async function createCrisisCommanderPlan(
   request: CrisisCommanderPlanRequest
@@ -24,13 +25,33 @@ export async function createCrisisCommanderPlan(
   validateRequest(request);
 
   try {
-    const simulation = await runUnifiedSimulation({ scenarioId: request.scenarioId });
+    const simulation = request.simulationResult || await runUnifiedSimulation({ scenarioId: request.scenarioId });
     const parliament = await createAIParliamentSession({
       scenarioId: request.scenarioId,
       simulationId: request.simulationId,
+      simulationResult: simulation,
       includeFullMatrix: false,
     });
     const includeChecklist = request.includeChecklist ?? true;
+
+    const deterministicExecutiveSummary = buildExecutiveSummary(simulation, parliament);
+    const deterministicFinalRecommendation = buildFinalRecommendation(parliament);
+
+    const execPrompt = `You are the Crisis Commander. Summarize this situation and consensus into a short 1-2 sentence executive summary for the dashboard: 
+    Scenario: ${simulation.scenario.scenarioName}
+    Parliament Consensus: ${parliament.recommendation.summary}
+    Fallback summary: ${deterministicExecutiveSummary.summary}`;
+
+    const recPrompt = `You are the Crisis Commander. Give a 1-sentence final directive based on this recommendation:
+    Fallback directive: ${deterministicFinalRecommendation}`;
+
+    const llmSummaryText = await generateWithGeminiFallback(execPrompt, deterministicExecutiveSummary.summary);
+    const finalRecommendation = await generateWithGeminiFallback(recPrompt, deterministicFinalRecommendation);
+
+    const executiveSummary = {
+      ...deterministicExecutiveSummary,
+      summary: llmSummaryText,
+    };
 
     return {
       planId: `cmd_${Date.now()}`,
@@ -39,7 +60,7 @@ export async function createCrisisCommanderPlan(
       status: "READY_FOR_REVIEW",
       severity: simulation.scenario.severity,
       situationReport: buildSituationReport(simulation),
-      executiveSummary: buildExecutiveSummary(simulation, parliament),
+      executiveSummary,
       activeIncidents: buildActiveIncidents(simulation),
       responseActions: buildResponseActions(simulation),
       resourceDeployment: buildResourceDeployment(simulation),
@@ -52,7 +73,7 @@ export async function createCrisisCommanderPlan(
         humanApprovalRequired: parliament.consensus.humanReviewRequired,
         responseStatus: "READY_FOR_EXECUTION",
       },
-      finalRecommendation: buildFinalRecommendation(parliament),
+      finalRecommendation,
       generatedAt: new Date().toISOString(),
     };
   } catch (error) {

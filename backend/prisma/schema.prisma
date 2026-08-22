@@ -59,6 +59,7 @@ model Scenario {
   expectedResilienceAfter  Float
   expectedRecoveryDays     Float
   tags                     String[]
+  stormPath                Json?
 
   // Optional fields for International scenarios
   globalRelevance          String?

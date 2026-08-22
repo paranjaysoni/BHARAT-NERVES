@@ -4,6 +4,7 @@ export interface AIParliamentSessionRequest {
   scenarioId: string;
   simulationId?: string;
   includeFullMatrix?: boolean;
+  simulationResult?: any;
 }
 
 // ─── Response shapes (mirror backend) ────────────────────────────────────────

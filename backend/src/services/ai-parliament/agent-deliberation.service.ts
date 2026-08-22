@@ -84,13 +84,25 @@ function getRuleForAgent(
   agent: AIAgent,
   simulation: SimulationResult
 ): Pick<AgentDeliberation, "position" | "priority" | "recommendation" | "riskConcern"> {
-  if (simulation.scenario.category === "CYCLONE") return cyclonePositions[agent.domain];
+  if (simulation.scenario.category === "CYCLONE") {
+    const pos = cyclonePositions[agent.domain];
+    
+    // Inject dynamic simulation context into the deterministic recommendation
+    const contextStr = `(Assessed against ${simulation.impact.score.riskLevel} risk: ${simulation.impact.infrastructure.affectedNodes} nodes affected, ₹${simulation.impact.economic.lossAfterRecoveryCr}Cr economic exposure, ${simulation.scenario.blockedRoutes.length} blocked routes.)`;
+    
+    return {
+      position: pos.position,
+      priority: pos.priority,
+      recommendation: `${pos.recommendation} ${contextStr}`,
+      riskConcern: pos.riskConcern,
+    };
+  }
 
   return {
     position: `Prioritize ${agent.priority.toLowerCase()} for ${simulation.scenario.scenarioName}.`,
     priority: agent.priority,
-    recommendation: `${agent.name} recommends applying ${agent.specializations[0] ?? "domain expertise"} to reduce ${simulation.impact.score.riskLevel.toLowerCase()} risk.`,
-    riskConcern: `${simulation.scenario.category.toLowerCase().replace(/_/g, " ")} impact across affected nodes and routes`,
+    recommendation: `${agent.name} recommends applying ${agent.specializations[0] ?? "domain expertise"} to reduce ${simulation.impact.score.riskLevel.toLowerCase()} risk. (Context: ₹${simulation.impact.economic.lossAfterRecoveryCr}Cr exposure)`,
+    riskConcern: `${simulation.scenario.category.toLowerCase().replace(/_/g, " ")} impact across ${simulation.impact.infrastructure.affectedNodes} affected nodes and ${simulation.impact.infrastructure.affectedRoutes} routes`,
   };
 }
 

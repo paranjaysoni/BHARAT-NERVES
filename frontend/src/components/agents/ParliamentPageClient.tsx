@@ -68,12 +68,12 @@ export function ParliamentPageClient() {
     );
   }
 
-  if (store.phase === "running") {
+  if (store.phase === "running" || (store.phase === "done" && store.playbackState !== "completed")) {
     return (
       <div className="flex h-60 flex-col items-center justify-center gap-3 rounded-md border border-border bg-card/60">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
         <p className="text-sm font-medium text-foreground">Simulation Running…</p>
-        <p className="text-xs text-muted-foreground">AI Parliament will convene once the simulation completes</p>
+        <p className="text-xs text-muted-foreground">AI Parliament will convene once the simulation playback completes</p>
       </div>
     );
   }
