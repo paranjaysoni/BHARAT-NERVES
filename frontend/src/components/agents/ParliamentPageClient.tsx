@@ -78,6 +78,23 @@ export function ParliamentPageClient() {
     );
   }
 
+  if (store.phase === "error") {
+    return (
+      <div className="flex h-60 flex-col items-center justify-center gap-3 rounded-md border border-danger/20 bg-danger/5 text-center">
+        <AlertCircle className="h-8 w-8 text-danger" />
+        <p className="text-sm font-medium text-danger">Simulation Failed</p>
+        <p className="max-w-xs text-xs text-muted-foreground">
+          AI Parliament cannot convene because the simulation failed.
+        </p>
+        {store.error && (
+          <p className="max-w-xs text-xs text-muted-foreground mt-1">
+            {store.error}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="flex h-60 flex-col items-center justify-center gap-3 rounded-md border border-border bg-card/60">

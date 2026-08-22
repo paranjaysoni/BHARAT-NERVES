@@ -157,7 +157,6 @@ const severityToRisk: Record<ScenarioSeverity, "low" | "medium" | "high" | "crit
 
 export function ScenarioSimulatorDashboard() {
   const [selectedScenarioId, setSelectedScenarioId] = useState(scenarios[0]?.id ?? "");
-  const [speed, setSpeed] = useState("1x");
   const store = useSimulationStore();
   const isRunning = store.phase === "running";
 
@@ -238,10 +237,9 @@ export function ScenarioSimulatorDashboard() {
       <section className="grid gap-4 pb-1 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <SimulationControlsPanel
           isRunning={isRunning}
-          speed={speed}
+          speed="1x"
           onReset={handleReset}
           onRun={handleRun}
-          onSpeedChange={setSpeed}
         />
         <ResultsPreviewPanel impact={selectedImpact} result={store.result} error={store.error} isRunning={isRunning} />
       </section>
@@ -460,29 +458,27 @@ function SimulationControlsPanel({
   isRunning,
   speed,
   onReset,
-  onRun,
-  onSpeedChange
+  onRun
 }: {
   isRunning: boolean;
   speed: string;
   onReset: () => void;
   onRun: () => void;
-  onSpeedChange: (speed: string) => void;
 }) {
   return (
     <section className="surface-card rounded-md p-4">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Simulation Controls</h2>
       <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_1fr_160px] xl:items-end">
-        <div>
-          <p className="type-caption mb-2">Simulation Speed</p>
-          <div className="grid grid-cols-4 overflow-hidden rounded-md border border-border">
+        <div title="Playback speed integration pending">
+          <p className="type-caption mb-2">Simulation Speed <span className="text-[10px] normal-case text-muted-foreground">(MVP)</span></p>
+          <div className="grid grid-cols-4 overflow-hidden rounded-md border border-border opacity-70">
             {["1x", "2x", "5x", "10x"].map((item) => (
               <button
                 key={item}
                 type="button"
-                onClick={() => onSpeedChange(item)}
+                disabled
                 className={clsx(
-                  "px-3 py-2 text-sm font-medium transition-colors",
+                  "px-3 py-2 text-sm font-medium cursor-not-allowed",
                   speed === item ? "bg-primary text-primary-foreground" : "bg-background text-muted-foreground hover:bg-secondary"
                 )}
               >
@@ -491,16 +487,15 @@ function SimulationControlsPanel({
             ))}
           </div>
         </div>
-        <div>
-          <p className="type-caption mb-2">Time Progression</p>
-          <div className="flex items-center gap-3 rounded-md border border-border bg-background px-3 py-2">
+        <div title="Timeline integration pending">
+          <p className="type-caption mb-2">Time Progression <span className="text-[10px] normal-case text-muted-foreground">(Static)</span></p>
+          <div className="flex items-center gap-3 rounded-md border border-border bg-background/50 px-3 py-2">
             <button
               type="button"
-              onClick={isRunning ? undefined : onRun}
-              disabled={isRunning}
-              className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground disabled:opacity-60"
+              disabled
+              className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/50 text-primary-foreground/50 cursor-not-allowed"
             >
-              {isRunning ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+              <Play className="h-4 w-4" />
             </button>
             <div className="h-1.5 flex-1 rounded-full bg-secondary">
               <div className="h-full w-1/3 rounded-full bg-primary" />

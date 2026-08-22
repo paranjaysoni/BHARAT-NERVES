@@ -16,7 +16,9 @@ import {
   Globe2,
   MoreVertical,
   Share2,
-  UserRound
+  UserRound,
+  Loader2,
+  AlertCircle
 } from "lucide-react";
 import clsx from "clsx";
 import { PageHeader, SearchField, Tooltip } from "@/components/shared";
@@ -115,6 +117,45 @@ const panelClass = "surface-card rounded-md p-3.5 text-card-foreground";
 export default function ReportsPage() {
   const store = useSimulationStore();
   const result = store.phase === "done" ? store.result : null;
+
+  if (store.phase === "running") {
+    return (
+      <div className="space-y-3.5">
+        <PageHeader
+          title="REPORTS"
+          description="Generate, analyze and share intelligence reports"
+        />
+        <div className="flex h-96 flex-col items-center justify-center gap-3 rounded-md border border-border bg-card/60 mt-8">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm font-medium text-foreground">Generating Report…</p>
+          <p className="text-xs text-muted-foreground">Waiting for the simulation results...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (store.phase === "error") {
+    return (
+      <div className="space-y-3.5">
+        <PageHeader
+          title="REPORTS"
+          description="Generate, analyze and share intelligence reports"
+        />
+        <div className="flex h-96 flex-col items-center justify-center gap-3 rounded-md border border-danger/20 bg-danger/5 text-center mt-8">
+          <AlertCircle className="h-8 w-8 text-danger" />
+          <p className="text-sm font-medium text-danger">Report Generation Failed</p>
+          <p className="max-w-xs text-xs text-muted-foreground">
+            A report could not be generated because the simulation failed.
+          </p>
+          {store.error && (
+            <p className="max-w-xs text-xs text-muted-foreground mt-1">
+              {store.error}
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3.5">
