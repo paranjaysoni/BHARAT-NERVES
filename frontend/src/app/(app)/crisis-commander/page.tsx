@@ -536,7 +536,12 @@ function CommandPanel({
 
 function PanelLink({ label }: { label: string }) {
   return (
-    <button className="mt-3 flex h-8 w-full items-center justify-center gap-2 rounded-md border border-border bg-background/60 text-xs font-medium text-primary hover:bg-secondary">
+    <button
+      type="button"
+      disabled
+      title="Pending integration"
+      className="mt-3 flex h-8 w-full items-center justify-center gap-2 rounded-md border border-border bg-background/60 text-xs font-medium text-muted-foreground opacity-60 cursor-not-allowed"
+    >
       {label}
       <ArrowRight className="h-3.5 w-3.5" />
     </button>

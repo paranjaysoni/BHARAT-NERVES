@@ -12,6 +12,7 @@ import type {
 import { ImpactValidationError } from "../../types/impact-engine.types.js";
 import type { InternationalScenario, Scenario } from "../../types/scenario.types.js";
 import type { RecoveryStatus } from "../../types/route-graph.types.js";
+import type { RiskConfigInput } from "../config/config.service.js";
 import { calculateCarbonImpact } from "./carbon-impact.service.js";
 import { calculateEconomicImpact } from "./economic-impact.service.js";
 import {
@@ -36,10 +37,8 @@ const validRecoveryStatuses = new Set<RecoveryStatus>([
   "INVALID_NODES",
 ]);
 
-export async function calculateImpact(request: ImpactCalculationRequest): Promise<ImpactCalculationResult> {
+export async function calculateImpact(request: ImpactCalculationRequest, config: RiskConfigInput): Promise<ImpactCalculationResult> {
   const scenario = await findScenario(request.scenarioId);
-  const config = await getConfig();
-
   if (!scenario) {
     throw new ImpactValidationError(
       "IMPACT_SCENARIO_NOT_FOUND",

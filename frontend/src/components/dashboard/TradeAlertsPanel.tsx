@@ -50,7 +50,7 @@ export function TradeAlertsPanel() {
   return (
     <SectionCard
       title="Active Alerts"
-      action={<button className="text-xs font-medium text-primary">View All</button>}
+      action={<button type="button" disabled title="Pending integration" className="text-xs font-medium text-primary opacity-60 cursor-not-allowed">View All</button>}
       className="h-full"
     >
       <div className="divide-y divide-border/70">
@@ -67,7 +67,7 @@ export function TradeAlertsPanel() {
           </div>
         ))}
       </div>
-      <button className="btn btn-secondary mt-4 w-full justify-center">
+      <button type="button" disabled title="Pending integration" className="btn btn-secondary mt-4 w-full justify-center opacity-60 cursor-not-allowed">
         View All Alerts
         <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
       </button>

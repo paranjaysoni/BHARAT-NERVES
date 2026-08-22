@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",
+    "prisma": "^5.14.0",
     "tsx": "^4.19.2",
     "typescript": "~5.4.5"
   },

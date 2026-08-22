@@ -16,6 +16,7 @@ import scenariosRouter from "./routes/scenarios.routes.js";
 import simulationRouter from "./routes/simulation.routes.js";
 import resourcesRouter from "./routes/resources.routes.js";
 import agentsRouter from "./routes/agents.routes.js";
+import { configRouter } from "./routes/config.routes.js";
 
 import { configRouter } from "./routes/config.routes.js";
 

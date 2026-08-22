@@ -1,5 +1,6 @@
 import { calculateImpact } from "../impact-engine/impact-engine.service.js";
 import { getRecoveredRoute } from "../route-graph/route-graph.service.js";
+import { getConfig } from "../config/config.service.js";
 import {
   runInternationalScenario,
   runLocalScenario,
@@ -41,7 +42,7 @@ export async function runSimulation(request: SimulationRunRequest): Promise<Simu
       extraDelayMinutes: routeRecovery.extraDelayMinutes,
       recoveryStatus: routeRecovery.recoveryStatus,
     },
-  });
+  }, await getConfig());
 
   return {
     simulationId: `sim_${Date.now()}`,
@@ -59,7 +60,8 @@ export async function runSimulation(request: SimulationRunRequest): Promise<Simu
 
 async function runScenarioForSimulation(scenarioId: string): Promise<ScenarioResult> {
   try {
-    if (await getScenarioById(scenarioId)) return await runLocalScenario(scenarioId);
+    const scenario = await getScenarioById(scenarioId);
+    if (scenario) return await runLocalScenario(scenarioId);
     return await runInternationalScenario(scenarioId);
   } catch (error) {
     if (error instanceof ScenarioNotFoundError) {

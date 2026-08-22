@@ -53,7 +53,7 @@ export function TopTradeCorridors() {
           </div>
         ))}
       </div>
-      <button className="btn btn-secondary mt-4 w-full justify-center">
+      <button type="button" disabled title="Pending integration" className="btn btn-secondary mt-4 w-full justify-center opacity-60 cursor-not-allowed">
         View All Corridors
         <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
       </button>

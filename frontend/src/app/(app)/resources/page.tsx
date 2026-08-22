@@ -225,7 +225,7 @@ function SearchAndFilters() {
         placeholder="Search resources, documents, datasets..."
         ariaLabel="Search resources"
       />
-      <button className="btn btn-outline h-11 justify-start px-4">
+      <button type="button" disabled title="Pending integration" className="btn btn-outline h-11 justify-start px-4 opacity-60 cursor-not-allowed">
         <Filter className="h-4 w-4" />
         Filters
       </button>
@@ -276,7 +276,7 @@ function QuickAccess() {
           const Icon = item.icon;
 
           return (
-            <button key={item.title} className="grid w-full grid-cols-[36px_1fr_16px] items-center gap-3 py-3 text-left">
+            <button key={item.title} type="button" disabled title="Pending integration" className="grid w-full grid-cols-[36px_1fr_16px] items-center gap-3 py-3 text-left opacity-60 cursor-not-allowed">
               <span className={clsx("flex h-8 w-8 items-center justify-center rounded-md border", toneClasses[item.tone])}>
                 <Icon className="h-4 w-4" />
               </span>
@@ -355,13 +355,13 @@ function FeaturedResources() {
               <span className="text-muted-foreground">{resource.updated}</span>
               <span className="text-muted-foreground">{resource.size}</span>
               <span className="flex items-center gap-3 text-muted-foreground">
-                <Tooltip label="Download resource">
-                  <button className="focus-ring rounded-md p-1 hover:bg-secondary" aria-label={`Download ${resource.name}`}>
+                <Tooltip label="Pending integration">
+                  <button type="button" disabled className="focus-ring rounded-md p-1 opacity-60 cursor-not-allowed" aria-label={`Download ${resource.name}`}>
                     <Download className="h-4 w-4" />
                   </button>
                 </Tooltip>
-                <Tooltip label="More actions">
-                  <button className="focus-ring rounded-md p-1 hover:bg-secondary" aria-label={`More actions for ${resource.name}`}>
+                <Tooltip label="Pending integration">
+                  <button type="button" disabled className="focus-ring rounded-md p-1 opacity-60 cursor-not-allowed" aria-label={`More actions for ${resource.name}`}>
                     <MoreVertical className="h-4 w-4" />
                   </button>
                 </Tooltip>
@@ -475,7 +475,7 @@ function Panel({
 
 function PanelLink({ label }: { label: string }) {
   return (
-    <button className="mt-3 flex h-8 w-full items-center justify-center gap-2 rounded-md border border-border bg-background/60 text-xs font-medium text-primary hover:bg-secondary">
+    <button type="button" disabled title="Pending integration" className="mt-3 flex h-8 w-full items-center justify-center gap-2 rounded-md border border-border bg-background/60 text-xs font-medium text-muted-foreground opacity-60 cursor-not-allowed">
       {label}
       <ArrowRight className="h-3.5 w-3.5" />
     </button>

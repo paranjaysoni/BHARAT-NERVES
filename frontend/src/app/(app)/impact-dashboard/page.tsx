@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ArrowDown,
   ArrowRight,
@@ -17,6 +19,7 @@ import { AegisMap, type HeatZone } from "@/components/maps";
 import { PageHeader } from "@/components/shared";
 import { impactDashboardPage } from "@/data";
 import { LiveImpactKpis } from "@/components/dashboard/LiveImpactKpis";
+import { useSimulationStore } from "@/hooks/use-simulation-store";
 
 const kpis = [
   {
@@ -153,6 +156,9 @@ const impactHeatZones: HeatZone[] = [
 ];
 
 export default function ImpactDashboardPage() {
+  const store = useSimulationStore();
+  const hasLiveResult = store.phase === "done" && store.result;
+
   return (
     <div className="space-y-3.5">
       <PageHeader
@@ -163,7 +169,7 @@ export default function ImpactDashboardPage() {
       {/* Live KPIs from simulation result — replaces static strip when active */}
       <LiveImpactKpis />
 
-      <KpiStrip />
+      {!hasLiveResult && <KpiStrip />}
 
       <section className="grid gap-3 lg:grid-cols-2 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1.05fr)_minmax(0,0.9fr)]">
         <ImpactHeatmap />
@@ -218,7 +224,12 @@ function KpiStrip() {
       })}
 
       <article className="min-h-[104px] border-t border-border/70 px-4 py-3 lg:border-l xl:border-t-0">
-        <button className="ml-auto flex h-8 items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-3 text-xs font-medium text-primary">
+        <button
+          type="button"
+          disabled
+          title="Export feature pending integration"
+          className="ml-auto flex h-8 items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-3 text-xs font-medium text-muted-foreground opacity-60 cursor-not-allowed"
+        >
           <Download className="h-3.5 w-3.5" />
           Export Report
         </button>
@@ -509,7 +520,12 @@ function Panel({
 
 function PanelLink({ label }: { label: string }) {
   return (
-    <button className="mt-3 flex h-8 w-full items-center justify-center gap-2 rounded-md border border-border bg-background/60 text-xs font-medium text-primary hover:bg-secondary">
+    <button
+      type="button"
+      disabled
+      title="Pending integration"
+      className="mt-3 flex h-8 w-full items-center justify-center gap-2 rounded-md border border-border bg-background/60 text-xs font-medium text-muted-foreground opacity-60 cursor-not-allowed"
+    >
       {label}
       <ArrowRight className="h-3.5 w-3.5" />
     </button>
