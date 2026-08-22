@@ -15,31 +15,33 @@ export class ScenarioNotFoundError extends Error {
   }
 }
 
-export function runLocalScenario(
+export async function runLocalScenario(
   scenarioId: string,
   request: ScenarioRunRequest = {}
-): ScenarioResult {
-  const scenario = getScenarioById(scenarioId);
+): Promise<ScenarioResult> {
+  const scenario = await getScenarioById(scenarioId);
   if (!scenario) throw new ScenarioNotFoundError(scenarioId);
   return runScenario(scenario, "LOCAL", request);
 }
 
-export function runInternationalScenario(
+export async function runInternationalScenario(
   scenarioId: string,
   request: ScenarioRunRequest = {}
-): ScenarioResult {
-  const scenario = getInternationalScenarioById(scenarioId);
+): Promise<ScenarioResult> {
+  const scenario = await getInternationalScenarioById(scenarioId);
   if (!scenario) throw new ScenarioNotFoundError(scenarioId);
   return runScenario(scenario, "INTERNATIONAL", request);
 }
 
-function runScenario(
+async function runScenario(
   scenario: Scenario | InternationalScenario,
   scope: "LOCAL" | "INTERNATIONAL",
   request: ScenarioRunRequest
-): ScenarioResult {
-  const nodesById = new Map(getAllNodes().map((node) => [node.id, node]));
-  const routesById = new Map(getAllRoutes().map((route) => [route.id, route]));
+): Promise<ScenarioResult> {
+  const allNodes = await getAllNodes();
+  const allRoutes = await getAllRoutes();
+  const nodesById = new Map(allNodes.map((node) => [node.id, node]));
+  const routesById = new Map(allRoutes.map((route) => [route.id, route]));
 
   const affectedNodes = scenario.affectedNodeIds
     .map((nodeId) => nodesById.get(nodeId))

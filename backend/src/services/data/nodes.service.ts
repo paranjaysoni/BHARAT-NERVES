@@ -1,20 +1,19 @@
-import type { InfrastructureNode } from "../../types/node.types.js";
+import { PrismaClient } from "@prisma/client";
+import type { InfrastructureNode, NodeStatus } from "../../types/node.types.js";
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const nodesData = require("../../data/nodes.json") as InfrastructureNode[];
+const prisma = new PrismaClient();
 
-export function getAllNodes(): InfrastructureNode[] {
-  return nodesData;
+export async function getAllNodes(): Promise<InfrastructureNode[]> {
+  const nodes = await prisma.node.findMany();
+  return nodes as unknown as InfrastructureNode[];
 }
 
-export function getNodeById(id: string): InfrastructureNode | null {
-  return nodesData.find((n) => n.id === id) ?? null;
+export async function getNodeById(id: string): Promise<InfrastructureNode | null> {
+  const node = await prisma.node.findUnique({ where: { id } });
+  return node as unknown as InfrastructureNode | null;
 }
 
-export function getNodesByType(type: InfrastructureNode["type"]): InfrastructureNode[] {
-  return nodesData.filter((n) => n.type === type);
-}
-
-export function getNodesByStatus(status: InfrastructureNode["status"]): InfrastructureNode[] {
-  return nodesData.filter((n) => n.status === status);
+export async function getNodesByStatus(status: NodeStatus): Promise<InfrastructureNode[]> {
+  const nodes = await prisma.node.findMany({ where: { status } });
+  return nodes as unknown as InfrastructureNode[];
 }

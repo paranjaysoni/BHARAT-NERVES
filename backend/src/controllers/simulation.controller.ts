@@ -4,12 +4,12 @@ import type { SimulationRunRequest } from "../types/simulation.types.js";
 import { SimulationValidationError } from "../types/simulation.types.js";
 import { sendError, sendSuccess } from "../utils/response.js";
 
-export function runSimulationController(
+export async function runSimulationController(
   req: Request<unknown, unknown, SimulationRunRequest>,
   res: Response
-): void {
+): Promise<void> {
   try {
-    const result = runUnifiedSimulation(req.body);
+    const result = await runUnifiedSimulation(req.body);
     sendSuccess(res, result, "Simulation completed");
   } catch (error) {
     if (error instanceof SimulationValidationError) {

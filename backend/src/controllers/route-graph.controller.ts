@@ -11,31 +11,31 @@ import {
 } from "../types/route-graph.types.js";
 import { sendError, sendSuccess } from "../utils/response.js";
 
-export function getRouteGraphHealthController(_req: Request, res: Response): void {
+export async function getRouteGraphHealthController(_req: Request, res: Response): Promise<void> {
   try {
-    sendSuccess(res, getRouteGraphHealth(), "Route graph health");
+    sendSuccess(res, await getRouteGraphHealth(), "Route graph health");
   } catch {
     sendError(res, "ROUTE_GRAPH_ERROR", "Route graph health check failed", 500);
   }
 }
 
-export function getShortestPathController(
+export async function getShortestPathController(
   req: Request<unknown, unknown, ShortestPathRequest>,
   res: Response
-): void {
+): Promise<void> {
   try {
-    sendSuccess(res, getShortestPath(req.body), "Shortest path result");
+    sendSuccess(res, await getShortestPath(req.body), "Shortest path result");
   } catch (error) {
     handleRouteGraphError(error, res);
   }
 }
 
-export function recoverRouteController(
+export async function recoverRouteController(
   req: Request<unknown, unknown, RouteRecoveryRequest>,
   res: Response
-): void {
+): Promise<void> {
   try {
-    sendSuccess(res, getRecoveredRoute(req.body), "Route recovery result");
+    sendSuccess(res, await getRecoveredRoute(req.body), "Route recovery result");
   } catch (error) {
     handleRouteGraphError(error, res);
   }

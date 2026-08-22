@@ -15,9 +15,9 @@ import {
   buildRecommendationMatrix,
 } from "./recommendation-builder.service.js";
 
-export function createAIParliamentSession(
+export async function createAIParliamentSession(
   request: AIParliamentSessionRequest
-): AIParliamentSession {
+): Promise<AIParliamentSession> {
   validateRequest(request);
 
   const agents = getAllAgents();
@@ -30,7 +30,7 @@ export function createAIParliamentSession(
   }
 
   try {
-    const simulation = runUnifiedSimulation({ scenarioId: request.scenarioId });
+    const simulation = await runUnifiedSimulation({ scenarioId: request.scenarioId });
     const deliberations = buildAgentDeliberations(agents, simulation);
     const consensus = calculateConsensus(deliberations, simulation.scenario.severity);
     const generatedAt = new Date();
