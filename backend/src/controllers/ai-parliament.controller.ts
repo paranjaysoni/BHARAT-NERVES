@@ -6,12 +6,12 @@ import {
 import type { AIParliamentSessionRequest } from "../types/ai-parliament.types.js";
 import { sendError, sendSuccess } from "../utils/response.js";
 
-export function createAIParliamentSessionController(
+export async function createAIParliamentSessionController(
   req: Request<unknown, unknown, AIParliamentSessionRequest>,
   res: Response
-): void {
+): Promise<void> {
   try {
-    const result = createAIParliamentSession(req.body);
+    const result = await createAIParliamentSession(req.body);
     sendSuccess(res, result, "AI Parliament session completed");
   } catch (error) {
     if (isAIParliamentValidationError(error)) {

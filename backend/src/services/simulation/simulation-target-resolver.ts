@@ -5,8 +5,8 @@ import { SimulationValidationError } from "../../types/simulation.types.js";
 const defaultSourceNodeId = "paradip_port";
 const defaultDestinationNodeId = "aiims_bhubaneswar";
 
-export function resolveSimulationTarget(request: SimulationRunRequest): SimulationTarget {
-  if (request.sourceNodeId && !getNodeById(request.sourceNodeId)) {
+export async function resolveSimulationTarget(request: SimulationRunRequest): Promise<SimulationTarget> {
+  if (request.sourceNodeId && !(await getNodeById(request.sourceNodeId))) {
     throw new SimulationValidationError(
       "INVALID_SIMULATION_SOURCE",
       "Simulation source node does not exist",
@@ -14,7 +14,7 @@ export function resolveSimulationTarget(request: SimulationRunRequest): Simulati
     );
   }
 
-  if (request.destinationNodeId && !getNodeById(request.destinationNodeId)) {
+  if (request.destinationNodeId && !(await getNodeById(request.destinationNodeId))) {
     throw new SimulationValidationError(
       "INVALID_SIMULATION_DESTINATION",
       "Simulation destination node does not exist",
@@ -29,14 +29,14 @@ export function resolveSimulationTarget(request: SimulationRunRequest): Simulati
     };
   }
 
-  if (getNodeById(defaultSourceNodeId) && getNodeById(defaultDestinationNodeId)) {
+  if ((await getNodeById(defaultSourceNodeId)) && (await getNodeById(defaultDestinationNodeId))) {
     return {
       sourceNodeId: request.sourceNodeId ?? defaultSourceNodeId,
       destinationNodeId: request.destinationNodeId ?? defaultDestinationNodeId,
     };
   }
 
-  const nodes = getAllNodes();
+  const nodes = await getAllNodes();
   const source = nodes.find((node) => node.type === "PORT") ?? nodes[0];
   const destination = nodes.find((node) => node.type === "HOSPITAL") ?? nodes[1] ?? source;
 

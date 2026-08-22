@@ -1,26 +1,57 @@
+import { PrismaClient } from "@prisma/client";
 import type { Scenario, InternationalScenario } from "../../types/scenario.types.js";
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const scenariosData = require("../../data/scenarios.json") as Scenario[];
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const internationalData = require("../../data/international-scenarios.json") as InternationalScenario[];
+const prisma = new PrismaClient();
 
-export function getAllScenarios(): Scenario[] {
-  return scenariosData;
+function mapPrismaScenarioToType(prismaScenario: any): any {
+  if (!prismaScenario) return null;
+  return {
+    ...prismaScenario,
+    expectedImpacts: {
+      delayHours: prismaScenario.expectedDelayHours,
+      economicLossCr: prismaScenario.expectedEconomicLossCr,
+      carbonIncreasePercent: prismaScenario.expectedCarbonIncrease,
+      populationAffected: prismaScenario.expectedPopAffected,
+      resilienceBefore: prismaScenario.expectedResilienceBefore,
+      resilienceAfter: prismaScenario.expectedResilienceAfter,
+      recoveryDays: prismaScenario.expectedRecoveryDays,
+    },
+  };
 }
 
-export function getScenarioById(id: string): Scenario | null {
-  return scenariosData.find((s) => s.id === id) ?? null;
+export async function getAllScenarios(): Promise<Scenario[]> {
+  const scenarios = await prisma.scenario.findMany({
+    where: { globalRelevance: null },
+  });
+  return scenarios.map(mapPrismaScenarioToType);
 }
 
-export function getAllInternationalScenarios(): InternationalScenario[] {
-  return internationalData;
+export async function getScenarioById(id: string): Promise<Scenario | null> {
+  const scenario = await prisma.scenario.findUnique({
+    where: { id },
+  });
+  if (!scenario || scenario.globalRelevance !== null) return null;
+  return mapPrismaScenarioToType(scenario);
 }
 
-export function getInternationalScenarioById(id: string): InternationalScenario | null {
-  return internationalData.find((s) => s.id === id) ?? null;
+export async function getAllInternationalScenarios(): Promise<InternationalScenario[]> {
+  const scenarios = await prisma.scenario.findMany({
+    where: { globalRelevance: { not: null } },
+  });
+  return scenarios.map(mapPrismaScenarioToType);
 }
 
-export function getScenariosBySeverity(severity: Scenario["severity"]): Scenario[] {
-  return scenariosData.filter((s) => s.severity === severity);
+export async function getInternationalScenarioById(id: string): Promise<InternationalScenario | null> {
+  const scenario = await prisma.scenario.findUnique({
+    where: { id },
+  });
+  if (!scenario || scenario.globalRelevance === null) return null;
+  return mapPrismaScenarioToType(scenario);
+}
+
+export async function getScenariosBySeverity(severity: Scenario["severity"]): Promise<Scenario[]> {
+  const scenarios = await prisma.scenario.findMany({
+    where: { severity, globalRelevance: null },
+  });
+  return scenarios.map(mapPrismaScenarioToType);
 }
