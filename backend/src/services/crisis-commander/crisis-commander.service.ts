@@ -18,14 +18,14 @@ import { buildResponseActions } from "./response-actions.builder.js";
 import { buildRiskAssessment } from "./risk-assessment.builder.js";
 import { buildActiveIncidents, buildSituationReport } from "./sitrep.builder.js";
 
-export function createCrisisCommanderPlan(
+export async function createCrisisCommanderPlan(
   request: CrisisCommanderPlanRequest
-): CrisisCommanderPlan {
+): Promise<CrisisCommanderPlan> {
   validateRequest(request);
 
   try {
-    const simulation = runUnifiedSimulation({ scenarioId: request.scenarioId });
-    const parliament = createAIParliamentSession({
+    const simulation = await runUnifiedSimulation({ scenarioId: request.scenarioId });
+    const parliament = await createAIParliamentSession({
       scenarioId: request.scenarioId,
       simulationId: request.simulationId,
       includeFullMatrix: false,

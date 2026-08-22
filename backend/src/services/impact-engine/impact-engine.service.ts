@@ -12,6 +12,7 @@ import type {
 import { ImpactValidationError } from "../../types/impact-engine.types.js";
 import type { InternationalScenario, Scenario } from "../../types/scenario.types.js";
 import type { RecoveryStatus } from "../../types/route-graph.types.js";
+import type { RiskConfigInput } from "../config/config.service.js";
 import { calculateCarbonImpact } from "./carbon-impact.service.js";
 import { calculateEconomicImpact } from "./economic-impact.service.js";
 import {
@@ -34,8 +35,8 @@ const validRecoveryStatuses = new Set<RecoveryStatus>([
   "INVALID_NODES",
 ]);
 
-export function calculateImpact(request: ImpactCalculationRequest): ImpactCalculationResult {
-  const scenario = findScenario(request.scenarioId);
+export async function calculateImpact(request: ImpactCalculationRequest, config: RiskConfigInput): Promise<ImpactCalculationResult> {
+  const scenario = await findScenario(request.scenarioId);
   if (!scenario) {
     throw new ImpactValidationError(
       "IMPACT_SCENARIO_NOT_FOUND",
@@ -95,7 +96,7 @@ export function calculateImpact(request: ImpactCalculationRequest): ImpactCalcul
     resources,
     resilience,
   };
-  const score = buildImpactScore(baseResult);
+  const score = buildImpactScore(baseResult, config);
   const summary = buildExecutiveImpactSummary({
     economic,
     infrastructure,
@@ -111,9 +112,11 @@ export function calculateImpact(request: ImpactCalculationRequest): ImpactCalcul
   };
 }
 
-function findScenario(id: string): Scenario | InternationalScenario | null {
+async function findScenario(id: string): Promise<Scenario | InternationalScenario | null> {
   const resolvedId = scenarioAliases[id] ?? id;
-  return getScenarioById(resolvedId) ?? getInternationalScenarioById(resolvedId);
+  const local = await getScenarioById(resolvedId);
+  if (local) return local;
+  return await getInternationalScenarioById(resolvedId);
 }
 
 function validateRecoveryRoute(recoveryRoute?: ImpactRecoveryRouteInput): void {

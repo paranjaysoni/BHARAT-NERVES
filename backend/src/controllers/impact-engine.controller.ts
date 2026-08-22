@@ -5,13 +5,15 @@ import {
 } from "../services/impact-engine/impact-engine.service.js";
 import type { ImpactCalculationRequest } from "../types/impact-engine.types.js";
 import { sendError, sendSuccess } from "../utils/response.js";
+import { getConfig } from "../services/config/config.service.js";
 
-export function calculateImpactController(
+export async function calculateImpactController(
   req: Request<unknown, unknown, ImpactCalculationRequest>,
   res: Response
-): void {
+): Promise<void> {
   try {
-    const result = calculateImpact(req.body);
+    const config = await getConfig();
+    const result = calculateImpact(req.body, config);
     sendSuccess(res, result, "Impact calculated");
   } catch (error) {
     if (isImpactValidationError(error)) {

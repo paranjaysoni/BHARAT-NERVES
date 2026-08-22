@@ -16,6 +16,7 @@ import scenariosRouter from "./routes/scenarios.routes.js";
 import simulationRouter from "./routes/simulation.routes.js";
 import resourcesRouter from "./routes/resources.routes.js";
 import agentsRouter from "./routes/agents.routes.js";
+import { configRouter } from "./routes/config.routes.js";
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.use("/api/scenarios", scenariosRouter);
 app.use("/api/simulations", simulationRouter);
 app.use("/api/resources", resourcesRouter);
 app.use("/api/agents", agentsRouter);
+app.use("/api/config", configRouter);
 
 // ── Error handling ───────────────────────────────────────────────────────────
 app.use(notFound);

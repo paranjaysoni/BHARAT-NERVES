@@ -5,6 +5,7 @@ import type {
   InfrastructureImpact,
 } from "../../types/impact-engine.types.js";
 import type { Scenario } from "../../types/scenario.types.js";
+import type { RiskConfigInput } from "../config/config.service.js";
 
 export function buildExecutiveImpactSummary({
   economic,
@@ -24,7 +25,10 @@ export function buildExecutiveImpactSummary({
   return `${scenario.name} creates ${riskLevel.toLowerCase()} logistics and population risk across ${infrastructure.affectedNodes} nodes and ${infrastructure.affectedRoutes} routes${savingsText}.`;
 }
 
-export function buildImpactScore(result: Omit<ImpactCalculationResult, "score" | "summary" | "generatedAt">): ImpactCalculationResult["score"] {
+export function buildImpactScore(
+  result: Omit<ImpactCalculationResult, "score" | "summary" | "generatedAt">,
+  config: RiskConfigInput
+): ImpactCalculationResult["score"] {
   const economicSeverity = normalize(result.economic.estimatedLossCr, 1_000);
   const populationSeverity = normalize(result.population.affected, 2_500_000);
   const infrastructureSeverity = normalize(
@@ -45,7 +49,7 @@ export function buildImpactScore(result: Omit<ImpactCalculationResult, "score" |
 
   return {
     impactScore,
-    riskLevel: getScoreRiskLevel(impactScore),
+    riskLevel: getScoreRiskLevel(impactScore, config),
     confidence: 0.86,
   };
 }
@@ -70,10 +74,10 @@ function normalize(value: number, max: number): number {
   return Math.min(100, (value / max) * 100);
 }
 
-function getScoreRiskLevel(score: number): ImpactRiskLevel {
-  if (score >= 85) return "CRITICAL";
-  if (score >= 60) return "HIGH";
-  if (score >= 35) return "MEDIUM";
+function getScoreRiskLevel(score: number, config: RiskConfigInput): ImpactRiskLevel {
+  if (score >= config.critical) return "CRITICAL";
+  if (score >= config.high) return "HIGH";
+  if (score >= config.medium) return "MEDIUM";
   return "LOW";
 }
 

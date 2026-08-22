@@ -6,12 +6,12 @@ import {
 import type { CrisisCommanderPlanRequest } from "../types/crisis-commander.types.js";
 import { sendError, sendSuccess } from "../utils/response.js";
 
-export function createCrisisCommanderPlanController(
+export async function createCrisisCommanderPlanController(
   req: Request<unknown, unknown, CrisisCommanderPlanRequest>,
   res: Response
-): void {
+): Promise<void> {
   try {
-    const result = createCrisisCommanderPlan(req.body);
+    const result = await createCrisisCommanderPlan(req.body);
     sendSuccess(res, result, "Crisis commander plan ready");
   } catch (error) {
     if (isCrisisCommanderValidationError(error)) {
