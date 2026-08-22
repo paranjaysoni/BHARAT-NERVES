@@ -217,6 +217,7 @@ export function ScenarioSimulatorDashboard() {
         <ScenarioSelectionRow
           scenarios={scenarioOptions}
           selectedScenarioId={selectedScenario.id}
+          isRunning={isRunning}
           onSelectScenario={(id) => {
             if (id === "scenario-custom") return;
             setSelectedScenarioId(id);
@@ -253,10 +254,12 @@ export function ScenarioSimulatorDashboard() {
 function ScenarioSelectionRow({
   scenarios: scenarioOptions,
   selectedScenarioId,
+  isRunning,
   onSelectScenario
 }: {
   scenarios: ScenarioOption[];
   selectedScenarioId: string;
+  isRunning?: boolean;
   onSelectScenario: (id: string) => void;
 }) {
   return (
@@ -272,10 +275,14 @@ function ScenarioSelectionRow({
             <button
               key={scenario.id}
               type="button"
-              onClick={() => onSelectScenario(scenario.id)}
+              onClick={() => {
+                if (!isRunning) onSelectScenario(scenario.id);
+              }}
+              disabled={isRunning}
               className={clsx(
                 "focus-ring group flex min-h-32 flex-col items-start rounded-md border bg-background/70 p-3 text-left transition-colors hover:border-border-strong hover:bg-secondary/40",
-                isSelected && "border-primary bg-primary/10 shadow-[0_0_0_1px_hsl(var(--primary)/0.35)]"
+                isSelected && "border-primary bg-primary/10 shadow-[0_0_0_1px_hsl(var(--primary)/0.35)]",
+                isRunning && "opacity-60 cursor-not-allowed pointer-events-none"
               )}
             >
               <span className="flex h-9 w-9 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">

@@ -1,3 +1,5 @@
+"use client";
+
 import { CrisisCommanderClient } from "@/components/commander/CrisisCommanderClient";
 import { CrisisMapPanel } from "@/components/commander/CrisisMapPanel";
 import {
@@ -20,6 +22,7 @@ import {
 import clsx from "clsx";
 import { PageHeader } from "@/components/shared";
 import { crisisCommanderPage } from "@/data";
+import { useSimulationStore } from "@/hooks/use-simulation-store";
 
 const kpis = [
   {
@@ -191,6 +194,9 @@ const toneClasses = {
 } as const;
 
 export default function CrisisCommanderPage() {
+  const store = useSimulationStore();
+  const showStaticFallback = store.phase === "idle";
+
   return (
     <div className="space-y-3.5">
       <PageHeader
@@ -201,20 +207,24 @@ export default function CrisisCommanderPage() {
       {/* Live backend-driven plan — appears after simulation runs */}
       <CrisisCommanderClient />
 
-      <KpiStrip />
+      {showStaticFallback && (
+        <>
+          <KpiStrip />
 
-      <section className="grid gap-3 lg:grid-cols-2 xl:grid-cols-[minmax(0,1.9fr)_minmax(0,0.95fr)_minmax(0,0.95fr)]">
-        <CrisisMap />
-        <ActiveIncidentsPanel />
-        <ResponseActionsPanel />
-      </section>
+          <section className="grid gap-3 lg:grid-cols-2 xl:grid-cols-[minmax(0,1.9fr)_minmax(0,0.95fr)_minmax(0,0.95fr)]">
+            <CrisisMap />
+            <ActiveIncidentsPanel />
+            <ResponseActionsPanel />
+          </section>
 
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <SituationOverviewPanel />
-        <ResourceDeploymentPanel />
-        <ImpactSummaryPanel />
-        <CommunicationsLogPanel />
-      </section>
+          <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <SituationOverviewPanel />
+            <ResourceDeploymentPanel />
+            <ImpactSummaryPanel />
+            <CommunicationsLogPanel />
+          </section>
+        </>
+      )}
     </div>
   );
 }
@@ -526,7 +536,12 @@ function CommandPanel({
 
 function PanelLink({ label }: { label: string }) {
   return (
-    <button className="mt-3 flex h-8 w-full items-center justify-center gap-2 rounded-md border border-border bg-background/60 text-xs font-medium text-primary hover:bg-secondary">
+    <button
+      type="button"
+      disabled
+      title="Pending integration"
+      className="mt-3 flex h-8 w-full items-center justify-center gap-2 rounded-md border border-border bg-background/60 text-xs font-medium text-muted-foreground opacity-60 cursor-not-allowed"
+    >
       {label}
       <ArrowRight className="h-3.5 w-3.5" />
     </button>
