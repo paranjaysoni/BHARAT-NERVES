@@ -1,7 +1,13 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { type ReactNode, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Activity,
+  AlertCircle,
+  ArrowRight,
   Bell,
+  CheckCircle2,
   ChevronDown,
   ChevronRight,
   Clock3,
@@ -11,6 +17,7 @@ import {
   Gauge,
   Globe2,
   KeyRound,
+  Loader2,
   LockKeyhole,
   Mail,
   MapPin,
@@ -18,12 +25,11 @@ import {
   PenLine,
   RadioTower,
   ShieldCheck,
-  SlidersHorizontal,
   Trash2,
   Wrench
 } from "lucide-react";
 import clsx from "clsx";
-import { PageHeader } from "@/components/shared";
+import { PageHeader, Tooltip } from "@/components/shared";
 
 const profileFields = [
   ["Full Name", "Amit Sharma"],
@@ -66,7 +72,6 @@ const privacyItems = [
 ] as const;
 
 const systemItems = [
-  ["Alert Thresholds", "Configure alert thresholds", SlidersHorizontal],
   ["Geographic Settings", "Manage map and location preferences", MapPin],
   ["Integration Settings", "Manage third-party integrations", RadioTower],
   ["Performance Settings", "Configure system performance", Gauge],
@@ -91,6 +96,7 @@ export default function SettingsPage() {
       />
 
       <section className="grid gap-3.5 md:grid-cols-2 xl:grid-cols-3">
+        <RiskThresholdConfiguration />
         <ProfileSettings />
         <NotificationPreferences />
         <SecuritySettings />
@@ -116,9 +122,15 @@ function ProfileSettings() {
             <div className="flex h-28 w-28 items-center justify-center rounded-full border border-border bg-secondary/45 text-4xl font-medium text-muted-foreground shadow-inner shadow-slate-950/20">
               AS
             </div>
-            <button className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full border border-primary bg-primary/20 text-primary">
-              <PenLine className="h-4 w-4" />
-            </button>
+            <Tooltip label="Edit Avatar">
+              <button
+                type="button"
+                aria-label="Edit Avatar"
+                className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full border border-primary bg-primary/20 text-primary hover:bg-primary/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                <PenLine className="h-4 w-4" />
+              </button>
+            </Tooltip>
           </div>
         </div>
 
@@ -126,11 +138,23 @@ function ProfileSettings() {
           {profileFields.map(([label, value, mode]) => (
             <div key={label} className="rounded-md border border-border bg-background/55 px-3 py-2">
               <div className="flex items-center justify-between gap-3">
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <p className="text-[0.68rem] leading-4 text-muted-foreground">{label}</p>
-                  <p className="truncate text-sm font-medium leading-5 text-foreground">{value}</p>
+                  {mode === "select" ? (
+                    <select
+                      defaultValue={value}
+                      aria-label={label}
+                      className="w-full truncate text-sm font-medium leading-5 text-foreground bg-transparent appearance-none outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm cursor-pointer"
+                    >
+                      <option value={value}>{value}</option>
+                      <option value="UTC">UTC</option>
+                      <option value="Europe/London (GMT)">Europe/London (GMT)</option>
+                    </select>
+                  ) : (
+                    <p className="truncate text-sm font-medium leading-5 text-foreground">{value}</p>
+                  )}
                 </div>
-                {mode === "select" ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : null}
+                {mode === "select" ? <ChevronDown className="pointer-events-none h-4 w-4 shrink-0 text-muted-foreground" /> : null}
               </div>
             </div>
           ))}
@@ -142,13 +166,17 @@ function ProfileSettings() {
 }
 
 function NotificationPreferences() {
+  const [prefs, setPrefs] = useState<Record<string, boolean>>(
+    Object.fromEntries(notifications.map(n => [n[0], n[2] as boolean]))
+  );
+
   return (
     <SettingsCard
       title="NOTIFICATION PREFERENCES"
       description="Configure how and when you receive notifications"
     >
       <div className="space-y-2">
-        {notifications.map(([title, description, enabled, tone]) => (
+        {notifications.map(([title, description, , tone]) => (
           <div
             key={title}
             className="grid grid-cols-[36px_1fr_auto] items-center gap-3 rounded-md border border-border bg-background/55 p-3"
@@ -160,7 +188,11 @@ function NotificationPreferences() {
               <span className="block truncate text-sm font-medium text-foreground">{title}</span>
               <span className="block truncate text-xs text-muted-foreground">{description}</span>
             </span>
-            <Toggle enabled={enabled} />
+            <Toggle
+              enabled={prefs[title] || false}
+              onToggle={() => setPrefs(prev => ({ ...prev, [title]: !prev[title] }))}
+              aria-label={`Toggle ${title}`}
+            />
           </div>
         ))}
       </div>
@@ -210,10 +242,18 @@ function PlatformPreferences() {
               <span className="block truncate text-sm font-medium text-foreground">{label}</span>
               <span className="block truncate text-xs text-muted-foreground">{description}</span>
             </span>
-            <button className="flex h-8 items-center gap-2 rounded-md border border-border bg-card px-3 text-xs text-foreground">
-              {value}
-              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
-            </button>
+            <div className="relative">
+              <select
+                defaultValue={value}
+                aria-label={label}
+                className="flex h-8 appearance-none items-center gap-2 rounded-md border border-border bg-card pl-3 pr-8 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
+              >
+                <option value={value}>{value}</option>
+                <option value="Option 2">Option 2</option>
+                <option value="Option 3">Option 3</option>
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            </div>
           </div>
         ))}
       </div>
@@ -283,10 +323,14 @@ function AboutProjectAegis() {
       </div>
       <div className="flex flex-wrap gap-x-9 gap-y-3">
         {aboutLinks.map(([label, Icon]) => (
-          <button key={label} className="flex items-center gap-2 text-sm font-medium text-primary">
+          <span
+            key={label}
+            className="flex items-center gap-2 text-sm font-medium text-muted-foreground opacity-70 cursor-not-allowed"
+            title="Page unavailable in MVP"
+          >
             <Icon className="h-4 w-4" />
             {label}
-          </button>
+          </span>
         ))}
       </div>
     </section>
@@ -353,11 +397,16 @@ function ActionRow({
   );
 }
 
-function Toggle({ enabled }: { enabled: boolean }) {
+function Toggle({ enabled, onToggle, "aria-label": ariaLabel }: { enabled: boolean; onToggle: () => void; "aria-label"?: string }) {
   return (
-    <span
+    <button
+      type="button"
+      role="switch"
+      aria-checked={enabled}
+      aria-label={ariaLabel}
+      onClick={onToggle}
       className={clsx(
-        "relative h-5 w-10 rounded-full border transition-colors",
+        "relative h-5 w-10 shrink-0 rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
         enabled ? "border-primary bg-primary" : "border-border-strong bg-secondary"
       )}
     >
@@ -367,15 +416,23 @@ function Toggle({ enabled }: { enabled: boolean }) {
           enabled ? "translate-x-[20px]" : "translate-x-0.5"
         )}
       />
-    </span>
+    </button>
   );
 }
 
 function CardButton({ label }: { label: string }) {
   return (
-    <button className="mt-4 flex h-9 w-full items-center justify-center rounded-md border border-border bg-background/60 text-sm font-medium text-primary hover:bg-secondary">
-      {label}
-    </button>
+    <div className="mt-4">
+      <Tooltip label="Backend integration pending">
+        <button
+          type="button"
+          disabled
+          className="flex h-9 w-full items-center justify-center rounded-md border border-border bg-background/60 text-sm font-medium text-muted-foreground opacity-60 cursor-not-allowed"
+        >
+          {label}
+        </button>
+      </Tooltip>
+    </div>
   );
 }
 
@@ -393,3 +450,143 @@ const valueToneClasses = {
   info: "text-primary",
   danger: "text-danger"
 } as const;
+
+function RiskThresholdConfiguration() {
+  const router = useRouter();
+  const [critical, setCritical] = useState<number>(85);
+  const [high, setHigh] = useState<number>(60);
+  const [medium, setMedium] = useState<number>(35);
+  
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    async function loadConfig() {
+      try {
+        const res = await fetch("/api/config");
+        if (!res.ok) throw new Error("Failed to load config");
+        const data = await res.json();
+        setCritical(data.critical);
+        setHigh(data.high);
+        setMedium(data.medium);
+      } catch (err) {
+        console.error("Config load error:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadConfig();
+  }, []);
+
+  // Validation
+  const isInvalid = high >= critical || medium >= high;
+  let validationMessage = "";
+  if (high >= critical) validationMessage = "High threshold must be less than Critical.";
+  else if (medium >= high) validationMessage = "Medium threshold must be less than High.";
+
+  async function handleSave() {
+    if (isInvalid) return;
+    setIsSaving(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      const res = await fetch("/api/config", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ critical, high, medium }),
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || "Failed to update configuration");
+      }
+      setSuccess(true);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  return (
+    <SettingsCard
+      title="RISK THRESHOLDS"
+      description="Configure alert threshold levels for simulation"
+    >
+      {isLoading ? (
+        <div className="flex h-32 items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <div className="grid grid-cols-3 gap-3">
+            <ThresholdInput label="Critical" value={critical} onChange={setCritical} tone="danger" />
+            <ThresholdInput label="High" value={high} onChange={setHigh} tone="warning" />
+            <ThresholdInput label="Medium" value={medium} onChange={setMedium} tone="info" />
+          </div>
+
+          {(validationMessage || error) && (
+            <div className="flex items-center gap-2 text-danger text-xs font-medium">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              <span>{validationMessage || error}</span>
+            </div>
+          )}
+
+          {success && (
+            <div className="flex items-center gap-2 text-success text-xs font-medium">
+              <CheckCircle2 className="h-4 w-4 shrink-0" />
+              <span>Configuration saved successfully.</span>
+            </div>
+          )}
+
+          <button
+            onClick={handleSave}
+            disabled={isSaving || isInvalid}
+            className="mt-4 flex h-9 w-full items-center justify-center rounded-md border border-border bg-background/60 text-sm font-medium text-primary hover:bg-secondary disabled:opacity-60 disabled:hover:bg-background/60 transition-colors"
+          >
+            {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save Configuration"}
+          </button>
+
+          {success && (
+            <button
+              onClick={() => router.push("/scenario-simulator")}
+              className="mt-2 flex h-9 w-full items-center justify-between rounded-md border border-border bg-primary/10 px-3 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
+            >
+              <span>Run Scenario Simulator</span>
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      )}
+    </SettingsCard>
+  );
+}
+
+function ThresholdInput({
+  label,
+  value,
+  onChange,
+  tone
+}: {
+  label: string;
+  value: number;
+  onChange: (val: number) => void;
+  tone: keyof typeof toneClasses;
+}) {
+  return (
+    <div className={clsx("rounded-md border p-2", toneClasses[tone])}>
+      <label className="mb-1.5 block text-[0.68rem] font-semibold uppercase tracking-wider opacity-80">
+        {label}
+      </label>
+      <input
+        type="number"
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="w-full bg-transparent text-lg font-bold outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+      />
+    </div>
+  );
+}
+
