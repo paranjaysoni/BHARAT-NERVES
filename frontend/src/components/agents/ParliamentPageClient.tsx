@@ -68,12 +68,29 @@ export function ParliamentPageClient() {
     );
   }
 
-  if (store.phase === "running") {
+  if (store.phase === "running" || (store.phase === "done" && store.playbackState !== "completed")) {
     return (
       <div className="flex h-60 flex-col items-center justify-center gap-3 rounded-md border border-border bg-card/60">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
         <p className="text-sm font-medium text-foreground">Simulation Running…</p>
-        <p className="text-xs text-muted-foreground">AI Parliament will convene once the simulation completes</p>
+        <p className="text-xs text-muted-foreground">AI Parliament will convene once the simulation playback completes</p>
+      </div>
+    );
+  }
+
+  if (store.phase === "error") {
+    return (
+      <div className="flex h-60 flex-col items-center justify-center gap-3 rounded-md border border-danger/20 bg-danger/5 text-center">
+        <AlertCircle className="h-8 w-8 text-danger" />
+        <p className="text-sm font-medium text-danger">Simulation Failed</p>
+        <p className="max-w-xs text-xs text-muted-foreground">
+          AI Parliament cannot convene because the simulation failed.
+        </p>
+        {store.error && (
+          <p className="max-w-xs text-xs text-muted-foreground mt-1">
+            {store.error}
+          </p>
+        )}
       </div>
     );
   }

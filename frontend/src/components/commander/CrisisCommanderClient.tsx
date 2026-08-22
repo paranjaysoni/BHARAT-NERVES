@@ -55,7 +55,12 @@ function Panel({ title, action, children, className }: {
 
 function PanelLink({ label }: { label: string }) {
   return (
-    <button className="mt-3 flex h-8 w-full items-center justify-center gap-2 rounded-md border border-border bg-background/60 text-xs font-medium text-primary hover:bg-secondary">
+    <button
+      type="button"
+      disabled
+      title="Pending integration"
+      className="mt-3 flex h-8 w-full items-center justify-center gap-2 rounded-md border border-border bg-background/60 text-xs font-medium text-muted-foreground opacity-60 cursor-not-allowed"
+    >
       {label}
       <ArrowRight className="h-3.5 w-3.5" />
     </button>
@@ -101,12 +106,29 @@ export function CrisisCommanderClient() {
     );
   }
 
-  if (store.phase === "running") {
+  if (store.phase === "running" || (store.phase === "done" && store.playbackState !== "completed")) {
     return (
       <div className="flex h-52 flex-col items-center justify-center gap-3 rounded-md border border-border bg-card/60">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
         <p className="text-sm font-medium text-foreground">Simulation Running…</p>
-        <p className="text-xs text-muted-foreground">The plan will be ready once the simulation engine completes</p>
+        <p className="text-xs text-muted-foreground">The plan will be ready once the simulation playback completes</p>
+      </div>
+    );
+  }
+
+  if (store.phase === "error") {
+    return (
+      <div className="flex h-52 flex-col items-center justify-center gap-3 rounded-md border border-danger/20 bg-danger/5 text-center">
+        <AlertCircle className="h-8 w-8 text-danger" />
+        <p className="text-sm font-medium text-danger">Simulation Failed</p>
+        <p className="max-w-xs text-xs text-muted-foreground">
+          Crisis Commander cannot generate an action plan because the simulation failed.
+        </p>
+        {store.error && (
+          <p className="max-w-xs text-xs text-muted-foreground mt-1">
+            {store.error}
+          </p>
+        )}
       </div>
     );
   }

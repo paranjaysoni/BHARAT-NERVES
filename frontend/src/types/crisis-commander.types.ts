@@ -4,6 +4,7 @@ export interface CrisisCommanderPlanRequest {
   scenarioId: string;
   simulationId?: string;
   includeChecklist?: boolean;
+  simulationResult?: any;
 }
 
 // ─── Response shapes (mirror backend) ────────────────────────────────────────

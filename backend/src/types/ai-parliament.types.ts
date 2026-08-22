@@ -15,6 +15,7 @@ export type InsightType = "AGREEMENT" | "DEBATE" | "RISK" | "ACTION";
 export interface AIParliamentSessionRequest {
   scenarioId: string;
   simulationId?: string;
+  simulationResult?: any;
   includeFullMatrix?: boolean;
 }
 
