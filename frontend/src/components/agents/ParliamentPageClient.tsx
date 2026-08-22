@@ -105,12 +105,14 @@ export function ParliamentPageClient() {
     );
   }
 
-  if (error) {
+  const displayError = store.parliamentError || error;
+
+  if (displayError) {
     return (
       <div className="flex h-60 flex-col items-center justify-center gap-3 rounded-md border border-danger/20 bg-danger/5 text-center">
         <AlertCircle className="h-8 w-8 text-danger" />
         <p className="text-sm font-medium text-danger">AI Parliament failed</p>
-        <p className="max-w-xs text-xs text-muted-foreground">{error}</p>
+        <p className="max-w-xs text-xs text-muted-foreground">{displayError}</p>
         <button
           onClick={handleGenerate}
           className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary"
@@ -212,23 +214,29 @@ function ParliamentSessionView({ session }: { session: AIParliamentSession }) {
             <p className="mb-2 text-[0.68rem] font-bold uppercase tracking-widest text-muted-foreground">
               Parliament Recommendation
             </p>
-            <h3 className="text-sm font-bold text-foreground">{session.recommendation.title}</h3>
-            <p className="mt-2 text-xs leading-5 text-muted-foreground">{session.recommendation.summary}</p>
-            <div className="mt-3 space-y-2">
-              {session.recommendation.priorityActions.map((action) => (
-                <div key={action.rank} className="flex items-center gap-3 rounded-md border border-border bg-background/60 px-3 py-2">
-                  <span className="text-xs font-bold text-muted-foreground">#{action.rank}</span>
-                  <span className="flex-1 text-xs font-medium text-foreground">{action.label}</span>
-                  <span className={clsx("rounded border px-2 py-0.5 text-[0.62rem] font-bold",
-                    action.priority === "CRITICAL" ? "border-danger/30 bg-danger/15 text-danger" :
-                    action.priority === "HIGH" ? "border-warning/30 bg-warning/15 text-warning" :
-                    "border-info/30 bg-info/15 text-info")}>
-                    {action.priority}
-                  </span>
-                  <span className="text-xs font-semibold text-foreground">{action.score}</span>
+            {typeof session.recommendation === "string" ? (
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">{session.recommendation}</p>
+            ) : (
+              <>
+                <h3 className="text-sm font-bold text-foreground">{session.recommendation.title}</h3>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">{session.recommendation.summary}</p>
+                <div className="mt-3 space-y-2">
+                  {Array.isArray(session.recommendation.priorityActions) && session.recommendation.priorityActions.map((action) => (
+                    <div key={action.rank} className="flex items-center gap-3 rounded-md border border-border bg-background/60 px-3 py-2">
+                      <span className="text-xs font-bold text-muted-foreground">#{action.rank}</span>
+                      <span className="flex-1 text-xs font-medium text-foreground">{action.label}</span>
+                      <span className={clsx("rounded border px-2 py-0.5 text-[0.62rem] font-bold",
+                        action.priority === "CRITICAL" ? "border-danger/30 bg-danger/15 text-danger" :
+                        action.priority === "HIGH" ? "border-warning/30 bg-warning/15 text-warning" :
+                        "border-info/30 bg-info/15 text-info")}>
+                        {action.priority}
+                      </span>
+                      <span className="text-xs font-semibold text-foreground">{action.score}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            )}
           </section>
 
           {/* Insights */}

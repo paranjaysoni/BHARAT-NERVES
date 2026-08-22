@@ -44,7 +44,11 @@ export async function createAIParliamentSession(
     Fallback recommendation: ${deterministicRecommendation}
     Output ONLY the final recommendation text directly.`;
     
-    const finalRecommendation = await generateWithGeminiFallback(prompt, deterministicRecommendation);
+    const finalRecommendation = await generateWithGeminiFallback(
+      prompt,
+      deterministicRecommendation,
+      (text) => ({ ...deterministicRecommendation, summary: text.trim() })
+    );
 
     return {
       sessionId: `parl_${Date.now()}`,

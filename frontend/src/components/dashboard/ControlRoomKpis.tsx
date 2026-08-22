@@ -1,48 +1,10 @@
+"use client";
+
 import { AlertTriangle, GitBranch, Network, ShieldCheck } from "lucide-react";
 import clsx from "clsx";
 import { SectionCard } from "@/components/shared";
-import { alerts, metrics, nodes, routes } from "@/data";
-
-function getMetricValue(metricId: string) {
-  const metric = metrics.find((item) => item.id === metricId);
-  return metric ? `${metric.value}${metric.unit ? metric.unit : ""}` : "N/A";
-}
-
-const overviewItems = [
-  {
-    id: "resilience",
-    label: "Resilience Score",
-    value: getMetricValue("metric-resilience-score").replace("/100", ""),
-    suffix: "/100",
-    detail: "Stable",
-    icon: ShieldCheck,
-    tone: "info"
-  },
-  {
-    id: "alerts",
-    label: "Active Alerts",
-    value: String(alerts.length).padStart(2, "0"),
-    detail: "High Priority",
-    icon: AlertTriangle,
-    tone: "warning"
-  },
-  {
-    id: "risk-nodes",
-    label: "At Risk Nodes",
-    value: String(nodes.filter((node) => node.status !== "operational").length),
-    detail: "Odisha Corridor",
-    icon: Network,
-    tone: "success"
-  },
-  {
-    id: "routes",
-    label: "Disrupted Routes",
-    value: String(routes.filter((route) => route.status !== "clear").length),
-    detail: "Needs Review",
-    icon: GitBranch,
-    tone: "danger"
-  }
-] as const;
+import { useSimulationStore } from "@/hooks/use-simulation-store";
+import { alerts, metrics, nodes, routes } from "@/data"; // keeping for fallback if no simulation
 
 const toneClasses = {
   danger: "text-danger border-danger/25 bg-danger/10",
@@ -52,10 +14,62 @@ const toneClasses = {
 };
 
 export function ControlRoomKpis() {
+  const store = useSimulationStore();
+  const hasSimulation = store.phase !== "idle" && store.result !== null;
+
+  function getMetricValue(metricId: string) {
+    const metric = metrics.find((item) => item.id === metricId);
+    return metric ? `${metric.value}${metric.unit ? metric.unit : ""}` : "N/A";
+  }
+
+  const overviewItems = [
+    {
+      id: "resilience",
+      label: "Resilience Score",
+      value: hasSimulation && store.result 
+        ? String(store.result.dashboard.resilienceScore)
+        : getMetricValue("metric-resilience-score").replace("/100", ""),
+      suffix: "/100",
+      detail: hasSimulation ? "Live Simulation" : "Static Overview",
+      icon: ShieldCheck,
+      tone: "info" as const
+    },
+    {
+      id: "alerts",
+      label: "Active Alerts",
+      value: hasSimulation && store.result
+        ? String(store.result.dashboard.activeAlerts).padStart(2, "0")
+        : String(alerts.length).padStart(2, "0"),
+      detail: hasSimulation ? "Simulated Warnings" : "High Priority",
+      icon: AlertTriangle,
+      tone: "warning" as const
+    },
+    {
+      id: "risk-nodes",
+      label: "At Risk Nodes",
+      value: hasSimulation && store.result
+        ? String(store.result.dashboard.atRiskNodes)
+        : String(nodes.filter((node) => node.status !== "operational").length),
+      detail: hasSimulation ? "Current Scenario" : "Odisha Corridor",
+      icon: Network,
+      tone: "success" as const
+    },
+    {
+      id: "routes",
+      label: "Disrupted Routes",
+      value: hasSimulation && store.result
+        ? String(store.result.dashboard.disruptedRoutes)
+        : String(routes.filter((route) => route.status !== "clear").length),
+      detail: hasSimulation ? "Current Scenario" : "Needs Review",
+      icon: GitBranch,
+      tone: "danger" as const
+    }
+  ] as const;
+
   return (
     <SectionCard
       title="System Overview"
-      description="National command posture."
+      description={hasSimulation ? `Live posture: ${store.result?.scenario.scenarioName}` : "National command posture."}
       className="h-full"
     >
       <div className="grid grid-cols-2 gap-3">

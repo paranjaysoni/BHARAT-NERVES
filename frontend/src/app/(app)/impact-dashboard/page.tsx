@@ -269,12 +269,19 @@ function KpiStrip() {
 }
 
 function ImpactHeatmap() {
+  const store = useSimulationStore();
+  const hasLiveResult = store.phase !== "idle" && store.result;
+
   return (
-    <Panel title="IMPACT HEATMAP" subtitle="Impact intensity across states" className="min-h-[330px]">
+    <Panel title="IMPACT HEATMAP" subtitle={hasLiveResult ? "Simulated Disruption Map" : "Impact intensity across states"} className="min-h-[330px]">
       <AegisMap
-        title="Static Impact Heat Zones"
-        description="Mock intensity zones over backend infrastructure data."
-        heatZones={impactHeatZones}
+        title={hasLiveResult ? "Simulation Impact" : "Static Impact Heat Zones"}
+        description={hasLiveResult ? "Network disruption based on simulation engine." : "Mock intensity zones over backend infrastructure data."}
+        heatZones={hasLiveResult ? undefined : impactHeatZones}
+        affectedNodeIds={hasLiveResult ? store.result?.digitalTwin.affectedNodeIds : undefined}
+        affectedRouteIds={hasLiveResult ? store.result?.digitalTwin.affectedRouteIds : undefined}
+        stormPath={hasLiveResult ? store.result?.scenario.stormPath : undefined}
+        playbackProgress={hasLiveResult ? store.playbackProgress : undefined}
         showImpactLegend
         heightClassName="h-[240px] sm:h-[282px]"
         compactMarkers
@@ -285,118 +292,144 @@ function ImpactHeatmap() {
 }
 
 function ImpactOverTime() {
-  const points = [
-    [22, 210],
-    [68, 175],
-    [114, 192],
-    [160, 178],
-    [206, 146],
-    [252, 128],
-    [298, 137],
-    [344, 130],
-    [390, 124],
-    [436, 105],
-    [482, 78],
-    [528, 78]
-  ];
-  const d = points.map(([x, y], index) => `${index === 0 ? "M" : "L"}${x} ${y}`).join(" ");
+  const store = useSimulationStore();
+  const hasLiveResult = store.phase !== "idle" && store.result;
+
+  if (!hasLiveResult || !store.result) {
+    return (
+      <Panel title="CARBON & DELAY IMPACT" subtitle="Awaiting Simulation" className="min-h-[330px]">
+        <div className="flex h-[260px] flex-col items-center justify-center rounded-md border border-dashed border-border bg-background/50 px-3 py-3 text-center text-muted-foreground">
+          Run a simulation to view impact changes.
+        </div>
+      </Panel>
+    );
+  }
+
+  const c = store.result.impact.carbon;
+  const d = store.result.impact.delay;
 
   return (
-    <Panel
-      title="IMPACT OVER TIME"
-      subtitle="Overall impact trend"
-      action={<button className="btn btn-outline h-8 px-2.5 text-xs">7 Days</button>}
-      className="min-h-[330px]"
-    >
-      <div className="relative h-[260px] rounded-md border border-border bg-background/50 px-3 py-3">
-        <svg className="h-full w-full" viewBox="0 0 560 240" preserveAspectRatio="none" aria-hidden="true">
-          {[0, 50, 100, 150, 200].map((y) => (
-            <line key={y} x1="34" x2="548" y1={20 + y} y2={20 + y} stroke="hsl(var(--border) / 0.55)" />
-          ))}
-          <path d={`${d} L528 220 L22 220 Z`} fill="hsl(var(--primary) / 0.14)" />
-          <path d={d} fill="none" stroke="hsl(var(--primary))" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-          {points.map(([x, y]) => (
-            <circle key={`${x}-${y}`} cx={x} cy={y} r="4" fill="hsl(var(--primary))" stroke="hsl(var(--card))" strokeWidth="1.5" />
-          ))}
-          <g>
-            <rect x="514" y="46" width="34" height="24" rx="5" fill="hsl(var(--primary))" />
-            <text x="531" y="63" textAnchor="middle" fill="white" fontSize="12" fontWeight="700">72</text>
-          </g>
-          {["22 Nov", "23 Nov", "24 Nov", "25 Nov", "26 Nov", "27 Nov", "28 Nov"].map((label, index) => (
-            <text key={label} x={44 + index * 78} y="236" fill="hsl(var(--muted-foreground))" fontSize="12">
-              {label}
-            </text>
-          ))}
-          {[0, 25, 50, 75, 100].map((label, index) => (
-            <text key={label} x="2" y={224 - index * 50} fill="hsl(var(--muted-foreground))" fontSize="12">
-              {label}
-            </text>
-          ))}
-        </svg>
+    <Panel title="CARBON & DELAY IMPACT" subtitle="Simulated Before/After Changes" className="min-h-[330px]">
+      <div className="flex h-[260px] flex-col justify-center gap-6 rounded-md border border-border bg-background/50 px-6 py-3">
+        <div>
+          <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Carbon Footprint (Tons)</h4>
+          <div className="flex items-center gap-4">
+            <div className="flex-1 rounded-md bg-secondary p-3 text-center">
+              <span className="block text-xs text-muted-foreground">Baseline</span>
+              <span className="text-xl font-medium">{c.baselineCarbonTons}</span>
+            </div>
+            <ArrowRight className="h-4 w-4 text-muted-foreground" />
+            <div className="flex-1 rounded-md bg-warning/10 border border-warning/20 p-3 text-center text-warning">
+              <span className="block text-xs opacity-70">Simulated</span>
+              <span className="text-xl font-bold">{c.finalCarbonTons}</span>
+            </div>
+            <div className="flex-1 text-center">
+              <span className="text-sm font-bold text-danger">+{c.carbonIncreasePercent}%</span>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">System Delay (Hours)</h4>
+          <div className="flex items-center gap-4">
+            <div className="flex-1 rounded-md bg-secondary p-3 text-center">
+              <span className="block text-xs text-muted-foreground">Baseline</span>
+              <span className="text-xl font-medium">{d.baselineDelayHours}</span>
+            </div>
+            <ArrowRight className="h-4 w-4 text-muted-foreground" />
+            <div className="flex-1 rounded-md bg-danger/10 border border-danger/20 p-3 text-center text-danger">
+              <span className="block text-xs opacity-70">Simulated</span>
+              <span className="text-xl font-bold">{d.finalDelayHours}</span>
+            </div>
+            <div className="flex-1 text-center">
+              <span className="text-sm font-bold text-danger">+{d.extraDelayMinutes}m</span>
+            </div>
+          </div>
+        </div>
       </div>
     </Panel>
   );
 }
 
 function SectorWiseImpact() {
+  const store = useSimulationStore();
+  const hasLiveResult = store.phase !== "idle" && store.result;
+  const score = hasLiveResult && store.result ? store.result.impact.score.impactScore : 72;
+
   return (
     <Panel title="SECTOR WISE IMPACT" className="min-h-[330px]">
       <div className="grid min-h-[238px] grid-cols-[145px_1fr] items-center gap-4">
         <div className="relative h-[142px] w-[142px]">
           <div className="absolute inset-0 rounded-full bg-[conic-gradient(hsl(var(--primary))_0_28%,hsl(var(--info))_28%_50%,hsl(var(--success))_50%_68%,hsl(var(--warning))_68%_82%,rgb(139_92_246)_82%_92%,rgb(100_116_139)_92%_100%)]" />
           <div className="absolute inset-[28px] flex flex-col items-center justify-center rounded-full border border-border bg-card text-center">
-            <span className="text-2xl font-semibold leading-none text-foreground">72</span>
+            <span className="text-2xl font-semibold leading-none text-foreground">{score}</span>
             <span className="mt-1 text-[0.67rem] leading-3 text-muted-foreground">
-              Total Impact<br />Score
+              {hasLiveResult ? "Simulation" : "Total Impact"}<br />Score
             </span>
           </div>
         </div>
         <div className="space-y-3">
+          <p className="text-xs text-muted-foreground italic mb-2">Granular sector breakdown is unmodeled in current simulation engine.</p>
           {sectorRows.map(([label, value, color]) => (
-            <div key={label} className="flex items-center gap-2 text-xs">
+            <div key={label} className="flex items-center gap-2 text-xs opacity-50">
               <span className={clsx("h-2.5 w-2.5 rounded-full", color)} />
               <span className="min-w-0 flex-1 truncate text-muted-foreground">{label}</span>
-              <span className="font-semibold text-foreground">{value}</span>
+              <span className="font-semibold text-foreground">--</span>
             </div>
           ))}
         </div>
       </div>
-      <PanelLink label="View Detailed Breakdown" />
+      <PanelLink label={hasLiveResult ? "Using simulated score" : "View Detailed Breakdown"} />
     </Panel>
   );
 }
 
 function ImpactByState() {
+  const store = useSimulationStore();
+  const hasLiveResult = store.phase !== "idle" && store.result;
+
+  if (!hasLiveResult || !store.result) {
+    return (
+      <Panel title="POPULATION & INFRASTRUCTURE" subtitle="Awaiting Simulation" className="min-h-[245px]">
+        <div className="flex h-[160px] flex-col items-center justify-center rounded-md border border-dashed border-border bg-background/50 text-center text-muted-foreground">
+          Run a simulation to view population metrics.
+        </div>
+      </Panel>
+    );
+  }
+
+  const p = store.result.impact.population;
+  const i = store.result.impact.infrastructure;
+
   return (
-    <Panel title="IMPACT BY STATE" titleSuffix="(Top 5)" className="min-h-[245px]">
-      <div className="overflow-x-auto">
-        <div className="min-w-[340px]">
-          <div className="grid grid-cols-[1.25fr_0.8fr_0.75fr_1fr] border-b border-border/70 pb-2 text-[0.68rem] text-muted-foreground">
-            <span>State</span>
-            <span className="text-center">Impact Score</span>
-            <span className="text-center">Trend (24h)</span>
-            <span className="text-right">Population Affected</span>
+    <Panel title="POPULATION & INFRASTRUCTURE" subtitle="Simulated Exposure" className="min-h-[245px]">
+      <div className="flex flex-col gap-4 py-2">
+        <div className="rounded-md border border-border bg-background/50 p-4">
+          <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">Affected Population</p>
+          <div className="flex items-center justify-between">
+            <span className="text-2xl font-bold text-foreground">{(p.affected / 1000000).toFixed(2)}M</span>
+            <span className={clsx("rounded-md border px-2 py-1 text-xs font-bold", 
+              p.riskLevel === "CRITICAL" ? "border-danger text-danger bg-danger/10" : 
+              p.riskLevel === "HIGH" ? "border-warning text-warning bg-warning/10" : "border-success text-success bg-success/10")}>
+              {p.riskLevel} RISK
+            </span>
           </div>
-          <div className="divide-y divide-border/60">
-            {stateRows.map(([state, score, direction, trend, population, tone]) => (
-              <div key={state} className="grid grid-cols-[1.25fr_0.8fr_0.75fr_1fr] items-center py-2 text-xs">
-                <span className="font-medium text-foreground">{state}</span>
-                <span className="text-center">
-                  <span className={clsx("inline-flex min-w-10 justify-center rounded-md border px-2 py-0.5 font-semibold", toneClasses[tone])}>
-                    {score}
-                  </span>
-                </span>
-                <span className={clsx("flex items-center justify-center gap-1 font-medium", direction === "up" ? "text-success" : "text-success")}>
-                  {direction === "up" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
-                  {trend}
-                </span>
-                <span className="text-right font-medium text-foreground">{population}</span>
-              </div>
-            ))}
+          <p className="mt-2 text-xs text-muted-foreground">Protected after recovery: {(p.protectedAfterRecovery / 1000000).toFixed(2)}M</p>
+        </div>
+
+        <div className="rounded-md border border-border bg-background/50 p-4">
+          <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">Infrastructure Damage</p>
+          <div className="flex items-center justify-between">
+            <span className="text-xl font-bold text-foreground">{i.affectedNodes} Nodes, {i.affectedRoutes} Routes</span>
+            <span className={clsx("rounded-md border px-2 py-1 text-xs font-bold", 
+              i.riskLevel === "CRITICAL" ? "border-danger text-danger bg-danger/10" : 
+              i.riskLevel === "HIGH" ? "border-warning text-warning bg-warning/10" : "border-success text-success bg-success/10")}>
+              {i.riskLevel} RISK
+            </span>
           </div>
+          <p className="mt-2 text-xs text-muted-foreground">Completely blocked routes: {i.blockedRoutes}</p>
         </div>
       </div>
-      <PanelLink label="View All States" />
     </Panel>
   );
 }

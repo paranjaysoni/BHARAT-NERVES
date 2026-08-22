@@ -38,11 +38,14 @@ import {
   setCommanderPlan,
   setParliamentLoading,
   setCommanderLoading,
+  setParliamentError,
+  setCommanderError,
   resetSimulation,
   playSimulation,
   pauseSimulation,
   restartSimulationPlayback,
   setSimulationSpeed,
+  setSimulationProgress,
 } from "@/lib/simulation-store";
 import { useSimulationStore } from "@/hooks/use-simulation-store";
 import type { SimulationResult } from "@/types/simulation.types";
@@ -192,37 +195,6 @@ export function ScenarioSimulatorDashboard() {
     [selectedScenario]
   );
 
-  // Playback state (isPlaying derived from store)
-  const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
-  const [playbackProgress, setPlaybackProgress] = useState(0);
-
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-    if (isPlaying && store.phase === "done") {
-      interval = setInterval(() => {
-        setPlaybackProgress((prev) => {
-          if (prev >= 100) {
-            pauseSimulation();
-            return 100;
-          }
-          return prev + (1 * playbackSpeed);
-        });
-      }, 100);
-    }
-    return () => clearInterval(interval);
-  }, [isPlaying, store.phase, playbackSpeed]);
-
-  useEffect(() => {
-    if (store.phase !== "done") {
-      // eslint-disable-next-line
-      pauseSimulation();
-      // eslint-disable-next-line
-      setPlaybackProgress(0);
-      // eslint-disable-next-line
-      setPlaybackSpeed(1);
-    }
-  }, [store.phase]);
-
   const handleRun = useCallback(async () => {
     if (!selectedScenarioId) return;
 
@@ -241,10 +213,10 @@ export function ScenarioSimulatorDashboard() {
       Promise.all([
         runParliamentSession({ scenarioId: scenId, simulationId: simId, simulationResult: result, includeFullMatrix: true })
           .then((s) => setParliamentSession(s))
-          .catch(() => setParliamentLoading(false)),
+          .catch((err) => setParliamentError(err instanceof Error ? err.message : "Failed to load Parliament")),
         runCrisisCommanderPlan({ scenarioId: scenId, simulationId: simId, simulationResult: result, includeChecklist: true })
           .then((p) => setCommanderPlan(p))
-          .catch(() => setCommanderLoading(false)),
+          .catch((err) => setCommanderError(err instanceof Error ? err.message : "Failed to load Commander plan")),
       ]);
     } catch (err) {
       setSimulationError(err instanceof Error ? err.message : "Simulation failed");
@@ -254,6 +226,23 @@ export function ScenarioSimulatorDashboard() {
   const handleReset = useCallback(() => {
     resetSimulation();
   }, []);
+
+  const handlePlayPause = useCallback(() => {
+    if (store.phase === "done" && store.playbackState !== "completed") {
+      if (isPlaying) pauseSimulation();
+      else playSimulation();
+    } else if (store.phase !== "running") {
+      handleRun();
+    }
+  }, [store.phase, store.playbackState, isPlaying, handleRun]);
+
+  const handleRestartPlayback = useCallback(() => {
+    if (store.phase === "done") {
+      restartSimulationPlayback();
+    } else {
+      resetSimulation();
+    }
+  }, [store.phase]);
 
   if (scenariosLoading) {
     return (
@@ -276,22 +265,6 @@ export function ScenarioSimulatorDashboard() {
       </div>
     );
   }
-  const handlePlayPause = useCallback(() => {
-    if (store.phase === "done" && store.playbackState !== "completed") {
-      if (isPlaying) pauseSimulation();
-      else playSimulation();
-    } else if (store.phase !== "running") {
-      handleRun();
-    }
-  }, [store.phase, store.playbackState, isPlaying, handleRun]);
-
-  const handleRestartPlayback = useCallback(() => {
-    if (store.phase === "done") {
-      restartSimulationPlayback();
-    } else {
-      resetSimulation();
-    }
-  }, [store.phase]);
 
   return (
     <div className="grid min-h-0 gap-4">
@@ -320,17 +293,14 @@ export function ScenarioSimulatorDashboard() {
       <section className="grid gap-4 pb-1 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <SimulationControlsPanel
           isRunning={isRunningBackend}
-          speed={playbackSpeed}
+          speed={store.playbackSpeed}
           isPlaying={isPlaying}
-          playbackProgress={playbackProgress}
+          playbackProgress={store.playbackProgress}
           hasResult={store.phase === "done"}
-          onPlayPause={() => {
-            if (isPlaying) pauseSimulation();
-            else playSimulation();
-          }}
-          onChangeSpeed={(s) => setPlaybackSpeed(s)}
+          onPlayPause={handlePlayPause}
+          onChangeSpeed={(s) => setSimulationSpeed(s)}
           onScrub={(p) => {
-            setPlaybackProgress(p);
+            setSimulationProgress(p);
             if (p >= 100) pauseSimulation();
           }}
           onReset={handleReset}
@@ -568,6 +538,9 @@ function ImpactPreviewMap({ scenario, impact, progress }: { scenario: ScenarioOp
         affectedRouteIds={affectedRouteIds}
         stormPath={store.result?.scenario.stormPath}
         playbackProgress={progress}
+        playbackState={store.playbackState}
+        playbackSpeed={store.playbackSpeed}
+        impactScore={store.result?.impact.score.impactScore}
         heightClassName="h-[300px] sm:h-[360px] xl:h-[420px]"
       />
     </section>

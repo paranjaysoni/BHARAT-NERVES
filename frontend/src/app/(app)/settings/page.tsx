@@ -469,9 +469,10 @@ function RiskThresholdConfiguration() {
         const res = await fetch(`${BASE_URL}/api/config`);
         if (!res.ok) throw new Error("Failed to load config");
         const data = await res.json();
-        setCritical(data.critical);
-        setHigh(data.high);
-        setMedium(data.medium);
+        const thresholds = data.data?.thresholds || data.thresholds || data;
+        setCritical(thresholds.critical ?? 85);
+        setHigh(thresholds.high ?? 60);
+        setMedium(thresholds.medium ?? 35);
       } catch (err) {
         console.error("Config load error:", err);
       } finally {
@@ -497,7 +498,7 @@ function RiskThresholdConfiguration() {
       const res = await fetch(`${BASE_URL}/api/config`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ critical, high, medium }),
+        body: JSON.stringify({ thresholds: { critical, high, medium } }),
       });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));

@@ -22,6 +22,8 @@ export interface SimulationStore {
   playbackState: PlaybackState;
   playbackProgress: number; // 0 to 100
   playbackSpeed: number; // multiplier (1, 2, 5, 10)
+  parliamentError: string | null;
+  commanderError: string | null;
 }
 
 const CHANGE_EVENT = "simulation-store-change";
@@ -41,6 +43,8 @@ export const INITIAL_STATE: SimulationStore = {
   playbackState: "idle",
   playbackProgress: 0,
   playbackSpeed: 1,
+  parliamentError: null,
+  commanderError: null,
 };
 
 // ── localStorage helpers ──────────────────────────────────────────────────────
@@ -80,6 +84,8 @@ function loadFromStorage(): SimulationStore {
       playbackState: persisted.playbackState === "playing" ? "paused" : (persisted.playbackState ?? "idle"),
       playbackProgress: persisted.playbackProgress ?? 0,
       playbackSpeed: persisted.playbackSpeed ?? 1,
+      parliamentError: null,
+      commanderError: null,
     };
   } catch {
     return { ...INITIAL_STATE };
@@ -259,6 +265,16 @@ export function setSimulationSpeed(speed: number) {
   _notify();
 }
 
+export function setSimulationProgress(progress: number) {
+  _state = { 
+    ..._state, 
+    playbackProgress: progress,
+    playbackState: progress >= 100 ? "completed" : _state.playbackState
+  };
+  saveToStorage(_state);
+  _notify();
+}
+
 export function setParliamentLoading(loading: boolean) {
   _state = { ..._state, isParliamentLoading: loading };
   _notify();
@@ -274,9 +290,20 @@ export function setParliamentSession(session: AIParliamentSession) {
     ..._state,
     parliament: session,
     isParliamentLoading: false,
+    parliamentError: null,
     lastUpdatedAt: new Date().toISOString(),
   };
   saveToStorage(_state);
+  _notify();
+}
+
+export function setParliamentError(error: string | null) {
+  _state = { ..._state, parliamentError: error, isParliamentLoading: false };
+  _notify();
+}
+
+export function setCommanderError(error: string | null) {
+  _state = { ..._state, commanderError: error, isCommanderLoading: false };
   _notify();
 }
 
@@ -285,6 +312,7 @@ export function setCommanderPlan(plan: CrisisCommanderPlan) {
     ..._state,
     commanderPlan: plan,
     isCommanderLoading: false,
+    commanderError: null,
     lastUpdatedAt: new Date().toISOString(),
   };
   saveToStorage(_state);

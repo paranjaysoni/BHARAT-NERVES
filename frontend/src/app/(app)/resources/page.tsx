@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ArrowRight,
   BarChart3,
@@ -192,7 +194,16 @@ const tabs = ["Recent", "Popular", "Recommended", "Shared With Me"] as const;
 
 const panelClass = "surface-card rounded-md p-3.5 text-card-foreground";
 
+import { useSimulationStore } from "@/hooks/use-simulation-store";
+import { Loader2, ShieldAlert, PackageOpen } from "lucide-react";
+
 export default function ResourcesPage() {
+  const store = useSimulationStore();
+  const commander = store.commanderPlan;
+  const isRunning = store.phase === "running";
+  const isProcessingCommander = store.phase === "done" && commander === null && !store.error; // Approximating loading state if we want, or rely on store flags
+  const hasResources = commander?.resourceDeployment && commander.resourceDeployment.length > 0;
+
   return (
     <div className="space-y-3.5">
       <PageHeader
@@ -200,7 +211,33 @@ export default function ResourcesPage() {
         description="Access critical data, documents, datasets and knowledge assets"
       />
 
-      <section className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(0,330px)]">
+      {isRunning && (
+        <section className="surface-card rounded-md p-6 text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
+          <p className="mt-3 text-sm font-medium text-foreground">Simulation in progress...</p>
+        </section>
+      )}
+
+      {hasResources && !isRunning && (
+        <section className="surface-card rounded-md p-6 border-info/30 bg-info/5">
+          <div className="flex items-center gap-3 mb-4">
+            <PackageOpen className="h-6 w-6 text-info" />
+            <h2 className="text-lg font-semibold text-foreground">Crisis Commander Deployments</h2>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {commander.resourceDeployment.map((res: any, idx: number) => (
+              <div key={idx} className="rounded-md border border-border bg-background p-4">
+                <h3 className="font-semibold text-foreground text-sm">{res.assetType}</h3>
+                <p className="mt-1 text-xs text-muted-foreground">Quantity: <span className="font-medium text-foreground">{res.quantity}</span></p>
+                <p className="text-xs text-muted-foreground">Location: <span className="font-medium text-foreground">{res.location}</span></p>
+                <p className="mt-2 text-xs text-info bg-info/10 p-1.5 rounded-sm">{res.justification}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className={clsx("grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(0,330px)] transition-opacity", isRunning && "opacity-50 pointer-events-none")}>
         <div className="space-y-3.5">
           <SearchAndFilters />
           <ResourceCategories />

@@ -27,6 +27,8 @@ services:
       - "4000:4000"
     env_file:
       - ./backend/.env
+    environment:
+      - DATABASE_URL=postgresql://aegis:password@postgres:5432/aegis_db
     depends_on:
       postgres:
         condition: service_healthy

@@ -143,12 +143,14 @@ export function CrisisCommanderClient() {
     );
   }
 
-  if (error) {
+  const displayError = store.commanderError || error;
+
+  if (displayError) {
     return (
       <div className="flex h-52 flex-col items-center justify-center gap-3 rounded-md border border-danger/20 bg-danger/5 text-center">
         <AlertCircle className="h-8 w-8 text-danger" />
         <p className="text-sm font-medium text-danger">Crisis Commander failed</p>
-        <p className="max-w-xs text-xs text-muted-foreground">{error}</p>
+        <p className="max-w-xs text-xs text-muted-foreground">{displayError}</p>
         <button
           onClick={handleGenerate}
           className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary"

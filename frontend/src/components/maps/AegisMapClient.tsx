@@ -30,6 +30,9 @@ export interface AegisMapProps {
   stats?: boolean;
   stormPath?: { lat: number; lng: number }[];
   playbackProgress?: number;
+  playbackState?: string;
+  playbackSpeed?: number;
+  impactScore?: number;
 }
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
@@ -55,7 +58,10 @@ export function AegisMap({
   compactMarkers = false,
   stats = true,
   stormPath,
-  playbackProgress
+  playbackProgress,
+  playbackState,
+  playbackSpeed = 1,
+  impactScore = 0,
 }: AegisMapProps) {
   const [nodes, setNodes] = useState<MapNode[]>([]);
   const [routes, setRoutes] = useState<MapRoute[]>([]);
@@ -128,11 +134,12 @@ export function AegisMap({
 
   const cyclonePosition = useMemo(() => {
     if (!stormPath || stormPath.length === 0 || playbackProgress === undefined) return null;
+    if (playbackState === "completed" || playbackProgress >= 100) return null;
+
     const progress = Math.max(0, Math.min(100, playbackProgress)) / 100;
     
-    // If progress is 0, return first point. If 1, return last.
+    // If progress is 0, return first point.
     if (progress === 0) return stormPath[0];
-    if (progress === 1) return stormPath[stormPath.length - 1];
 
     const numSegments = stormPath.length - 1;
     const totalProgress = progress * numSegments;
@@ -148,16 +155,23 @@ export function AegisMap({
       lat: p1.lat + (p2.lat - p1.lat) * segmentProgress,
       lng: p1.lng + (p2.lng - p1.lng) * segmentProgress,
     };
-  }, [stormPath, playbackProgress]);
+  }, [stormPath, playbackProgress, playbackState]);
 
   const cycloneIcon = useMemo(() => {
+    const isPaused = playbackState === "paused";
+    const animDuration = 2 / Math.max(0.1, playbackSpeed);
+    
+    // Map impactScore (0-100) to a reasonable visual scale (0.8x to 1.5x)
+    const scale = 0.8 + (Math.max(0, Math.min(100, impactScore)) / 100) * 0.7;
+    const playState = isPaused ? "paused" : "running";
+
     return divIcon({
       className: "bg-transparent border-none shadow-none",
-      html: `<div class="flex items-center justify-center text-4xl leading-none animate-spin" style="animation-duration: 2s;">🌀</div>`,
+      html: `<div class="flex items-center justify-center text-4xl leading-none animate-spin" style="animation-duration: ${animDuration}s; animation-play-state: ${playState}; transform: scale(${scale});">🌀</div>`,
       iconSize: [40, 40],
       iconAnchor: [20, 20]
     });
-  }, []);
+  }, [playbackState, playbackSpeed, impactScore]);
 
   return (
     <div className={clsx("relative overflow-hidden rounded-md border border-border bg-slate-950", className)}>

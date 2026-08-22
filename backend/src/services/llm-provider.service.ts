@@ -42,7 +42,7 @@ export async function generateWithGeminiFallback<T>(
     }
     return fallbackValue;
   } catch (error) {
-    console.error("Gemini API call failed, using fallback.", error);
+    console.error("Gemini API call failed", error);
     return fallbackValue;
   }
 }

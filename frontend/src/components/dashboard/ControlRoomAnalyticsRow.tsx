@@ -1,71 +1,110 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, CloudRain } from "lucide-react";
 import { QuickActions } from "@/components/dashboard/QuickActions";
-import { metrics } from "@/data";
-
-function getMetricValue(metricId: string) {
-  const metric = metrics.find((item) => item.id === metricId);
-  return metric ? `${metric.value}${metric.unit ? metric.unit : ""}` : "N/A";
-}
+import { useSimulationStore } from "@/hooks/use-simulation-store";
 
 export function ControlRoomAnalyticsRow() {
+  const store = useSimulationStore();
+  const hasSimulation = store.phase !== "idle" && store.result !== null;
+
   return (
     <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-[1fr_1.35fr_0.95fr_1fr]">
-      <ResilienceTrend />
-      <EconomicImpact />
+      <ResilienceTrend hasSimulation={hasSimulation} result={store.result} />
+      <EconomicImpact hasSimulation={hasSimulation} result={store.result} />
       <WeatherOutlook />
       <QuickActions />
     </section>
   );
 }
 
-function ResilienceTrend() {
+function ResilienceTrend({ hasSimulation, result }: { hasSimulation: boolean; result: any }) {
+  const score = hasSimulation && result ? result.dashboard.resilienceScore : 78;
+
   return (
     <article className="surface-card rounded-md p-4">
       <h3 className="text-sm font-semibold uppercase tracking-wide text-foreground">
-        Resilience Trend
+        Resilience {hasSimulation ? "Simulation" : "Trend"}
       </h3>
       <div className="mt-4 grid grid-cols-[120px_minmax(0,1fr)] items-center gap-4">
         <div className="relative h-28 w-28">
           <div className="absolute inset-0 rounded-full bg-[conic-gradient(hsl(var(--success))_0_78%,hsl(var(--secondary))_78%_100%)]" />
           <div className="absolute inset-3 rounded-full bg-card" />
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <p className="text-3xl font-semibold leading-8 text-foreground">78</p>
+            <p className="text-3xl font-semibold leading-8 text-foreground">{score}</p>
             <p className="text-sm text-muted-foreground">/100</p>
           </div>
         </div>
         <div>
-          <p className="text-sm font-semibold text-success">↑ 8 pts</p>
-          <p className="mt-1 text-xs text-muted-foreground">vs yesterday</p>
-          <svg className="mt-4 h-12 w-full" viewBox="0 0 120 40" aria-hidden="true">
-            <path
-              d="M2 34 C15 28 20 32 30 22 S48 20 56 15 S71 20 82 10 S101 12 118 4"
-              className="fill-none stroke-success"
-              strokeWidth="2"
-            />
-          </svg>
-          <p className="mt-1 text-sm font-medium text-success">Stable</p>
+          <p className="text-sm font-semibold text-success">
+            {hasSimulation ? `Post-Recovery: ${result?.impact.resilience.after}` : "↑ 8 pts"}
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {hasSimulation ? "Simulated Resilience" : "vs yesterday"}
+          </p>
+          {hasSimulation ? (
+            <div className="mt-4 text-xs text-muted-foreground">
+              Baseline: {result?.impact.resilience.before} <br/>
+              Status: {result?.impact.resilience.status}
+            </div>
+          ) : (
+            <svg className="mt-4 h-12 w-full" viewBox="0 0 120 40" aria-hidden="true">
+              <path
+                d="M2 34 C15 28 20 32 30 22 S48 20 56 15 S71 20 82 10 S101 12 118 4"
+                className="fill-none stroke-success"
+                strokeWidth="2"
+              />
+            </svg>
+          )}
         </div>
       </div>
     </article>
   );
 }
 
-function EconomicImpact() {
+function EconomicImpact({ hasSimulation, result }: { hasSimulation: boolean; result: any }) {
+  const loss = hasSimulation && result ? `₹${result.dashboard.economicExposureCr}` : "₹1.2K";
+  const carbon = hasSimulation && result ? `${result.dashboard.carbonImpactTons} tons` : "345 tons";
+  const recovery = hasSimulation && result ? result.dashboard.recoveryTime : "14 days";
+
   return (
     <article className="surface-card rounded-md p-4">
       <h3 className="text-sm font-semibold uppercase tracking-wide text-foreground">
-        Economic Impact <span className="text-xs font-medium normal-case text-muted-foreground">(Potential)</span>
+        {hasSimulation ? "Simulated Impact" : "Economic Impact"}{" "}
+        <span className="text-xs font-medium normal-case text-muted-foreground">(Potential)</span>
       </h3>
       <div className="mt-6 grid grid-cols-3 gap-4">
-        <ImpactStat label="Potential Loss" value={getMetricValue("metric-economic-impact")} tone="danger" detail="Without Recovery" />
-        <ImpactStat label="After Recovery" value="₹4.3 Cr" tone="success" detail="With Plan" />
-        <ImpactStat label="Loss Reduction" value="65%" tone="info" detail="Estimated" />
+        <div>
+          <p className="type-caption">Expected Loss</p>
+          <p className="mt-1 text-2xl font-semibold text-danger">{loss}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {hasSimulation ? "Exposure in Cr." : "In Cr."}
+          </p>
+        </div>
+        <div className="border-l border-border pl-4">
+          <p className="type-caption">Carbon Impact</p>
+          <p className="mt-1 text-2xl font-semibold text-warning">{carbon}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {hasSimulation ? "Simulated footprint" : "+12% vs baseline"}
+          </p>
+        </div>
+        <div className="border-l border-border pl-4">
+          <p className="type-caption">Recovery Time</p>
+          <p className="mt-1 text-2xl font-semibold text-info">{recovery}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {hasSimulation ? "After disruption" : "Avg per sector"}
+          </p>
+        </div>
       </div>
-      <Link href="/impact-dashboard" className="btn btn-secondary mt-5 w-full">
-        View Impact Dashboard
-        <ArrowRight className="h-4 w-4" aria-hidden="true" />
-      </Link>
+      <div className="mt-4 flex items-center justify-end">
+        <Link
+          href="/reports"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+        >
+          View Full Breakdown <ArrowRight className="h-3 w-3" />
+        </Link>
+      </div>
     </article>
   );
 }
