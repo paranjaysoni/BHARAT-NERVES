@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { PageHeader, Tooltip } from "@/components/shared";
+import { BASE_URL } from "@/lib/api/client";
 
 const profileFields = [
   ["Full Name", "Amit Sharma"],
@@ -465,7 +466,7 @@ function RiskThresholdConfiguration() {
   useEffect(() => {
     async function loadConfig() {
       try {
-        const res = await fetch("/api/config");
+        const res = await fetch(`${BASE_URL}/api/config`);
         if (!res.ok) throw new Error("Failed to load config");
         const data = await res.json();
         setCritical(data.critical);
@@ -493,7 +494,7 @@ function RiskThresholdConfiguration() {
     setSuccess(false);
 
     try {
-      const res = await fetch("/api/config", {
+      const res = await fetch(`${BASE_URL}/api/config`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ critical, high, medium }),

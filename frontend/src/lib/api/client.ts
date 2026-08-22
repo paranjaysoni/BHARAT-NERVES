@@ -1,4 +1,4 @@
-const BASE_URL =
+export const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 // Safely coerce a backend value to a finite number before calling .toFixed() etc.
