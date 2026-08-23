@@ -3,11 +3,13 @@
 import { Bell, ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { useRouter } from "next/navigation";
 import { GlobalSimulationIndicator } from "@/components/layout/GlobalSimulationIndicator";
 import { alerts, currentUser, selectedCorridor, settings } from "@/data";
 
 export function Topbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const isControlRoom = pathname === "/control-room";
   const isScenarioSimulator = pathname === "/scenario-simulator";
   const isTradeSentinel = pathname === "/trade-sentinel";
@@ -201,48 +203,60 @@ export function Topbar() {
     );
   }
 
-  return (
-    <header className="sticky top-0 z-30 border-b border-border bg-background/90 px-4 py-2 shadow-[0_1px_2px_rgb(15_23_42/0.04)] backdrop-blur sm:px-5 lg:px-6">
-      <div className="flex min-h-9 flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-        <div className="min-w-0">
-          <p className="type-micro-label truncate">
-            {currentUser.organization}
-          </p>
-          <h1 className="truncate text-base font-semibold leading-5 text-foreground">
-            National Control Room
-          </h1>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <GlobalSimulationIndicator />
-
-          <button className="btn btn-secondary max-w-full justify-between">
-            <span className="truncate">{selectedCorridor.name}</span>
-            <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
-          </button>
-
-          <button
-            className="btn btn-secondary btn-icon relative"
-            aria-label="Notifications"
-          >
-            <Bell className="h-4 w-4" aria-hidden="true" />
-            <span className="animate-badge-pulse absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
-              {alerts.length}
-            </span>
-          </button>
-
-          <div className="surface-card hidden rounded-md px-3 py-1.5 text-right sm:block">
-            <p className="text-sm font-semibold leading-4 text-card-foreground">
-              {settings.displayTime}
+    return (
+      <header className="sticky top-0 z-30 border-b border-border bg-background/90 px-4 py-2 shadow-[0_1px_2px_rgb(15_23_42/0.04)] backdrop-blur sm:px-5 lg:px-6">
+        <div className="flex min-h-9 flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
+            <p className="type-micro-label truncate">
+              {currentUser.organization}
             </p>
-            <p className="text-xs leading-4 text-muted-foreground">
-              {settings.displayDate}
-            </p>
+            <h1 className="truncate text-base font-semibold leading-5 text-foreground">
+              National Control Room
+            </h1>
           </div>
 
-          <ThemeToggle />
+          <div className="flex flex-wrap items-center gap-2">
+            <GlobalSimulationIndicator />
+
+            <button className="btn btn-secondary max-w-full justify-between">
+              <span className="truncate">{selectedCorridor.name}</span>
+              <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+            </button>
+
+            <button
+              className="btn btn-secondary btn-icon relative"
+              aria-label="Notifications"
+            >
+              <Bell className="h-4 w-4" aria-hidden="true" />
+              <span className="animate-badge-pulse absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-xs font-semibold text-primary-foreground">
+                {alerts.length}
+              </span>
+            </button>
+
+            <div className="surface-card hidden rounded-md px-3 py-1.5 text-right sm:block">
+              <p className="text-sm font-semibold leading-4 text-card-foreground">
+                {settings.displayTime}
+              </p>
+              <p className="text-xs leading-4 text-muted-foreground">
+                {settings.displayDate}
+              </p>
+            </div>
+
+            <ThemeToggle />
+            {/* Logout button for authenticated pages */}
+            {pathname !== '/' && pathname !== '/login' && (
+              <button
+                onClick={async () => {
+                  await fetch('/api/auth/logout', { method: 'POST' });
+                  router.push('/login');
+                }}
+                className="btn btn-primary ml-2"
+              >
+                Logout
+              </button>
+            )}
+          </div>
         </div>
-      </div>
-    </header>
-  );
+      </header>
+    );
 }

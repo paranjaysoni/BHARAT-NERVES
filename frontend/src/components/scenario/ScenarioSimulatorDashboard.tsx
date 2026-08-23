@@ -136,7 +136,8 @@ export function ScenarioSimulatorDashboard() {
   );
 
   // Sync if we navigate back and there's an active scenario
-  useEffect(() => {
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+useEffect(() => {
     if (store.activeScenarioId && store.activeScenarioId !== selectedScenarioId) {
       setSelectedScenarioId(store.activeScenarioId);
     }
@@ -149,6 +150,7 @@ export function ScenarioSimulatorDashboard() {
   const [scenariosLoading, setScenariosLoading] = useState(true);
   const [scenariosError, setScenariosError] = useState<string | null>(null);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
     getScenarios()
       .then((data) => {

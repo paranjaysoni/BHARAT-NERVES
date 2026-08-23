@@ -117,11 +117,11 @@ export function LandingNavbar() {
           </button>
 
           <Link
-            href="/control-room"
-            className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-md hover:bg-secondary"
-          >
-            Login
-          </Link>
+          href="/login"
+          className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-md hover:bg-secondary"
+        >
+          Login
+        </Link>
           <a
             href="#cta"
             onClick={(e) => handleAnchorClick(e, "#cta")}

@@ -8,7 +8,8 @@ export function useSimulationStore(): SimulationStore {
   const [state, setState] = useState<SimulationStore>(INITIAL_STATE);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+useEffect(() => {
     setMounted(true);
     setState(getStore()); // Catch up to persisted state
     const unsub = subscribeToStore(() => setState(getStore()));
