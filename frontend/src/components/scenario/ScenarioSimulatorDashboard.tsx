@@ -198,11 +198,11 @@ useEffect(() => {
   );
 
   const handleRun = useCallback(async () => {
-    if (!selectedScenarioId) return;
+    if (!selectedScenario.id) return;
 
-    setSimulationRunning(selectedScenarioId);
+    setSimulationRunning(selectedScenario.id);
     try {
-      const result = await runSimulation({ scenarioId: selectedScenarioId });
+      const result = await runSimulation({ scenarioId: selectedScenario.id });
       setSimulationDone(result);
 
       // Auto-trigger parliament and commander in parallel after simulation completes
@@ -223,7 +223,7 @@ useEffect(() => {
     } catch (err) {
       setSimulationError(err instanceof Error ? err.message : "Simulation failed");
     }
-  }, [selectedScenarioId]);
+  }, [selectedScenario.id]);
 
   const handleReset = useCallback(() => {
     resetSimulation();
