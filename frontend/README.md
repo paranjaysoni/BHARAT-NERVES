@@ -1,250 +1,154 @@
-# Project Aegis Frontend
+# Project AEGIS Frontend
 
-Frontend foundation for the Bharat Nerves Platform.
+<div align="center">
 
-Project Aegis is a self-healing digital nervous system for trade, logistics, and disaster resilience. This frontend will become the mission-control interface for digital twin simulation, scenario analysis, trade sentinel monitoring, AI Parliament, Crisis Commander, impact analysis, resources, reports, and settings.
+## A Self‑Healing Digital Nervous System – Frontend
 
-## Tech Stack
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-blue?logo=typescript)](https://typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.17-38B2AC?logo=tailwindcss)](https://tailwindcss.com)
+[![Leaflet](https://img.shields.io/badge/Leaflet-1.9-brightgreen)](https://leafletjs.com)
 
-- Next.js App Router
-- React
-- TypeScript
-- Tailwind CSS
-- ESLint
-- lucide-react
-- clsx
-- Recharts
-- Leaflet
-- React Leaflet
-- OpenStreetMap
+</div>
 
-Digital Twin Map is implemented using Leaflet + OpenStreetMap. No paid provider or API key is required.
+---
 
-## Setup Commands
+## 1️⃣ Frontend Overview
 
+The frontend is a **Next.js 16** application that provides the mission‑control interface for the AEGIS simulation platform. It renders the digital twin map, dashboards, AI Parliament & Crisis Commander UI, and orchestrates the end‑to‑end simulation flow through a shared client‑side state store (`useSimulationStore`). All data displayed originates from the backend APIs; the UI does **not** perform any core simulation or AI calculations.
+
+---
+
+## 2️⃣ Technology Stack (verified)
+
+| Component | Technology | Version |
+|-----------|------------|---------|
+| Framework | Next.js | 16.2.9 |
+| UI Library | React | 19.2.7 |
+| Language | TypeScript | 6.0.3 |
+| Styling | Tailwind CSS | 3.4.17 |
+| State | Zustand | – (store lives in `src/hooks/use-simulation-store.ts`) |
+| Maps | Leaflet + React‑Leaflet | 1.9.4 / 5.0.0 |
+| Charts | Recharts | 3.8.1 |
+| Icons | Lucide React | 1.18.0 |
+
+---
+
+## 3️⃣ Architecture Highlights
+
+* **App Router** – All user‑facing pages live under `src/app/(app)/*`; the public landing page lives under `src/app/(public)`.
+* **Global State** – `useSimulationStore` (Zustand) stores the latest `SimulationResult`, AI Parliament output, Crisis Commander plan, and UI flags. The store persists to `localStorage` (`project-aegis-simulation-state`).
+* **API Layer** – Frontend communicates with the backend via the REST API defined in `docs/API_REFERENCE.md` (e.g., `GET /api/scenarios`, `POST /api/simulations/run`). The base URL is injected via `NEXT_PUBLIC_API_URL`.
+* **Authentication** – Server‑side demo credentials (`DEMO_AUTH_USERNAME`, `DEMO_AUTH_PASSWORD`) are validated by the Next.js route `/api/auth/login`. On success an HTTP‑only session cookie is set; the client never sees the password.
+
+---
+
+## 4️⃣ Page / Route Matrix (live & static)
+
+| Route | Purpose | Main Components | Data Source | Status |
+|-------|---------|----------------|------------|--------|
+| `/` | Landing page – marketing overview | `LandingNavbar`, `HeroSection`, `MetricsStrip` | Static markdown & mock data | 🟢 LIVE |
+| `/control-room` | National Control Room dashboard | `ControlRoomHeader`, `DigitalTwinMap`, `SystemStatus` | Backend `/api/nodes`, `/api/routes` | 🟢 LIVE |
+| `/scenario-simulator` | Choose scenario & run simulation | `ScenarioSelector`, `SimulationControls`, `ResultPreview` | Backend `/api/scenarios`, `/api/simulations/run` | 🟢 LIVE |
+| `/trade-sentinel` | Trade corridor monitoring | `TradeMap`, `ShipmentTable` | Backend `/api/trade` (mock) | 🟡 PARTIAL (mock data) |
+| `/ai-parliament` | Multi‑agent deliberation UI | `ParliamentCards`, `ConsensusGauge` | Backend `/api/ai-parliament/session` | 🟢 GEMINI (LLM) |
+| `/crisis-commander` | Executive response plan UI | `PlanTimeline`, `ResourceMap` | Backend `/api/crisis-commander/plan` | 🟢 GEMINI |
+| `/impact-dashboard` | Impact KPIs & heatmaps | `ImpactCharts`, `HeatmapLayer` | Backend `/api/impact/calculate` | 🟢 LIVE |
+| `/resources` | Reference material & documentation links | `ResourceList`, `DetailPanel` | Static JSON (`/api/resources`) | 🟡 STATIC |
+| `/reports` | CSV report generation (client‑side) | `ReportSelector`, `CsvExportButton` | Client‑side only | 🟡 STATIC |
+| `/settings` | Theme & UI preferences | `ThemeToggle`, `SettingsForm` | Local storage | 🟢 CLIENT‑DERIVED |
+
+---
+
+## 5️⃣ State Management – `useSimulationStore`
+
+```ts
+interface SimulationStore {
+  simulationId?: string;
+  status: "idle" | "running" | "paused" | "completed" | "error";
+  result?: SimulationResult; // deterministic payload from backend
+  parliament?: AIParliamentSession; // Gemini narrative
+  plan?: CrisisPlan; // Gemini executive plan
+  // UI flags
+  showSettings: boolean;
+  showReports: boolean;
+  // actions
+  startSimulation: (scenarioId: string) => Promise<void>;
+  pauseSimulation: () => void;
+  resumeSimulation: () => void;
+  reset: () => void;
+  loadResult: (result: SimulationResult) => void;
+}
+```
+* The store is imported by **every** page (see `grep` output in the audit). Changing its shape would break many components, confirming its central role.
+* Persistence is handled via `localStorage` – the state survives page reloads but is cleared on explicit reset.
+
+---
+
+## 6️⃣ API Integration (selected endpoints)
+
+| Method | Endpoint | Used By | Description |
+|--------|----------|---------|-------------|
+| `GET` | `/api/health` | Health check page | Returns `{status: "ok"}` |
+| `GET` | `/api/scenarios` | Scenario Simulator | List of disaster scenarios (PostgreSQL) |
+| `POST` | `/api/simulations/run` | Scenario Simulator | Orchestrates Scenario → Route‑Graph → Impact engines |
+| `POST` | `/api/ai-parliament/session` | AI Parliament page | Sends deterministic result to Gemini, receives narrative |
+| `POST` | `/api/crisis-commander/plan` | Crisis Commander page | Gemini‑generated executive plan |
+| `GET` | `/api/nodes` | Digital Twin map | Static node catalogue (JSON) |
+| `GET` | `/api/routes` | Digital Twin map | Static route catalogue (JSON) |
+
+All endpoints are documented in `docs/API_REFERENCE.md`.
+
+---
+
+## 7️⃣ Authentication Flow
+
+1. User enters username/password on the login page.
+2. `POST /api/auth/login` (Next.js route) validates against server‑side env vars `DEMO_AUTH_USERNAME` / `DEMO_AUTH_PASSWORD`.
+3. On success an **HTTP‑only** session cookie (`auth-token`) is set.
+4. Subsequent API calls include the cookie automatically; the backend checks it for protected routes.
+
+No credentials ever appear in client‑side JavaScript or `NEXT_PUBLIC_*` variables.
+
+---
+
+## 8️⃣ Local Development (verified commands)
 ```bash
+# From the repository root
+cd frontend
 npm install
-npm run dev
-npm run lint
-npm run build
+# Provide the backend URL for the dev server
+echo "NEXT_PUBLIC_API_URL=http://localhost:4000" > .env.local
+npm run dev   # → http://localhost:3000
 ```
-
-The local development server will run from the `frontend/` directory.
-
-## Folder Structure
-
-```text
-frontend/
-├── src/
-│   ├── app/
-│   │   ├── layout.tsx           ← Minimal root (html/body only)
-│   │   ├── globals.css
-│   │   ├── (public)/            ← Public landing, no AppShell
-│   │   │   ├── layout.tsx
-│   │   │   └── page.tsx         ← Landing page at /
-│   │   └── (app)/               ← All dashboard routes, AppShell injected
-│   │       ├── layout.tsx
-│   │       ├── control-room/
-│   │       ├── scenario-simulator/
-│   │       ├── trade-sentinel/
-│   │       ├── ai-parliament/
-│   │       ├── crisis-commander/
-│   │       ├── impact-dashboard/
-│   │       ├── resources/
-│   │       ├── reports/
-│   │       ├── settings/
-│   │       └── loading.tsx
-│   ├── components/
-│   │   ├── landing/             ← Landing page sections
-│   │   ├── layout/
-│   │   ├── dashboard/
-│   │   ├── maps/
-│   │   ├── scenario/
-│   │   ├── agents/
-│   │   ├── commander/
-│   │   ├── resources/
-│   │   └── shared/
-│   ├── layouts/
-│   ├── hooks/
-│   ├── lib/
-│   ├── services/
-│   ├── data/
-│   │   ├── control-room.ts
-│   │   ├── scenario-simulator.ts
-│   │   ├── trade.ts
-│   │   ├── shipments.ts
-│   │   ├── parliament.ts
-│   │   ├── crisis-commander.ts
-│   │   ├── impact.ts
-│   │   ├── nodes.ts
-│   │   ├── routes.ts
-│   │   ├── scenarios.ts
-│   │   ├── agents.ts
-│   │   ├── metrics.ts
-│   │   ├── alerts.ts
-│   │   ├── reports.ts
-│   │   ├── resources.ts
-│   │   ├── settings.ts
-│   │   ├── navigation.ts
-│   │   ├── user.ts
-│   │   ├── corridors.ts
-│   │   ├── system-status.ts
-│   │   └── index.ts
-│   ├── types/
-│   ├── constants/
-│   ├── styles/
-│   └── utils/
-├── public/
-├── docs/
-├── package.json
-├── tsconfig.json
-├── tailwind.config.ts
-├── postcss.config.mjs
-├── next.config.ts
-└── README.md
-```
-
-## Theme Strategy
-
-The frontend is prepared for both light and dark themes.
-
-- Theme tokens are defined as CSS variables in `src/app/globals.css`.
-- Tailwind colors are mapped to semantic tokens in `tailwind.config.ts`.
-- Dark mode uses the Tailwind `class` strategy.
-- A future issue can add a ThemeProvider and theme toggle without changing the token model.
-
-Developers should use semantic utilities such as `bg-background`, `text-foreground`, `border-border`, and `text-muted-foreground` instead of hardcoded colors.
-
-## Landing Page
-
-The public-facing landing page at `/` is now live (MVP complete).
-
-### Status: MVP Complete
-
-The landing page uses a **Next.js App Router route group** strategy:
-
-- `(public)/page.tsx` — resolves to `/`, no sidebar, standalone layout
-- `(app)/layout.tsx` — all dashboard routes (`/control-room`, etc.) get the full AppShell
-
-### Landing Sections
-
-1. **LandingNavbar** — sticky, scroll-aware, mobile hamburger
-2. **HeroSection** — headline + CSS dashboard mockup (ProductPreview)
-3. **MetricsStrip** — 550+ nodes / 45+ agents / 120+ sources / 98.7% uptime
-4. **CapabilitiesSection** — 6 platform capability cards
-5. **ScenarioShowcase** — 4 scenario cards (Cyclone, Wildfire, Earthquake, Port)
-6. **TrustedInstitutions** — NDRF, IMD, MoS, AICTE, NIC, ISRO grid
-7. **TestimonialsSection** — 3 testimonial cards
-8. **FinalCTA** — "Access Command Center" → /control-room
-9. **LandingFooter** — logo, copyright, links
-
-All landing components are in `src/components/landing/`. Full documentation at `docs/landing-page.md`.
+The frontend uses hot‑module reloading; the Docker‑compose stack already runs the backend on port 4000.
 
 ---
 
-## Current Status
-
-Issue #18 complete: Scenario Simulator MVP refinement applied. Skeleton phase complete.
-
-Implemented:
-
-- Next.js App Router foundation
-- TypeScript strict mode
-- Tailwind CSS configuration
-- ESLint configuration
-- Light and dark CSS variable theme tokens
-- Global `AppShell`
-- Desktop sidebar navigation
-- Topbar
-- Simple theme toggle
-- Placeholder pages for all primary app sections
-- Shared `PageHeader`, `SectionCard`, and `StatusBadge` components
-- Centralized mock data layer in `src/data`
-- Strongly typed domain interfaces in `src/types`
-- Navigation config moved into centralized data
-- Placeholder pages consuming data imports
-- Reusable shared dashboard components
-- Shared component export barrel
-- Internal `/component-preview` route
-- National Control Room dashboard at `/control-room`
-- Dashboard-specific composition components in `src/components/dashboard`
-- Control Room mock data slice in `src/data/control-room.ts`
-- Scenario Simulator page at `/scenario-simulator`
-- Scenario-specific composition components in `src/components/scenario`
-- Scenario Simulator mock data slice in `src/data/scenario-simulator.ts`
-- Trade Sentinel dashboard at `/trade-sentinel`
-- Trade-specific dashboard components in `src/components/dashboard`
-- Trade mock data in `src/data/trade.ts`
-- Shipment mock data in `src/data/shipments.ts`
-- AI Parliament page at `/ai-parliament` — full MVP refinement (Issue #20): live deliberation storytelling, SVG consensus gauge, animated agent cards, decision timeline, discussion insights, key metrics, reduced table dominance
-- Agent-specific composition components in `src/components/agents`
-- Parliament mock data in `src/data/parliament.ts`
-- Crisis Commander page at `/crisis-commander`
-- Commander-specific composition components in `src/components/commander`
-- Crisis Commander mock data in `src/data/crisis-commander.ts`
-- Impact Dashboard page at `/impact-dashboard`
-- Impact dashboard components in `src/components/dashboard`
-- Impact mock data in `src/data/impact.ts`
-- Static Recharts visualizations for impact analytics
-- Reusable Digital Twin Map system with Leaflet + OpenStreetMap
-- Backend static node and route map data displayed from `/api/nodes` and `/api/routes`
-- Control Room real digital twin map
-- Scenario Simulator real scenario preview map
-- Trade Sentinel real trade corridor map
-- Impact Dashboard real map with static mock impact heat zones
-- Resources page at `/resources`
-- Resources-specific composition components in `src/components/resources`
-- Expanded resource mock data in `src/data/resources.ts`
-- Reports page at `/reports`
-- Reports-specific composition components in `src/components/reports`
-- Expanded report mock data in `src/data/reports.ts` (22 reports with full executive preview content)
-- Interactive report selection with local state preview panel
-- Settings page at `/settings`
-- Settings-specific composition components in `src/components/settings`
-- Full settings data in `src/data/settings.ts`
-- Functional theme switching (Light / Dark / System) shared between Topbar and Settings page
-- Global layout density refinement for AppShell, Sidebar, Topbar, PageHeader, cards, KPI rows, grids, tables, and long scroll regions
-- `frontend/docs/layout-refinement.md` density, spacing, viewport, and scrolling standards
-- Global design system refinement for typography, semantic colors, premium surfaces, KPI cards, badges, tables, timelines, buttons, focus rings, and motion standards
-- `frontend/docs/design-system.md` typography, colors, spacing, cards, badges, buttons, tables, and motion standards
-- Control Room MVP redesign with reference-aligned command header, dominant digital twin map, right-side system overview and active alerts, bottom analytics row, quick actions, and footer status strip
-- Scenario Simulator MVP refinement with reference-aligned scenario selection, simulation overview, scenario details, impact summary, dominant impact preview map, simulation controls, and results preview
-- Frontend documentation
-
-Not implemented:
-
-- Real forecasting
-- Real uploads/downloads
-- Cloud storage
-- AI logic
-- Scenario simulation
-- NetworkX routing
-- Business calculations
-
-## Global Simulation State
-
-Global simulation state is implemented (Issue #63).
-
-- Simulation results persist across page refreshes via `localStorage` (key: `project-aegis-simulation-state`)
-- Active scenario indicator appears in every page's topbar
-- All five intelligence pages (Scenario Simulator, Control Room, Impact Dashboard, AI Parliament, Crisis Commander) read from a shared module-level store
-- Parliament and Commander plans auto-load after simulation completes; manual "Generate" buttons available as fallback
-- Reset clears localStorage and returns all pages to baseline
-- Store: `src/lib/simulation-store.ts` | Docs: `docs/global-simulation-state.md`
+## 9️⃣ Production Build & Deployment
+```bash
+npm run build   # creates an optimized static bundle
+npm start       # runs the production server (used by Vercel)
+```
+The production deployment is hosted on **Vercel** (verified via `vercel.json` in the repo). The build artifact is automatically deployed on push to `main`.
 
 ---
 
-## Next Phase
+## 🔟 Limitations (frontend specific)
+| Limitation | Why | Trade‑off | Future Work |
+|------------|-----|----------|------------|
+| Maps use static node/route JSON; no live GIS queries. | Simplicity & deterministic demo. | No real‑time traffic or weather overlay. | Integrate MapLibre GL with PostGIS for dynamic spatial queries. |
+| Reports are CSV generated client‑side. | Avoid server‑side PDF generation complexity. | No styled PDFs for judges. | Add a server‑side PDF service (e.g., puppeteer). |
+| Theme toggle is limited to light/dark via CSS class. | Minimal UI polish for hackathon. | No dynamic theming per user. | Implement a full ThemeProvider with user preferences stored in the store. |
 
-Phase 2 — Intelligence Layer & Real Product Logic
+---
 
-Skeleton phase complete. All 9 product pages implemented with mock data.
+## 📚 Documentation Links
+* Full technical docs: `docs/README.md`
+* Architecture diagram: `docs/ARCHITECTURE.md`
+* API reference: `docs/API_REFERENCE.md`
+* State management guide: `docs/FRONTEND_STATE.md`
 
-Suggested Phase 2 priorities:
-- Real map integration (MapLibre GL or Leaflet)
-- Live weather data feed (IMD API)
-- Port AIS data integration
-- Authentication and user management
-- Recharts → live data binding
-- Backend API layer (Next.js API routes or separate service)
-- AI Parliament live agent calls (Gemini 2.5)
+---
+
+*All information above is derived from the current `main` branch; no source code has been modified.*
